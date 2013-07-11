@@ -147,6 +147,7 @@ public class MainWindow extends JFrame {
             openButton = new JButton(guiController.loadIcon("open24.gif"));
             infoButton = new JButton(guiController.loadIcon("information24.gif"));
             waveletDialogBT = new JButton(guiController.loadIcon("invert.png"));
+            
             waveletDialogBT.setEnabled(false);
 
             Font buttonsFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);

@@ -1,4 +1,4 @@
-package icp.aplication;
+package icp.application;
 
 import icp.data.*;
 

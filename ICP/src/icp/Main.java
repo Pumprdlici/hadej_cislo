@@ -1,6 +1,6 @@
 package icp;
 
-import icp.aplication.SessionManager;
+import icp.application.SessionManager;
 
 /**
  * Hlavní spouštìcí tøída aplikace.

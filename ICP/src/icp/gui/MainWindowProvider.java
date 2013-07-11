@@ -7,7 +7,7 @@ package icp.gui;
 import icp.Const;
 import icp.algorithm.cwt.CWT;
 import icp.algorithm.dwt.DWT;
-import icp.aplication.*;
+import icp.application.*;
 import icp.data.InvalidFrameIndexException;
 
 import java.util.*;

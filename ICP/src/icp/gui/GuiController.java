@@ -1,11 +1,12 @@
 package icp.gui;
 
 import icp.Const;
-import icp.aplication.SessionManager;
+import icp.application.SessionManager;
 import icp.data.formats.CorruptedFileException;
 import icp.gui.signals.SignalsWindowProvider;
 
 import java.io.*;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import javax.swing.*;
@@ -212,13 +213,17 @@ public class GuiController extends Observable {
 
     /**
      * Na��t� ikony ze souboru.
+     * 
+     * Bug fix 11. 7. 2013 lvareka - chybne sestaveni cesty
+     * 
+     * 
      * @param name 
      * @return Na�ten� ikona.
      */
     public ImageIcon loadIcon(String name) {
         ImageIcon imageIcon;
-        URLClassLoader urlLoader = (URLClassLoader) this.getClass().getClassLoader();
-        imageIcon = new ImageIcon(urlLoader.getResource("images" + File.separator + name));
+        String relPath = "images" + File.separator + name;
+        imageIcon = new ImageIcon(relPath);
         return imageIcon;
     }
     

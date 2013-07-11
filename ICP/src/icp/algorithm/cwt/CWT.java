@@ -1,7 +1,7 @@
 package icp.algorithm.cwt;
 
 import icp.algorithm.cwt.wavelets.WaveletCWT;
-import icp.aplication.Transformation;
+import icp.application.Transformation;
 
 /**
  * Tøída spojité waveletové transfromace.

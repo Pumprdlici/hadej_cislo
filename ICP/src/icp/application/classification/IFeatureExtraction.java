@@ -1,6 +1,6 @@
 package icp.application.classification;
 
-import icp.data.Epoch;
+import java.util.List;
 
 /**
  * 
@@ -16,5 +16,5 @@ public interface IFeatureExtraction {
 	 * @param epoch
 	 * @return feature vector
 	 */
-	public double[] extractFeatures(Epoch epoch);
+	public double[] extractFeatures(List<double[]> epoch);
 }

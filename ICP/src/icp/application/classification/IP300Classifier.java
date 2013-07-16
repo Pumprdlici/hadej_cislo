@@ -1,6 +1,7 @@
 package icp.application.classification;
 
-import icp.data.Epoch;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -12,11 +13,23 @@ import icp.data.Epoch;
 public interface IP300Classifier {
 	
 	/**
+	 * 
+	 * Predefine feature extraction method
+	 * 
+	 * @param fe
+	 */
+	public void init(IFeatureExtraction fe); 
+	
+	public void train(List<double[][]> epochs, List<Double> targets, IFeatureExtraction fe);
+	
+	public Stat test(List<double[][]> epochs, List<Double> targets);
+	
+	/**
 	 *
 	 * Calculated the output of the classifier for the selected epoch
 	 * 
-	 * @param epoch
+	 * @param epoch - number of channels x temporal samples
 	 * @return  - probability of the epoch to be target; e.g. nontarget - 0, target - 0
 	 */
-	public double classify(Epoch epoch);
+	public double classify(List<double[]> epoch);
 }

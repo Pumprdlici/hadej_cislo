@@ -8,10 +8,9 @@ import icp.data.*;
 
 import java.util.ArrayList;
 
-
 public class Transformation extends Thread
 {
-	private ArrayList<double[][]> epochs;
+	private ArrayList<double[][]> testingEpochs;
 	private ArrayList<double[][]> transformatedEpochsDWT;
 	private ArrayList<ArrayList<double[][]>> transformatedEpochsCWT;
 	private SignalsSegmentation signalsSegmentation;
@@ -53,18 +52,18 @@ public class Transformation extends Thread
 		ArrayList<double[]> highestCoeficients;
 		ArrayList<int[]> indexesHighestCoeficients;
 		
-		for(int i = 0; i < epochs.size();i++)
+		for(int i = 0; i < testingEpochs.size();i++)
 		{			
-			transformedEpochs = new double[epochs.get(i).length][epochs.get(i)[0].length];
+			transformedEpochs = new double[testingEpochs.get(i).length][testingEpochs.get(i)[0].length];
 			highestCoeficients = new ArrayList<double[]>();
 			indexesHighestCoeficients = new ArrayList<int[]>();
 			
-			for(int j = 0; j < epochs.get(i).length;j++)
+			for(int j = 0; j < testingEpochs.get(i).length;j++)
 			{
 				if(!enabledWT)
 					return;
 				
-				transformedEpochs[j] = dwt.transform(epochs.get(i)[j]);
+				transformedEpochs[j] = dwt.transform(testingEpochs.get(i)[j]);
 				highestCoeficients.add(dwt.getHighestCoeficients());
 				indexesHighestCoeficients.add(dwt.getIndexesHighestCoeficients());
 				sendProgressUnits();
@@ -87,15 +86,15 @@ public class Transformation extends Thread
 		ArrayList<double[]> highestCoeficients;
 		ArrayList<int[]> indexesHighestCoeficients;
 		
-		for(int i = 0; i < epochs.size();i++)
+		for(int i = 0; i < testingEpochs.size();i++)
 		{						
 			transformedEpochs = new ArrayList<double[][]>();
 			highestCoeficients = new ArrayList<double[]>();
 			indexesHighestCoeficients = new ArrayList<int[]>();
 			
-			for(int j = 0; j < epochs.get(i).length;j++)
+			for(int j = 0; j < testingEpochs.get(i).length;j++)
 			{
-				cwt.transform(epochs.get(i)[j]);
+				cwt.transform(testingEpochs.get(i)[j]);
 				transformedEpochs.add(cwt.getCwtDataReal());
 				highestCoeficients.add(cwt.getHighestCoeficients());
 				indexesHighestCoeficients.add(cwt.getIndexesHighestCoeficients());
@@ -112,18 +111,18 @@ public class Transformation extends Thread
 	{		
 		if(actualTransform == Const.DWT)
 		{
-			this.progressUnit = Const.PROGRESS_MAX/ (double)(epochs.size()*epochs.get(0).length);
+			this.progressUnit = Const.PROGRESS_MAX/ (double)(testingEpochs.size()*testingEpochs.get(0).length);
 		}
 		else
 		{	
 			double countScales = ((cwt.getMaxScale()-cwt.getMinScale())/cwt.getStepScale())+1;
-			this.progressUnit = Const.PROGRESS_MAX/(epochs.size()*epochs.get(0).length*countScales);
+			this.progressUnit = Const.PROGRESS_MAX/(testingEpochs.size()*testingEpochs.get(0).length*countScales);
 		}
 	}
 	
 	private void loadEpochValues() throws InvalidFrameIndexException
 	{
-		epochs = new ArrayList<double[][]>();
+		testingEpochs = new ArrayList<double[][]>();
 		int startEpoch = signalsSegmentation.getStartEpoch();
 		int endEpoch = signalsSegmentation.getEndEpoch();
 		int epochLength = endEpoch - startEpoch;
@@ -154,7 +153,7 @@ public class Transformation extends Thread
 			}					
 			
 			
-			epochs.add(epoch);
+			testingEpochs.add(epoch);
 		}	
 		else
 		{
@@ -174,17 +173,20 @@ public class Transformation extends Thread
 					}
 				}
 				
-				epochs.add(epoch);
+				testingEpochs.add(epoch);
 			}
 		}
+		
+		
+		System.out.println("Epochs" + testingEpochs);
 	}
 	
     public void detectErp(int start, int end, int indexScaleWavelet)
     {
     	totalPositiveDetection = 0;
-    	detectedERP = new boolean[epochs.size()][epochs.get(0).length];
-    	positionHighestCoeficients = new int[epochs.size()][epochs.get(0).length];
-    	positiveDetectionInChannels = new int[epochs.size()];
+    	detectedERP = new boolean[testingEpochs.size()][testingEpochs.get(0).length];
+    	positionHighestCoeficients = new int[testingEpochs.size()][testingEpochs.get(0).length];
+    	positiveDetectionInChannels = new int[testingEpochs.size()];
     	
     	if(actualTransform == Const.DWT)
     	{
@@ -237,6 +239,12 @@ public class Transformation extends Thread
 
     }
     
+	// lvareka
+	public void detectWithClassifier() {
+		
+		
+	}
+    
 	public void stopWT()
 	{
 		enabledWT = false;
@@ -245,6 +253,7 @@ public class Transformation extends Thread
 			cwt.setTransform(enabledWT);
 	}
 	
+			
 	@Override
 	public void run()
 	{
@@ -355,7 +364,7 @@ public class Transformation extends Thread
 	
 	public ArrayList<double[][]> getEpochs()
 	{
-		return epochs;	
+		return testingEpochs;	
 	}
 	
 	public ArrayList<double[][]> getTransformedEpochsDWT()
@@ -395,4 +404,12 @@ public class Transformation extends Thread
 		actualTransform = Const.CWT;
 		this.cwt = cwt;	
 	}
+	
+	
+	
+	
+	
+	
+
+	
 }

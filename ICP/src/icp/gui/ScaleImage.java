@@ -2,20 +2,20 @@ package icp.gui;
 
 import icp.Const;
 import icp.algorithm.cwt.CWT;
-import icp.algorithm.cwt.wavelets.WaveletCWT;
 import icp.algorithm.math.Mathematic;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.*;
 
 import javax.swing.*;
 
-
 public class ScaleImage extends JPanel
 {
 	private static final long serialVersionUID = 1L;
+	private final DialogInterface scaleDialog;
 	private final int VERTICAL = 1, HORIZONT = 5, MARK_LENGTH = 5, X_COEF_DIF = 5, X_TIME_DIF = 2; 
-	private final int LEFT = 70, BOTTOM = 20, STR_MARGIN = 2, STR_LOC = 4, INDENT_LABELS = 5;
+	private final int LEFT = 70, BOTTOM = 20, STR_MARGIN = 2, STR_LOC = 4, INDENT_LABELS = 5, COUNT_FRACT = 6; 	
 	private final int[] XAXIS_SCALES = {1, 10, 100, 1000, 10000};
 	private final int[] LABELS_COUNTS = {25, 20, 10, 10, 10};
 	private int xAxisScale;
@@ -30,11 +30,33 @@ public class ScaleImage extends JPanel
 	private static final int CONST_COLOR = 255;
 	private double minScale, scaleStep, scale;
 	private int actualWT;
+	private int cursorX = -1;
+	private int cursorY = -1;
 	
 	
-	public ScaleImage(JComponent background)
+	public ScaleImage(JComponent background, DialogInterface scaleDialog)
 	{
+		this.scaleDialog = scaleDialog;
 		this.background = background;
+		
+		addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                cursorX = -1;
+                cursorY = -1;
+                sendCursorPosition(cursorX, cursorY);
+            }
+        });
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			
+	        @Override
+	        public void mouseMoved(MouseEvent e) {
+	            cursorX = e.getX();
+	            cursorY = e.getY();
+	            sendCursorPosition(cursorX, cursorY);
+	        }
+	    });
 	}
 	
 	protected void paintComponent(Graphics g)
@@ -141,17 +163,19 @@ public class ScaleImage extends JPanel
 		
 		//osa x
 		int countMarker = 0;
+		float markerCoef = 0;
 		
 		for(int i = 0; i < XAXIS_SCALES.length; i++)
 		{
-			countMarker = signal.length/XAXIS_SCALES[i];
+			markerCoef = (float) (signal.length/(double)XAXIS_SCALES[i]);
+			countMarker = (int)Math.round(markerCoef);
 			xAxisScale = XAXIS_SCALES[i];
 			
 			if(countMarker <= LABELS_COUNTS[i])
 				break;
 		}
 		
-		float xstep = (float) ((canvasWidth - scalogramMargin.left - scalogramMargin.right - LEFT) / countMarker);
+		float xstep = (float) ((canvasWidth - LEFT) / markerCoef);
 		float x = xAxis1;
 		
 		for(int i = 0;i < countMarker;i++)
@@ -243,17 +267,19 @@ public class ScaleImage extends JPanel
 		
 		//osa x
 		int countMarker = 0;
+		float markerCoef = 0;
 		
 		for(int i = 0; i < XAXIS_SCALES.length; i++)
 		{
-			countMarker = signals[0].length/XAXIS_SCALES[i];
+			markerCoef = (float) (signals[0].length/(double)XAXIS_SCALES[i]);
+			countMarker = (int)Math.round(markerCoef);
 			xAxisScale = XAXIS_SCALES[i];
 			
 			if(countMarker <= LABELS_COUNTS[i])
 				break;
 		}
 		
-		float xstep = (float) ((canvasWidth - scalogramMargin.left - scalogramMargin.right - LEFT) / countMarker);
+		float xstep = (float) ((canvasWidth - LEFT) / markerCoef);
 		float x = xAxis1;
 		
 		for(int i = 0;i < countMarker;i++)
@@ -296,6 +322,62 @@ public class ScaleImage extends JPanel
 		this.colorCoeficient = highestCoeficients;
 		
 		this.repaint();		
+	}
+	
+	private void sendCursorPosition(int x, int y)
+	{
+		if(x > LEFT && x < canvasWidth && y > scalogramMargin.top && y < canvasHeight-BOTTOM-scalogramMargin.bottom)
+		{
+			int yPosition;
+			int xPosition;
+			double value;
+			
+			if(actualWT == Const.DWT)
+			{
+				int level;
+				int start;
+				int end;
+				yPosition = (colorCoeficient.length - 1)-(int)((y-scalogramMargin.top)/
+						((canvasHeight - scalogramMargin.bottom - scalogramMargin.top - BOTTOM)/colorCoeficient.length));
+				
+				level = (int)Math.pow(Mathematic.CONST_2, yPosition+1);
+				
+				start = signal.length/level;
+				end = 2*start;
+				
+				xPosition = (int)((x-LEFT)*((end-start)/(canvasWidth-LEFT)));
+				
+				value = signal[start+xPosition];
+				
+				String[] valueString = (""+value).split("[.]");
+				
+				if(valueString[1].length() > COUNT_FRACT)
+					valueString[1] = valueString[1].substring(0, COUNT_FRACT);
+				
+				scaleDialog.setValueOfScalogram(valueString[0]+"."+valueString[1], 
+						""+(yPosition+1), ""+(xPosition*level));
+			}
+			else
+			{
+				yPosition = (signals.length-1)-(int)((y-scalogramMargin.top)/
+						((canvasHeight - scalogramMargin.bottom - scalogramMargin.top - BOTTOM)/signals.length));
+				xPosition = (int)((x-LEFT)*(signals[0].length/(canvasWidth-LEFT)))-1;
+				
+				value = signals[yPosition][xPosition];
+				
+				String[] valueString = (""+value).split("[.]");
+								
+				if(valueString[1].length() > COUNT_FRACT)
+					valueString[1] = valueString[1].substring(0, COUNT_FRACT);
+				
+				scaleDialog.setValueOfScalogram(valueString[0]+"."+valueString[1], 
+						""+((yPosition*this.scaleStep)+this.minScale), ""+(xPosition+1));
+			}
+		}
+		else
+		{
+			scaleDialog.clearValueOfScalogram();
+		}
 	}
 		
 }

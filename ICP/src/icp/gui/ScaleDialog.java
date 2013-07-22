@@ -4,21 +4,22 @@ import icp.Const;
 import icp.algorithm.cwt.CWT;
 import icp.algorithm.dwt.DWT;
 import icp.algorithm.math.Mathematic;
+import icp.aplication.Element;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 
-public class ScaleDialog extends JDialog
+public class ScaleDialog extends JDialog implements DialogInterface
 {
 	private static final long serialVersionUID = 1L;
 	private final short DWIDTH = 940, DHEIGHT = 640, BORD = 2, BORD_2 = -2;
 	private final short WIDTH_E = DWIDTH - 205 , HEIGHT_E = 120;
 	private final short WIDTH_S = DWIDTH - 205 , HEIGHT_S = 330;
-	private final short WIDTH_L = 130 , HEIGHT_L = 200;
+	private final short WIDTH_L = 130 , HEIGHT_L = 165, HEIGHT_LI = 270;;
 	private final short WIDTH_I = 100 , HEIGHT_I = 20;
 	private final double MILISECOND_IN_SECOND = 1000.0;
 	private Component mainWindow;
@@ -31,20 +32,22 @@ public class ScaleDialog extends JDialog
 	private double epochLength;
 	private double[] waveletLengths;
 	private int actualWT;
-	private ArrayList<double[][]> epochs;
-	private String[] channelsNames;
-	private String[] allEpochs;
-	private JList channelsListS;
+	private ArrayList<double[][]> elementsData;
+	private String[] elementsNames;
+	private String[] allEpochNames;
+	private JList elementsListS;
 	private JList epochsListS;
 	private JSpinner startSpinner;
 	private JSpinner endSpinner;
-	private JComboBox showChannelsJCB;
+	private JComboBox showElementsJCB;
 	private JComboBox waveletLengthsJCB;
-	private int selectedStart, selectedEnd, selectedChannelIndex;
-	private String selectedChannelName;
+	private int selectedStart, selectedEnd, selectedElementIndex;
+	private String selectedElementName;
 	private String selectedWaveletLength;
 	private String selectedWaveletName;
+	private String detectedChars;
 	private JLabel infoLabel;
+	private JLabel valueOfScalogramLabel;
 	private JPanel[][] epochPanels;
 	//private JProgressBar scaleProgress;
 	//private JProgressBar erpProgress;
@@ -142,10 +145,10 @@ public class ScaleDialog extends JDialog
 		channelsPane.setPreferredSize(new Dimension(WIDTH_L, HEIGHT_L));
 		channelsPane.setMaximumSize(new Dimension(WIDTH_L, HEIGHT_L));
 		channelsPane.setMinimumSize(new Dimension(WIDTH_L, HEIGHT_L));
-		channelsListS = new JList();
-		channelsListS.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		channelsListS.setLayoutOrientation(JList.VERTICAL);
-		channelsPane.setViewportView(channelsListS);
+		elementsListS = new JList();
+		elementsListS.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		elementsListS.setLayoutOrientation(JList.VERTICAL);
+		channelsPane.setViewportView(elementsListS);
 		channelsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		JScrollPane epochsPane = new JScrollPane();
@@ -162,17 +165,26 @@ public class ScaleDialog extends JDialog
 		epochsPane.setViewportView(epochsListS);
 		epochsPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		JPanel progressPanelS = new JPanel();
-		progressPanelS.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		JPanel northPanel = new JPanel(new BorderLayout());
+		northPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		
+		valueOfScalogramLabel = new JLabel();
+		valueOfScalogramLabel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Scalogram coeficient"),
+				BorderFactory.createEmptyBorder(BORD, BORD, BORD, BORD)));
+		clearValueOfScalogram();
 		
 		JButton showScalogramBT = new JButton("Show Scalogram");
 		showScalogramBT.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		showScalogramBT.addActionListener(new FunctionShowScalogramBT());
 		
+		northPanel.add(valueOfScalogramLabel, BorderLayout.NORTH);
+		northPanel.add(showScalogramBT, BorderLayout.SOUTH);
+		
 		panel.add(channelsPane, BorderLayout.NORTH);
 		panel.add(epochsPane, BorderLayout.CENTER);
 		//panel.add(progressPanelS);
-		panel.add(showScalogramBT, BorderLayout.SOUTH);		
+		panel.add(northPanel, BorderLayout.SOUTH);		
 		
 		scalogramToolsPanel.add(panel, BorderLayout.NORTH);
 		
@@ -190,12 +202,12 @@ public class ScaleDialog extends JDialog
 		channelsShowJP.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Show channel"),
 				BorderFactory.createEmptyBorder(BORD, BORD, BORD, BORD)));
-		showChannelsJCB = new JComboBox();
-		showChannelsJCB.addActionListener(new FunctionShowChannelsJCB());
-		showChannelsJCB.setPreferredSize(new Dimension(WIDTH_I, HEIGHT_I));
-		showChannelsJCB.setMaximumSize(new Dimension(WIDTH_I, HEIGHT_I));
-		showChannelsJCB.setMinimumSize(new Dimension(WIDTH_I, HEIGHT_I));
-		channelsShowJP.add(showChannelsJCB);
+		showElementsJCB = new JComboBox();
+		showElementsJCB.addActionListener(new FunctionShowChannelsJCB());
+		showElementsJCB.setPreferredSize(new Dimension(WIDTH_I, HEIGHT_I));
+		showElementsJCB.setMaximumSize(new Dimension(WIDTH_I, HEIGHT_I));
+		showElementsJCB.setMinimumSize(new Dimension(WIDTH_I, HEIGHT_I));
+		channelsShowJP.add(showElementsJCB);
 		northPanel.add(channelsShowJP, BorderLayout.NORTH);
 		northPanel.add(new JSeparator(), BorderLayout.SOUTH);
 		
@@ -228,6 +240,8 @@ public class ScaleDialog extends JDialog
 		panelERPLocation.add(endPanel);
 		panelERP.add(panelERPLocation);		
 		
+		JPanel waveletAndPolarityPanel = new JPanel(new BorderLayout());
+		
 		JPanel waveletLengthsPanel = new JPanel(new BorderLayout());
 		waveletLengthsPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		waveletLengthsPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -241,14 +255,17 @@ public class ScaleDialog extends JDialog
 		waveletLengthsJCB.setMinimumSize(new Dimension(WIDTH_I, HEIGHT_I));
 		waveletLengthsPanel.add(waveletLengthsJCB, BorderLayout.NORTH);
 		
+		
+		waveletAndPolarityPanel.add(waveletLengthsPanel, BorderLayout.NORTH);
+		
 		JScrollPane infoPane = new JScrollPane();
 		infoPane.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Information"),
 				BorderFactory.createEmptyBorder(BORD, BORD, BORD, BORD)));
 		infoLabel = new JLabel();
-		infoPane.setPreferredSize(new Dimension(WIDTH_L, HEIGHT_L));
-		infoPane.setMaximumSize(new Dimension(WIDTH_L, HEIGHT_L));
-		infoPane.setMinimumSize(new Dimension(WIDTH_L, HEIGHT_L));
+		infoPane.setPreferredSize(new Dimension(WIDTH_L, HEIGHT_LI));
+		infoPane.setMaximumSize(new Dimension(WIDTH_L, HEIGHT_LI));
+		infoPane.setMinimumSize(new Dimension(WIDTH_L, HEIGHT_LI));
 		infoPane.setViewportView(infoLabel);
 		
 		JPanel progressPanelS = new JPanel();
@@ -258,7 +275,7 @@ public class ScaleDialog extends JDialog
 		detectErpBT.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		detectErpBT.addActionListener(new FunctionDetectErpBT());
 		JPanel southPanel = new JPanel(new BorderLayout());
-		southPanel.add(waveletLengthsPanel, BorderLayout.NORTH);
+		southPanel.add(waveletAndPolarityPanel, BorderLayout.NORTH);
 		southPanel.add(infoPane, BorderLayout.CENTER);
 		southPanel.add(detectErpBT, BorderLayout.SOUTH);
 		
@@ -282,13 +299,13 @@ public class ScaleDialog extends JDialog
 	}
 	
 	
-	void createSignalAndScalogramPanel(int channelIndex, int epochIndex)
+	void createSignalAndScalogramPanel(int elementIndex, int epochIndex)
 	{
 		imagePanelS.removeAll();		
 		
 		JPanel panelOriginal = new JPanel();
 		panelOriginal.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Channel: "+channelsNames[channelIndex]+" - (Epoch "+(epochIndex+1)+")"),
+				BorderFactory.createTitledBorder("Element: "+elementsNames[elementIndex]+" - ("+allEpochNames[epochIndex]+")"),
 				BorderFactory.createEmptyBorder(BORD_2, BORD_2, BORD_2, BORD_2)));
 		panelOriginal.setLayout(new BoxLayout(panelOriginal, BoxLayout.Y_AXIS));
 		panelOriginal.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -314,11 +331,12 @@ public class ScaleDialog extends JDialog
 		panelSignalTR.setMinimumSize(new Dimension(WIDTH_S, HEIGHT_S));
 		panelSignalTR.setMaximumSize(new Dimension(WIDTH_S, HEIGHT_S));
 		panelSignalTR.setPreferredSize(new Dimension(WIDTH_S, HEIGHT_S));
-		ScaleImage scaleIm = new ScaleImage(panelSignalTR); 
+		ScaleImage scaleIm = new ScaleImage(panelSignalTR, this); 
 		panelSignalTR.add(scaleIm);
 		panelTransform.add(panelSignalTR);
 		
-		sigIm.setValues(epochs.get(channelIndex)[epochIndex]);
+		
+		sigIm.setValues(elementsData.get(elementIndex)[epochIndex]);
 		
 		if(actualWT == Const.DWT)
 		{
@@ -326,7 +344,7 @@ public class ScaleDialog extends JDialog
 					BorderFactory.createTitledBorder("Scalogram ("+dwt.getWavelet().getName()+"):"),
 					BorderFactory.createEmptyBorder(BORD_2, BORD_2, BORD_2, BORD_2)));
 			
-			scaleIm.setValues(dwtData.get(channelIndex)[epochIndex], highestCoeficientsDWT.get(channelIndex).get(epochIndex));
+			scaleIm.setValues(dwtData.get(elementIndex)[epochIndex], highestCoeficientsDWT.get(elementIndex).get(epochIndex));
 		}
 		else
 		{
@@ -334,7 +352,7 @@ public class ScaleDialog extends JDialog
 					BorderFactory.createTitledBorder("Scalogram ("+cwt.getWavelet().getName()+"):"),
 					BorderFactory.createEmptyBorder(BORD_2, BORD_2, BORD_2, BORD_2)));
 			
-			scaleIm.setValues(cwtData.get(channelIndex).get(epochIndex), highestCoeficientsCWT.get(channelIndex).get(epochIndex), cwt);
+			scaleIm.setValues(cwtData.get(elementIndex).get(epochIndex), highestCoeficientsCWT.get(elementIndex).get(epochIndex), cwt);
 		}
 		
 		imagePanelS.add(panelOriginal);
@@ -346,8 +364,8 @@ public class ScaleDialog extends JDialog
 	
 	void createERPPanels()
 	{
-		epochPanels = new JPanel[epochs.size()][epochs.get(0).length];
-		epochImages = new SignalImage[epochs.size()][epochs.get(0).length];
+		epochPanels = new JPanel[elementsData.size()][elementsData.get(0).length];
+		epochImages = new SignalImage[elementsData.size()][elementsData.get(0).length];
 		
 		imagePanelE.removeAll();		
 		
@@ -357,7 +375,7 @@ public class ScaleDialog extends JDialog
 			{
 				JPanel panelOriginal = new JPanel();
 				panelOriginal.setBorder(BorderFactory.createCompoundBorder(
-						BorderFactory.createTitledBorder("Channel: "+channelsNames[i]+" - (Epoch "+(j+1)+")"),
+						BorderFactory.createTitledBorder("Element: "+elementsNames[i]+" - ("+allEpochNames[j]+")"),
 						BorderFactory.createEmptyBorder(BORD_2, BORD_2, BORD_2, BORD_2)));
 				panelOriginal.setLayout(new BoxLayout(panelOriginal, BoxLayout.Y_AXIS));
 				panelOriginal.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -373,7 +391,7 @@ public class ScaleDialog extends JDialog
 				panelSignal.add(sigIm);
 				panelOriginal.add(panelSignal);				
 				
-				sigIm.setValues(epochs.get(i)[j]);
+				sigIm.setValues(elementsData.get(i)[j]);
 				epochPanels[i][j] = panelOriginal;
 				
 				imagePanelE.add(panelOriginal);	
@@ -384,21 +402,21 @@ public class ScaleDialog extends JDialog
 		imagePanelE.repaint();
 	}
 	
-	private void showEpochsByChannels()
+	private void showEpochsByElement()
 	{
-		int startChannel = 0;
-		int endChannel = epochs.size();
+		int startElement = 0;
+		int endElement = epochPanels.length;
 		
-		if(selectedChannelIndex > 0)
+		if(selectedElementIndex > 0)
 		{
-			startChannel = selectedChannelIndex - 1;
-			endChannel = selectedChannelIndex;
+			startElement = selectedElementIndex - 1;
+			endElement = selectedElementIndex;
 		}
-		
+				
 		erpScrollPane.setViewportView(null);
 		imagePanelE.removeAll();
 		
-		for(int i = startChannel; i < endChannel; i++)
+		for(int i = startElement; i < endElement; i++)
 		{
 			for(int j = 0; j < epochPanels[i].length; j++)
 			{				
@@ -415,20 +433,39 @@ public class ScaleDialog extends JDialog
 	private void setErpDetection()
 	{
 		boolean[][] erpDetection = this.mainWindowProvider.transform.getDetectionERP();
-		int[][] positionHighestCoef = this.mainWindowProvider.transform.getPositionHighestCoeficients();
+		int row = 0;
+		int column = 0;
+		boolean rowFind;
+		detectedChars = "";
 		
-		for(int i = 0; i < erpDetection.length; i++)
+		for(int i = 0; i < epochPanels.length; i++)
 		{
-			for(int j = 0; j < erpDetection[i].length; j++)
+			row = 0;
+			column = 0;
+			rowFind = false;
+			
+			for(int j = 0; j < epochPanels[i].length; j++)
 			{
+				if(erpDetection[i][j] && !rowFind)
+				{
+					row = j;
+					rowFind = true;
+				}
+				else if(erpDetection[i][j] && rowFind)
+				{
+					column = j - 4;
+				}
+				
 				epochImages[i][j].setDetectionERP(erpDetection[i][j]);
 				epochPanels[i][j].setBorder(BorderFactory.createCompoundBorder(
-						BorderFactory.createTitledBorder("Channel: "+channelsNames[i]+" - (Epoch "+(j+1)+")"+
-								" - [Erp detected: "+erpDetection[i][j]+
-								"; Position of highest coeficient: "+positionHighestCoef[i][j]+"]"),
+						BorderFactory.createTitledBorder("Element: "+elementsNames[i]+" - ("+allEpochNames[j]+")"+
+								" - [Erp detected: "+erpDetection[i][j]+"]"),
 						BorderFactory.createEmptyBorder(BORD_2, BORD_2, BORD_2, BORD_2)));
+				
 				imagePanelE.repaint();
 			}
+			
+			detectedChars += Element.calculatorChars[row][column];
 		}
 
 		setInfoPanel();
@@ -443,13 +480,13 @@ public class ScaleDialog extends JDialog
 	
 	private void setComponents()
 	{
-		channelsListS.removeAll();
+		elementsListS.removeAll();
 		epochsListS.removeAll();
 		waveletLengthsJCB.removeAllItems();
 		
-		channelsListS.setListData(channelsNames);
-		channelsListS.setSelectedIndex(0);
-		epochsListS.setListData(allEpochs);
+		elementsListS.setListData(elementsNames);
+		elementsListS.setSelectedIndex(0);
+		epochsListS.setListData(allEpochNames);
 		epochsListS.setSelectedIndex(0);
 		samplFrequency = this.mainWindowProvider.app.getHeader().getSamplingInterval();
 		double milisecondFrequency = samplFrequency/MILISECOND_IN_SECOND;
@@ -494,28 +531,35 @@ public class ScaleDialog extends JDialog
 		
 		createERPPanels();
 	}
+
+	public void setValueOfScalogram(String value, String scale, String position)
+	{		
+		valueOfScalogramLabel.setText("<html>" +
+				"Coeficient:<br> "+value+" <br><br>" +
+				"Scale:<br> "+scale+" <br><br>" +
+				"Position [ms]:<br> "+position+" </html>");
+	}
+	
+	public void clearValueOfScalogram()
+	{
+		valueOfScalogramLabel.setText("<html>" +
+				"Coeficient:<br> none <br><br>" +
+				"Scale:<br> none <br><br>" +
+				"Position [ms]:<br> none</html>");
+	}
 	
 	private void setInfoPanel()
 	{
-		int positiveDetection = 0;
-		
-		if(selectedChannelIndex > 0)
-		{
-			if(erpDetection)
-				positiveDetection = this.mainWindowProvider.transform.getPositiveDetectionInChannels()[selectedChannelIndex - 1];
-		}
-		else
-			positiveDetection = this.mainWindowProvider.transform.getTotalPositiveDetection();
 		
 		infoLabel.setText("<html>" +
+				"Detected chars:<br>"+ detectedChars +"<br><br>"+
 				"Samp. frequency:<br>"+ samplFrequency +" [1/s]<br><br>"+
 				"Epoch length:<br>"+ epochLength +" [ms]<br><br>"+
 				"Start-interval:<br>"+ selectedStart +" [ms]<br><br>"+
 				"End-interval:<br>"+ selectedEnd +" [ms]<br><br>"+
-				"Channel:<br>"+ selectedChannelName +"<br><br>"+
+				"Channel:<br>"+ selectedElementName +"<br><br>"+
 				"Wavelet-name:<br>"+ selectedWaveletName +"<br><br>"+
 				"Wavelet-length:<br>"+ selectedWaveletLength +" [ms]<br><br>"+
-				"Positive-detection:<br>"+ positiveDetection +" epochs<br><br>"+
 				"</html>");
 		
 		infoLabel.repaint();
@@ -524,17 +568,22 @@ public class ScaleDialog extends JDialog
 	public void setScaleDialogData()
 	{
 		actualWT = this.mainWindowProvider.transform.getActualTransform();
+		elementsData = mainWindowProvider.transform.getElementsData(); 
+		elementsNames = new String[elementsData.size()];
 		
-		if(!mainWindowProvider.transform.getAveraging())
-			channelsNames = mainWindowProvider.transform.getChannelsNames();
-		else
-		{
-			channelsNames = new String[1];
-			channelsNames[0] = "Channels average";
-		}
+		for(int i = 0;i < elementsNames.length;i++)
+			elementsNames[i] = "Element "+(i+1);
 		
-		epochs = mainWindowProvider.transform.getEpochs(); 
-		allEpochs = new String[epochs.get(0).length];
+		allEpochNames = new String[Const.ROWS_COLS_COUNT_OF_ELEMENT];
+		
+		for(int i = 0; i < allEpochNames.length/2 ;i++)
+			allEpochNames[i] = "Row "+(i+1);
+		
+		int index = 1;
+		
+		for(int i = allEpochNames.length/2; i < allEpochNames.length ;i++)
+			allEpochNames[i] = "Column "+(index++);
+		
 		dwtData = mainWindowProvider.transform.getTransformedEpochsDWT();
 		highestCoeficientsDWT = mainWindowProvider.transform.getHighestCoeficientsDWT();
 		dwt = mainWindowProvider.transform.getDWT();
@@ -544,29 +593,25 @@ public class ScaleDialog extends JDialog
 		selectedWaveletLength = "0";
 		selectedStart = 0;
 		selectedEnd = 0;
+		detectedChars = "nothing";
 		erpDetection = false;
-		
-		
-		for(int i = 0; i < allEpochs.length ;i++)
-		{
-			allEpochs[i] = "Epoch "+(i+1);
-		}
+				
 		
 		setComponents();
 		
-		showChannelsJCB.removeAllItems();
+		showElementsJCB.removeAllItems();
 		
-		if(channelsNames.length > 1)
-			showChannelsJCB.addItem("All channels");
+		if(elementsNames.length > 1)
+			showElementsJCB.addItem("All elements");
 			
-		for(int i = 0; i < channelsNames.length ;i++)
+		for(int i = 0; i < elementsNames.length ;i++)
 		{
-			showChannelsJCB.addItem(channelsNames[i]);
+			showElementsJCB.addItem(elementsNames[i]);
 		}
 		
-		showChannelsJCB.setSelectedIndex(0);		
-		selectedChannelIndex = showChannelsJCB.getSelectedIndex();
-		selectedChannelName = (String) showChannelsJCB.getSelectedItem();
+		showElementsJCB.setSelectedIndex(0);		
+		selectedElementIndex = showElementsJCB.getSelectedIndex();
+		selectedElementName = (String) showElementsJCB.getSelectedItem();
 		
 		setInfoPanel();
 	}
@@ -583,17 +628,17 @@ public class ScaleDialog extends JDialog
 	
 	private class FunctionShowScalogramBT implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	int channelIndex = channelsListS.getSelectedIndex();
+        	int elementIndex = elementsListS.getSelectedIndex();
         	int epochIndex = epochsListS.getSelectedIndex();
         	
-        	if(channelIndex < 0 || epochIndex < 0)
+        	if(elementIndex < 0 || epochIndex < 0)
         	{
-        		JOptionPane.showMessageDialog(ScaleDialog.this, "Must be setected channel and epoch.", 
+        		JOptionPane.showMessageDialog(ScaleDialog.this, "Must be setected element and epoch.", 
 						"Selection error!", JOptionPane.ERROR_MESSAGE, 
 						null);
         	}
         	else
-        		createSignalAndScalogramPanel(channelIndex, epochIndex);
+        		createSignalAndScalogramPanel(elementIndex, epochIndex);
         }
     }
 	
@@ -606,12 +651,12 @@ public class ScaleDialog extends JDialog
         	{
 	        	int indexScaleWavelet = waveletLengthsJCB.getSelectedIndex();
 	        	selectedWaveletLength = waveletLengthsJCB.getSelectedItem().toString();
-	        	selectedChannelIndex = showChannelsJCB.getSelectedIndex();
-	    		selectedChannelName = (String) showChannelsJCB.getSelectedItem();
+	        	selectedElementIndex = showElementsJCB.getSelectedIndex();
+	    		selectedElementName = (String) showElementsJCB.getSelectedItem();
 	    		selectedStart = start;
 	    		selectedEnd = end;
 	
-	        	mainWindowProvider.detectErp(start, end, indexScaleWavelet);
+	    		mainWindowProvider.detectErp(start, end, indexScaleWavelet);
 	        	erpDetection = true;
 	        	setErpDetection();   
         	}
@@ -626,9 +671,9 @@ public class ScaleDialog extends JDialog
 	
 	private class FunctionShowChannelsJCB implements ActionListener {
         public void actionPerformed(ActionEvent e) {    
-        	selectedChannelIndex = showChannelsJCB.getSelectedIndex();
-    		selectedChannelName = (String) showChannelsJCB.getSelectedItem();
-        	showEpochsByChannels();
+        	selectedElementIndex = showElementsJCB.getSelectedIndex();
+    		selectedElementName = (String) showElementsJCB.getSelectedItem();
+        	showEpochsByElement();
         	setInfoPanel();
         }
     }

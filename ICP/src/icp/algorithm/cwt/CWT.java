@@ -1,7 +1,7 @@
 package icp.algorithm.cwt;
 
 import icp.algorithm.cwt.wavelets.WaveletCWT;
-import icp.application.Transformation;
+import icp.aplication.ProgressInterface;
 
 /**
  * Tøída spojité waveletové transfromace.
@@ -30,7 +30,7 @@ public class CWT
 	//pole indexù nejvyšších koeficientù
 	private int[] indexesHighestCoeficients;
 	
-	private Transformation transformation;
+	private ProgressInterface progress;
 	private boolean transformEnabled;
 	
 	/**
@@ -105,7 +105,7 @@ public class CWT
 			highestCoeficients[scale] = highestCoef;
 			indexesHighestCoeficients[scale] = indexHighestCoef;
 			
-			transformation.sendProgressUnits();
+			progress.sendProgressUnits();
 			scale++;
 		}
 	}
@@ -234,9 +234,9 @@ public class CWT
 	/**
 	 * Nastavuje objekt transformation.
 	 */
-	public void setTransformation(Transformation transformation)
+	public void setProgressInterface(ProgressInterface progress)
 	{
-		this.transformation = transformation;
+		this.progress = progress;
 	}
 	
 	/**

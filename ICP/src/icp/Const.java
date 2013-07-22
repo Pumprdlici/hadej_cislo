@@ -1,7 +1,6 @@
 package icp;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 
 /**
  * Obsahuje konstanty používané v aplikaci.
@@ -11,7 +10,7 @@ public class Const {
     /**
      * Název aplikace.
      */
-    public static final String APP_NAME = "jERP Studio";
+    public static final String APP_NAME = "ERP Calculator";
     
     /**
      * Koncovka souboru ve formátu ascii.
@@ -132,4 +131,12 @@ public class Const {
     
     public static final int COLOR_COUNT = 64;
     public static final int P300_LENGTH = 256;
+    public static final int ROWS_COLS_COUNT_OF_ELEMENT = 8;
+    
+    /**
+     * Možné polarity amplitud pøi detekci evokovaných potenciálù.
+     */
+    public static final int BOTH_POLARITY = 0;
+    public static final int N_POLARITY = 1;
+    public static final int P_POLARITY = 2;
 }

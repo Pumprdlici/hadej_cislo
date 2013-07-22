@@ -3,8 +3,7 @@ package icp.data.formats;
 
 import icp.data.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Rozhraní modulù pro ukládání datových souborù.

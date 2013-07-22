@@ -4,11 +4,9 @@ import icp.algorithm.cwt.CWT;
 import icp.algorithm.cwt.wavelets.*;
 import icp.algorithm.dwt.DWT;
 import icp.algorithm.dwt.wavelets.*;
-import icp.data.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -21,7 +19,7 @@ import javax.swing.*;
 public class WaveletTransformDialog extends JDialog
 {
 	private static final long serialVersionUID = 1L;
-	private final short DWIDTH = 400, DHEIGHT = 522, BORD = 2, JL_WIDTH = 50, JL_HEIGHT = 20,
+	private final short DWIDTH = 400, DHEIGHT = 370, BORD = 2, JL_WIDTH = 50, JL_HEIGHT = 20,
 						JC_WIDTH = 150, JC_HEIGHT = 20, CHP_WIDTH = 200, CHP_HEIGHT = 100,
 						COMPLEX_MORLET_INDEX = 1;
 	private JFrame mainWindow;
@@ -77,7 +75,7 @@ public class WaveletTransformDialog extends JDialog
 		this.add(createInterior());
 		this.setSize(new Dimension(DWIDTH, DHEIGHT));
 		this.setResizable(false);
-		setChannelsName();
+		//setChannelsName();
 	}
 	
 	/**
@@ -131,10 +129,10 @@ public class WaveletTransformDialog extends JDialog
 		wTransformBT = new JButton("Run Wavelet Transformation");
 		wTransformBT.addActionListener(new FunctionRunWT_BT());
 		buttonPanel.add(wTransformBT);
-		wTransformBT.setEnabled(false);
+		//wTransformBT.setEnabled(false);
 		
 		centerPanel.add(panel, BorderLayout.NORTH);
-		centerPanel.add(signalPanel(), BorderLayout.CENTER);
+		//centerPanel.add(signalPanel(), BorderLayout.CENTER);
 		centerPanel.add(buttonPanel, BorderLayout.SOUTH);
 		return centerPanel;
 	}
@@ -202,7 +200,7 @@ public class WaveletTransformDialog extends JDialog
 		return cwtScalePanel;
 	}	
 	
-	private JPanel signalPanel()
+	/*private JPanel signalPanel()
 	{		
 		JPanel signalPanel = new JPanel(new BorderLayout());
 		signalPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -233,7 +231,7 @@ public class WaveletTransformDialog extends JDialog
 		signalPanel.add(checkBoxesPanel, BorderLayout.NORTH);
 		signalPanel.add(panel, BorderLayout.SOUTH);
 		return signalPanel;
-	}	
+	}	*/
 	
 	
 	/**
@@ -280,7 +278,7 @@ public class WaveletTransformDialog extends JDialog
 	/**
 	 * Nastavuje jména všech kanálù v souboru a vkládá je do seznamu pro kontrolované kanály.
 	 */
-	public void setChannelsName()
+	/*private void setChannelsName()
 	{
 		List<Channel> channels = mainWindowProvider.app.getHeader().getChannels();
 		
@@ -298,7 +296,7 @@ public class WaveletTransformDialog extends JDialog
 		
 		repaint();
 		validate();
-	}
+	}*/
 	
 	public void setDWTSetting()
 	{
@@ -409,7 +407,7 @@ public class WaveletTransformDialog extends JDialog
 	 */
 	private class FunctionRunWT_BT implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-        	int channelsForTransform = 0;
+        	/*int channelsForTransform = 0;
         	
         	for(int i = 0; i < allChannels.length; i++)
         	{
@@ -432,19 +430,19 @@ public class WaveletTransformDialog extends JDialog
             			break;
             		}
             	}
-        	}
+        	}*/
         	
         	//System.out.println(channelsIndexes.length);
         	
-        	boolean averaging = useAveragingCHB.isSelected();
+        	//boolean averaging = useAveragingCHB.isSelected();
         	
         	if(dwtJRB.isSelected())
         	{
         		WaveletDWT wDwt = waveletsDWT[waveletsJCB.getSelectedIndex()];
         		DWT dwt = new DWT(wDwt);        
         		
-        		progressDialog = new ProgressDialog(WaveletTransformDialog.this, "DWT Complete...", mainWindowProvider);
-				mainWindowProvider.sendDWTData(dwt, channelsIndexes, averaging);				
+        		progressDialog = new ProgressDialog(WaveletTransformDialog.this, "DWT complete...", mainWindowProvider);
+				mainWindowProvider.sendDWTData(dwt);				
         	}
         	else
         	{
@@ -512,8 +510,8 @@ public class WaveletTransformDialog extends JDialog
 				{
 	        		CWT cwt = new CWT(minScale, maxScale, step, wCwt);
 
-	        		progressDialog = new ProgressDialog(WaveletTransformDialog.this, "CWT Complete...", mainWindowProvider);
-					mainWindowProvider.sendCWTData(cwt, channelsIndexes, averaging);
+	        		progressDialog = new ProgressDialog(WaveletTransformDialog.this, "CWT complete...", mainWindowProvider);
+					mainWindowProvider.sendCWTData(cwt);
 				}
         	}   
         }
@@ -530,7 +528,7 @@ public class WaveletTransformDialog extends JDialog
 	
 	/**
 	 * Obsluhuje tlaèítko pro stornování akce a zavøení dialogu.
-	 */
+	 *//*
 	private class FunctionChannelsJRB implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	boolean foundSelectedChannel = false;
@@ -547,11 +545,11 @@ public class WaveletTransformDialog extends JDialog
         	wTransformBT.setEnabled(foundSelectedChannel);
 
         }
-    }
+    }*/
 	
 	/**
 	 * Obsluhuje tlaèítko pro stornování akce a zavøení dialogu.
-	 */
+	 *//*
 	private class FunctionSelectAllChannelsCHB implements ActionListener {
         public void actionPerformed(ActionEvent e) {
         	boolean select = selectAllChannelsCHB.isSelected(); 
@@ -564,7 +562,7 @@ public class WaveletTransformDialog extends JDialog
         	wTransformBT.setEnabled(select);
 
         }
-    }
+    }*/
 	
 	/**
 	 * Obsluhuje tlaèítko pro stornování akce a zavøení dialogu.

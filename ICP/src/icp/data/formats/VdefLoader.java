@@ -1,11 +1,9 @@
 package icp.data.formats;
 
-
 import icp.data.*;
 
-import java.util.*;
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Tøída VdefLoader obsahuje všechny metody pro parsování vstupních souborù
@@ -26,6 +24,7 @@ public class VdefLoader implements DataFormatLoader {
     private Header header;
     private BufferCreator loader;
     private long numberOfSamples;
+    private ArrayList<String> epochDescription;
 
     /**
      * Konstruktor tøídy VdefLoader
@@ -39,6 +38,7 @@ public class VdefLoader implements DataFormatLoader {
 //        this.headerFile = headerFile;
         channelLines = 0;
         numberOfSamples = 0;
+        epochDescription = new ArrayList<String>();
     }
 
     /**
@@ -160,6 +160,9 @@ public class VdefLoader implements DataFormatLoader {
                     this.epochKeyNames.put(pole[0], pole[1]);
                 }
             }
+            
+            header.setEpochs(markers);
+            header.setEpochTypes(epochDescription);
             fr.close();
         } catch (IOException e) {
             throw new IOException("Error parsing marker file: " + markerFile);
@@ -180,6 +183,20 @@ public class VdefLoader implements DataFormatLoader {
         m.setLength(Byte.parseByte(pole[3]));
         m.setChannelNumber(Byte.parseByte(pole[4]));
         this.markers.add(m);
+        
+        boolean found = false;
+        
+        for(int i = 0;i < epochDescription.size();i++)
+        {
+        	if(epochDescription.get(i).equals(m.getDescription()))
+        	{
+        		found = true;
+        		break;
+        	}
+        }
+        
+        if(!found)
+        	epochDescription.add(m.getDescription());
     }
 
     /**
@@ -402,7 +419,7 @@ public class VdefLoader implements DataFormatLoader {
         }
     }
 
-
+    @Override
     public Header load(BufferCreator loader) throws IOException, CorruptedFileException {
         this.loader = loader;
         headerFile = loader.getInputFile();
@@ -472,7 +489,7 @@ public class VdefLoader implements DataFormatLoader {
 
     }
 
-
+    @Override
     public ArrayList<Epoch> getEpochs() {
         return markers;
     }

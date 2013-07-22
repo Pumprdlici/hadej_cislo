@@ -3,12 +3,10 @@ package icp.data.formats;
 import icp.data.*;
 
 import java.io.*;
-import java.util.*;
-import javax.xml.stream.*;
-
-
 import java.nio.ByteOrder;
-import java.util.ArrayList;
+import java.util.*;
+
+import javax.xml.stream.*;
 
 /**
  * Modul pro naèítání BrainStudio formátu.

@@ -1,8 +1,6 @@
 package icp.data;
 
 import java.util.*;
-import java.util.GregorianCalendar;
-import java.util.ArrayList;
 
 /**
  * Tøída uchovávající informace o naèteném souboru.
@@ -45,6 +43,10 @@ public class Header implements Cloneable {
      * Délka mìøení
      */
     private String length;
+    
+    private String[] epochTypes;
+    
+    private ArrayList<Epoch> epochs;
 
     /**
      * Konstruktor tridy Header.java.
@@ -59,6 +61,8 @@ public class Header implements Cloneable {
         docName = "";
         length = "";
         channels = null;
+        epochTypes = new String[0];
+        epochs = new ArrayList<Epoch>();
     }
 
     /**
@@ -236,6 +240,25 @@ public class Header implements Cloneable {
      */
     public void setLength(String length) {
         this.length = length;
+    }
+    
+    public void setEpochTypes(ArrayList<String> epochTypesAL) {
+        epochTypes = new String[epochTypesAL.size()];
+        
+        for(int i = 0; i < epochTypes.length;i++)
+        	epochTypes[i] = epochTypesAL.get(i);
+    }
+    
+    public String[] getEpochTypes() {
+        return this.epochTypes;
+    }
+    
+    public void setEpochs(ArrayList<Epoch> epochs) {
+        this.epochs = epochs;
+    }
+    
+    public ArrayList<Epoch> getEpochs() {
+        return epochs;
     }
 
     /**

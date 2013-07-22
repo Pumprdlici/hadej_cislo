@@ -3,17 +3,10 @@ package icp.data.formats;
 import icp.Const;
 import icp.data.*;
 
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
+import java.io.*;
+import java.util.*;
+
+import javax.xml.stream.*;
 
 
 /**

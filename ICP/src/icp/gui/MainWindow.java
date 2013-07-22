@@ -1,15 +1,29 @@
 package icp.gui;
 
 import icp.Const;
-import icp.gui.WaveletTransformDialog;
+import icp.algorithm.mp.*;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
 
-import java.beans.PropertyChangeListener;
 
 /**
  * Hlavní okno.
@@ -29,15 +43,23 @@ public class MainWindow extends JFrame {
     protected JSplitPane splitVerticalRight;
     protected JSplitPane split;
     private JMenu fileMenu;
-    private JMenu editMenu;
+    private JMenu toolsMenu;
     private JMenu helpMenu;
     protected JMenuItem openMenuItem;
-    protected JMenuItem waveletTransformItem;
+    protected JMenuItem averagingItem;
+    protected JMenuItem resultItem;
     private JMenuItem aboutMenuItem;
     protected JButton openButton;
     protected JButton infoButton;
     protected JButton waveletDialogBT;
+    protected JButton matchingDialogJB;
+    protected JButton detectionWT_BT;
+    protected JButton detectionMP_BT;
+    protected JButton detectionMPandWT_BT;
     protected WaveletTransformDialog waveletDialog;
+    protected AveragingDialog averagingDialog;
+    protected ResultDialog resultDialog;
+    private ProgressDialog progressDialog;
 
     /**
      * Vytváøí instanci tøídy.
@@ -76,8 +98,16 @@ public class MainWindow extends JFrame {
         });
     }
 
+    public void createAveragingDialogs() {
+    	averagingDialog = new AveragingDialog(mainWindow, mainWindowProvider);
+    }
+    
     public void createWaveletDialog() {
     	waveletDialog = new WaveletTransformDialog(mainWindow, mainWindowProvider);
+    }
+    
+    public void createResultDialog() {
+    	resultDialog = new ResultDialog(mainWindow, mainWindowProvider);
     }
 
     /**
@@ -89,17 +119,19 @@ public class MainWindow extends JFrame {
 
         fileMenu = new JMenu("File");
         helpMenu = new JMenu("Help");
-        editMenu = new JMenu("Edit");
+        toolsMenu = new JMenu("Tools");
 
         openMenuItem = new JMenuItem("Open...");
 
-        waveletTransformItem = new JMenuItem("Wavelet Transform");
+        averagingItem = new JMenuItem("Averaging");
+        resultItem = new JMenuItem("Results");
 
         aboutMenuItem = new JMenuItem("About");
 
         openMenuItem.addActionListener(new OpenFileListener());
 
-        waveletTransformItem.addActionListener(new WaveletTRListener());
+        averagingItem.addActionListener(new AveragingListener());
+        resultItem.addActionListener(new ResultListener());
 
         aboutMenuItem.addActionListener(new AboutListener());
 
@@ -107,18 +139,20 @@ public class MainWindow extends JFrame {
 
         exitMenuItem.addActionListener(new ExitListener());
 
-        waveletTransformItem.setEnabled(false);
+        averagingItem.setEnabled(false);
+        resultItem.setEnabled(false);
 
         fileMenu.add(openMenuItem);
         fileMenu.add(new JSeparator());
         fileMenu.add(exitMenuItem);
         
-        editMenu.add(waveletTransformItem);
+        toolsMenu.add(averagingItem);
+        toolsMenu.add(resultItem);
 
         helpMenu.add(aboutMenuItem);
 
         menu.add(fileMenu);
-        menu.add(editMenu);
+        menu.add(toolsMenu);
         menu.add(helpMenu);
 
         return menu;
@@ -146,26 +180,58 @@ public class MainWindow extends JFrame {
 
             openButton = new JButton(guiController.loadIcon("open24.gif"));
             infoButton = new JButton(guiController.loadIcon("information24.gif"));
-            waveletDialogBT = new JButton(guiController.loadIcon("invert.png"));
-            
+            waveletDialogBT = new JButton("WT");
+            matchingDialogJB = new JButton("MP");
+            detectionWT_BT = new JButton("Detection WT");
+            detectionMP_BT = new JButton("Detection MP");
+            detectionMPandWT_BT = new JButton("Detection MP+WT");
             waveletDialogBT.setEnabled(false);
-
+            matchingDialogJB.setEnabled(false);
+            detectionWT_BT.setEnabled(false);
+            detectionMP_BT.setEnabled(false);
+            detectionMPandWT_BT.setEnabled(false);
+            
             Font buttonsFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 
 
             openButton.addActionListener(new OpenFileListener());
             infoButton.addActionListener(new AboutListener());
             waveletDialogBT.addActionListener(new WaveletTRListener());
+            detectionWT_BT.addActionListener(new DetectionWTListener());
+            detectionMP_BT.addActionListener(new DetectionMPListener());
+            detectionMPandWT_BT.addActionListener(new DetectionMPandWTListener());
+            matchingDialogJB.addActionListener(new MatchingDialogListener());
 
             toolBar.add(openButton);
             toolBar.addSeparator();
             toolBar.add(waveletDialogBT);
+            toolBar.add(matchingDialogJB);
+            toolBar.add(detectionWT_BT);
+            toolBar.add(detectionMP_BT);
+            toolBar.add(detectionMPandWT_BT);
             toolBar.addSeparator();
             toolBar.add(infoButton);
             toolBar.setFloatable(false);
         }
 
         return toolBar;
+    }
+    
+    public void setEnabledDetection(boolean enabled)
+    {
+    	detectionWT_BT.setEnabled(enabled);
+    	detectionMP_BT.setEnabled(enabled);
+    	detectionMPandWT_BT.setEnabled(enabled);
+    }
+    
+    public void sendProgressUnits(double units) {	
+		progressDialog.setProgressUnits(units);
+    }
+    
+    public void wtDetection()
+    {
+    	progressDialog = new ProgressDialog(MainWindow.this, "WT-detection complete...", mainWindowProvider);
+    	mainWindowProvider.waveletTransformDetection();
     }
 
     /**
@@ -189,11 +255,112 @@ public class MainWindow extends JFrame {
             guiController.exitAplication();
         }
     }
+    
+    private class DetectionWTListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+        	wtDetection();
+        }
+    }
+    
+    private class DetectionMPListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) 
+        {
+        	progressDialog = new ProgressDialog(MainWindow.this, "MP-detection complete...", mainWindowProvider);
+        	UserBase ub;
+    		try
+			{
+				ub = mainWindowProvider.getUserBase();
+				UserAtomDefinition selected = ub.getAtom(0);
+	    		double[] function = selected.getValues(selected.getOriginalLength());	
+	    		mainWindowProvider.matchingPursuitDetection(function, 15, 200, 5, DetectionAlgorithm.CORELATION);
+			}
+    		catch (IOException e1)
+			{
+    			e1.printStackTrace();
+    			JOptionPane.showMessageDialog(null,
+    	    		    "Convolution atom hasn't been found.",
+    	    		    "Loading exception",
+    	    		    JOptionPane.ERROR_MESSAGE);
+    			e1.printStackTrace();
+			}
+        }
+    }
 
     private class WaveletTRListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
             waveletDialog.setActualLocationAndVisibility();
+        }
+    }
+    
+    private class DetectionMPandWTListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+        	progressDialog = new ProgressDialog(MainWindow.this, "MP-preprocessing complete...", mainWindowProvider);
+        	mainWindowProvider.mpPreprocessing();
+        }
+    }
+    
+    private class MatchingDialogListener implements ActionListener
+    {
+		@Override
+		public void actionPerformed(ActionEvent event)
+		{
+			progressDialog = new ProgressDialog(MainWindow.this, "MP-detection complete...", mainWindowProvider);
+			matchingPursuitDetection();
+		}
+    }
+    
+    private void matchingPursuitDetection()
+    {
+    	UserBase ub;
+		try
+		{
+			ub = mainWindowProvider.getUserBase();
+		
+	    	ConvolutionSettingsPanel csp = new ConvolutionSettingsPanel(ub);
+			
+			Object[] options = {"Apply", "Storno"};
+			int n = JOptionPane.showOptionDialog(this, csp, "Correlation settings", JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+			
+			if (n == 0)
+			{
+				UserAtomDefinition selected = ub.getAtom(csp.getSelectedAtomIndex());
+				
+				double[] function = selected.getValues(selected.getOriginalLength() + csp.getStretch());
+				
+				for (int i = 0; i < function.length; i++)
+				{
+					function[i] = function[i] * csp.getScale();
+				}
+				
+				mainWindowProvider.matchingPursuitDetection(function, csp.getMinPosition(), csp.getMaxPosition(), csp.getNumberOfIterations(), csp.getMethod());
+			}
+		}
+		catch (IOException e)
+		{
+			JOptionPane.showMessageDialog(this,
+	    		    "Convolution atom hasn't been found.",
+	    		    "Loading exception",
+	    		    JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+    }
+    
+    private class AveragingListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+            averagingDialog.setActualLocationAndVisibility();
+        }
+    }
+    
+    private class ResultListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+            resultDialog.setActualLocationAndVisibility();
         }
     }
 

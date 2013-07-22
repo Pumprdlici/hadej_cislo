@@ -88,7 +88,7 @@ public class ProgressDialog extends JDialog
 	{
 		window.setEnabled(true);
     	ProgressDialog.this.setVisible(false);
-    	this.mainWindowProvider.app.stopWT();
+    	this.mainWindowProvider.app.stopProcess();
 	}
 	
 	private class FunctionStornoBT implements ActionListener {

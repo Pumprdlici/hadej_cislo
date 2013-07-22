@@ -1,10 +1,9 @@
 package icp;
 
-import icp.application.SessionManager;
+import icp.aplication.SessionManager;
 
 /**
  * Hlavní spouštìcí tøída aplikace.
- * @author Jiøí Kuèera
  */
 public class Main {
 

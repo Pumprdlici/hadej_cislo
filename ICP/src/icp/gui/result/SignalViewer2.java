@@ -1,28 +1,14 @@
 package icp.gui.result;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.util.Observable;
-import java.util.Observer;
+import icp.algorithm.mp.*;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
+import java.util.*;
 
-import cz.zcu.kiv.rondik.mp.algorithm.Atom;
-import cz.zcu.kiv.rondik.mp.algorithm.DecompositionCollection;
-import cz.zcu.kiv.rondik.mp.algorithm.GaborsAtom;
-import cz.zcu.kiv.rondik.mp.algorithm.UsersAtom;
+import javax.swing.*;
+
 
 @SuppressWarnings("serial")
 public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionListener
@@ -31,6 +17,11 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 	
 	public class ComunicationProvider extends Observable implements Observer
 	{
+		public void sendID()
+		{
+			this.setChanged();
+			this.notifyObservers(id);
+		}
 		/**
 		 * Metoda pro posílání zpráv registrovaným posluchaèùm.
 		 * @param object Zpráva.
@@ -51,13 +42,17 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 		}
 	}
 	
+	private int shift;
+	
+	private int id;
+	
 	private int colorIndex;
 	
 	private static double COLOR_SIZE_DIFFERENCE_STEP = 20D;
 	
 	private ComunicationProvider cp;
 	
-	private DecompositionCollection atoms;
+	private Atom atom;
 	
 	private boolean settedZoomY;
 	
@@ -81,9 +76,10 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 	
 	private boolean mouseOver;
 	
-	public SignalViewer2(JComponent background)
+	public SignalViewer2(int id, JComponent background, int shift)
 	{
 		super();
+		this.id = id;
 		this.background = background;
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -92,6 +88,7 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 		settedZoomY = false;
 		mouseOver = false;
 		cp = new ComunicationProvider();
+		this.shift = shift;
 	}
 	
 	public ComunicationProvider getComunicationProvider()
@@ -113,40 +110,38 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 	/**
 	 * @param atoms the atoms to set
 	 */
-	public void setAtoms(DecompositionCollection atoms)
+	public void setAtom(Atom atom)
 	{
-		this.atoms = atoms;
+		this.atom = atom;
 		colorIndex = 0;
 		repaint();
 	}
 
 	private void highlihtAtoms()
 	{
-		if (atoms != null && atoms.size() > 0)
+		if (atom != null)
 		{
 			Color oldColor = g2.getColor();
-			Atom current;
+			
 			double step = (canvasWidth - INSETS.left - INSETS.right) / (values.length - 1);
-			for (int i = 0; i < atoms.size(); i++)
-			{
-				current = atoms.getAtom(i);
-				if (current instanceof UsersAtom)
+			
+				if (atom instanceof UsersAtom)
 				{
 					g2.setColor(COLORS[colorIndex]);
 					colorIndex = (colorIndex + 1) % COLORS.length;
-					g2.fill(new Rectangle2D.Double(INSETS.left + step * current.getPosition(), INSETS.top + i * COLOR_SIZE_DIFFERENCE_STEP, 
-							step * ((UsersAtom)current).getStretch(), canvasHeight - INSETS.top - INSETS.bottom - 2 * i * COLOR_SIZE_DIFFERENCE_STEP));
+					g2.fill(new Rectangle2D.Double(INSETS.left + step * atom.getPosition(), INSETS.top, 
+							step * ((UsersAtom)atom).getStretch(), canvasHeight - INSETS.top - INSETS.bottom));
 					g2.setColor(Color.RED);
-					g2.drawString(((UsersAtom)current).getName(), (float) (INSETS.left + step * current.getPosition()), (float) (INSETS.top + 10 + i * COLOR_SIZE_DIFFERENCE_STEP));
+					g2.drawString(((UsersAtom)atom).getName(), (float) (INSETS.left + step * atom.getPosition()), (float) (INSETS.top + 10));
 				}
-				else if (current instanceof GaborsAtom)
+				else if (atom instanceof GaborsAtom)
 				{
 					g2.setColor(COLORS[colorIndex]);
 					colorIndex = (colorIndex + 1) % COLORS.length;
-					g2.fill(new Rectangle2D.Double(INSETS.left + (step * current.getPosition()) - step *current.getScale(),
-							INSETS.top + i * COLOR_SIZE_DIFFERENCE_STEP, 2 * step * current.getScale(), canvasHeight - INSETS.top - INSETS.bottom  - 2 * i * COLOR_SIZE_DIFFERENCE_STEP));
+					g2.fill(new Rectangle2D.Double(INSETS.left + (step * atom.getPosition()) - step *atom.getScale(),
+							INSETS.top, 2 * step * atom.getScale(), canvasHeight - INSETS.top - INSETS.bottom ));
 				}
-			}
+			
 			g2.setColor(oldColor);
 		}
 	}
@@ -161,10 +156,10 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 		
 		double step = (canvasWidth - INSETS.left - INSETS.right) / (values.length - 1);
 		double doubleI = 0;
-		int intI = 0;
+		int intI = shift;
 		while (doubleI < canvasWidth - INSETS.left - INSETS.right)
 		{
-			if (intI % 50 == 0)
+			if ((intI - shift) % 100 == 0)
 			{
 				g2.draw(new Line2D.Double(INSETS.left + doubleI, zero - 5, INSETS.left + doubleI, zero + 5));
 				g2.drawString(String.valueOf(intI), new Float(INSETS.left + doubleI - 10), new Float(zero + 15));
@@ -177,7 +172,7 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 			intI += 10;
 		}
 		
-		step = 0.5;
+		/*step = 0.5;
 		doubleI = INSETS.top + ((canvasHeight - INSETS.top - INSETS.bottom) / 2);
 		doubleI -= step * zoomY;
 		intI = (int) (10 * step);
@@ -235,12 +230,12 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 			}
 			doubleI += step * zoomY;
 			intI -= 10 * step;
-		}
+		}*/
 		
 		g2.drawString("[ms]", (float) (canvasWidth - INSETS.right - 24), (float) ((canvasHeight / 2) + 32));
 		g2.drawString("[mV]", INSETS.left + 8, INSETS.top + 12);
 		
-		g2.setStroke(oldStroke);
+		//g2.setStroke(oldStroke);
 	}
 	
 	@Override
@@ -283,7 +278,7 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 				g2.setColor(Color.RED);
 				g2.draw(new Line2D.Double(mousePositionX, 0, mousePositionX, canvasHeight));
 				g2.drawString(String.valueOf(values[index]) + " mV",  (int) mousePositionX + 2, 20);
-				g2.drawString(String.valueOf(index) + " ms",  (int) mousePositionX + 2, 32);
+				g2.drawString(String.valueOf(index + shift) + " ms",  (int) mousePositionX + 2, 32);
 			}
 		}
 	}
@@ -335,7 +330,7 @@ public class SignalViewer2 extends JPanel implements MouseListener, MouseMotionL
 	{
 		if (values != null && values.length > 0)
 		{
-			//new SignalDetail(values);
+			cp.sendID();
 		}
 	}
 

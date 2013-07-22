@@ -3,8 +3,6 @@ package icp.data.formats;
 import icp.data.*;
 
 import java.io.IOException;
-
-
 import java.util.ArrayList;
 
 /**

@@ -1,13 +1,14 @@
 package icp.gui.signals;
 
 import icp.Const;
-import icp.application.*;
-import icp.data.*;
+import icp.aplication.*;
+import icp.data.Header;
 import icp.gui.GuiController;
 
 import java.awt.Color;
 import java.awt.event.*;
 import java.util.*;
+
 import javax.swing.*;
 
 /**
@@ -18,7 +19,7 @@ import javax.swing.*;
  * @author Petr Soukal
  */
 public class SignalsWindowProvider implements Observer {
-
+	private final int EPOCH_MIN_LENGTH = 800;
     private SessionManager appCore;
     private DrawingComponent drawingComponent;
     private SignalsSegmentation signalsSegmentation;
@@ -161,6 +162,14 @@ public class SignalsWindowProvider implements Observer {
             if (drawingComponent != null) {
                 int startValue = ((Integer) signalsWindow.startEpoch.getValue()).intValue();
                 int endValue = ((Integer) signalsWindow.endEpoch.getValue()).intValue();
+                
+                if((startValue+endValue) < EPOCH_MIN_LENGTH)
+                {
+                	JOptionPane.showMessageDialog(null, "Epoch is short (length >= "+EPOCH_MIN_LENGTH+").", 
+							"Epoch length error!", JOptionPane.ERROR_MESSAGE, 
+							null);
+                	return;
+                }
 
                 if (!setLeftEpochBorder(startValue)) {
                     signalsWindow.startEpoch.setValue(new Integer(appCore.getLeftEpochBorder()));

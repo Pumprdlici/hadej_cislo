@@ -194,5 +194,4 @@ public class Epoch implements Comparable<Epoch> {
         this.description = description;
     }
 
-
 }

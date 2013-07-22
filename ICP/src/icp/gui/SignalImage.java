@@ -1,14 +1,16 @@
 package icp.gui;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.*;
+
 import javax.swing.*;
 
 public class SignalImage extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	private final int VERTICAL = 1, HORIZONT = 5, ROUND = 10; 
-	private final int LEFT = 70, INDENT_LABELS = 5; 	
+	private final int VERTICAL = 1, HORIZONT = 5; 
+	private final int LEFT = 70, INDENT_LABELS = 5, COUNT_FRACT = 5; 	
 	private final int[] XAXIS_SCALES = {1, 10, 100, 1000, 10000};
 	private final int[] LABELS_COUNTS = {25, 20, 10, 10, 10};
 	private int xAxisScale;
@@ -21,11 +23,31 @@ public class SignalImage extends JPanel
 	public final float ZOOM_Y_SIG = 0.5f;
 	//public final float ZOOM_Y_COEF = 0.3f;//0.3
 	private double zoomY;
-	private boolean existERP;
+	private boolean existERP;	
+	private int cursorX = -1;
+	private String captionValue;
 	
 	public SignalImage(JComponent background)
 	{
 		this.background = background;
+		
+		addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                cursorX = -1;
+                refresh();
+            }
+        });
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			
+	        @Override
+	        public void mouseMoved(MouseEvent e) {
+	        	cursorX = e.getX();
+	        	refresh();
+	        }
+	
+	    });
 	}
 	
 	protected void paintComponent(Graphics g)
@@ -67,6 +89,17 @@ public class SignalImage extends JPanel
 				x1 += step;
 			}
 			
+			if(cursorX >= LEFT && cursorX < canvasWidth)
+			{
+				if(existERP)
+					g2.setPaint(Color.YELLOW);
+				else
+					g2.setPaint(Color.RED);
+				
+				captionValue = getValue(cursorX);
+				g2.drawString(captionValue, cursorX-(captionValue.length()*6), 20);
+				g2.drawLine(cursorX, signalMargin.top, cursorX, getHeight() - signalMargin.bottom - 1);
+			}
 			//paintHistogram();
 		}
 	}
@@ -98,8 +131,8 @@ public class SignalImage extends JPanel
 		else
 			g2.setPaint(Color.WHITE);
 		
-		g2.fill(new RoundRectangle2D.Float(signalMargin.left, signalMargin.top, 
-				canvasWidth, canvasHeight, ROUND, ROUND));	
+		g2.fill(new Rectangle2D.Float(signalMargin.left, signalMargin.top, 
+				canvasWidth, canvasHeight));	
 		
 		g2.setPaint(Color.LIGHT_GRAY);
 		
@@ -114,17 +147,19 @@ public class SignalImage extends JPanel
 		g2.draw(new Line2D.Float(xAxis2, yAxis3, xAxis3, yAxis3));
 		
 		int countMarker = 0;
+		float markerCoef = 0;
 
 		for(int i = 0; i < XAXIS_SCALES.length; i++)
 		{
-			countMarker = signal.length/XAXIS_SCALES[i];
+			markerCoef = (float) (signal.length/(double)XAXIS_SCALES[i]);
+			countMarker = (int)Math.round(markerCoef);
 			xAxisScale = XAXIS_SCALES[i];
 			
 			if(countMarker <= LABELS_COUNTS[i])
 				break;
 		}
 			
-		float xstep = (float) ((canvasWidth - signalMargin.left - signalMargin.right - LEFT) / countMarker);
+		float xstep = (float) ((canvasWidth - LEFT) / (float)markerCoef);
 		
 		float x = xAxis1;
 		
@@ -169,9 +204,27 @@ public class SignalImage extends JPanel
 		
 	}
 	
+	public String getValue(int cursorValueX)
+	{
+		double coef = this.signal.length/(canvasWidth-LEFT);
+		int index = (int)((cursorValueX-LEFT)*coef);
+
+		String[] valueString = (""+this.signal[index]).split("[.]");
+		
+		if(valueString[1].length() > COUNT_FRACT)
+			valueString[1] = valueString[1].substring(0, COUNT_FRACT);
+		
+		return valueString[0]+"."+valueString[1];
+	}
+	
 	public void setDetectionERP(boolean existERP)
 	{
 		this.existERP = existERP;	
+		this.repaint();
+	}
+	
+	private void refresh()
+	{
 		this.repaint();
 	}
 	

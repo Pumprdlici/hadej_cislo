@@ -1,14 +1,14 @@
 package icp.gui;
 
 import icp.Const;
-import icp.application.SessionManager;
+import icp.aplication.SessionManager;
 import icp.data.formats.CorruptedFileException;
 import icp.gui.signals.SignalsWindowProvider;
 
 import java.io.*;
-import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.Observable;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -16,81 +16,89 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class GuiController extends Observable {
 
     /**
-     * Byl zavï¿½en projekt a ï¿½ï¿½dnï¿½ dalï¿½ï¿½ nenï¿½ otevï¿½enï¿½.
+     * Byl zavøen projekt a žádný další není otevøený.
      */
     public static final int MSG_PROJECT_CLOSED = 1;
     /**
-     * Byl zmï¿½nï¿½n aktuï¿½lnï¿½ otevï¿½enï¿½ projekt (potaï¿½mo Buffer a Header apod.).
+     * Byl zmìnìn aktuálnì otevøený projekt (potažmo Buffer a Header apod.).
      */
     public static final int MSG_CURRENT_PROJECT_CHANGED = 2;
     /**
-     * Spuï¿½tï¿½no pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu.
+     * Spuštìno pøehrávání signálu.
      */
     public static final int MSG_SIGNAL_PLAYBACK_START = 3;
     /**
-     * Zastaveno pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu.
+     * Zastaveno pøehrávání signálu.
      */
     public static final int MSG_SIGNAL_PLAYBACK_STOP = 4;
     /**
-     * Pozastaveno pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu.
+     * Pozastaveno pøehrávání signálu.
      */
     public static final int MSG_SIGNAL_PLAYBACK_PAUSE = 5;
     /**
-     * Pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu po pozastavenï¿½ opï¿½t spuï¿½tï¿½no.
+     * Pøehrávání signálu po pozastavení opìt spuštìno.
      */
     public static final int MSG_SIGNAL_PLAYBACK_RESUME = 6;
     /**
-     * Byl zmï¿½nï¿½n vï¿½bï¿½r kanï¿½lï¿½ urï¿½enï¿½ch k zobrazenï¿½.
+     * Byl zmìnìn výbìr kanálù urèených k zobrazení.
      */
     public static final int MSG_CHANNEL_SELECTED = 7;
     /**
-     * Jsou k dispozici novï¿½ prï¿½mï¿½ry.
+     * Jsou k dispozici nové prùmìry.
      */
     public static final int MSG_NEW_AVERAGES_AVAILABLE = 8;
     /**
-     * Je poï¿½adovï¿½no spuï¿½tï¿½nï¿½ exportnï¿½ho okna.
+     * Je požadováno spuštìní exportního okna.
      */
     public static final int MSG_RUN_AVERAGES_EXPORT = 9;
     /**
-     * Byla vyvolï¿½no undo, redo a nebo akce, kterï¿½ undo/redo umoï¿½nï¿½.
+     * Byla vyvoláno undo, redo a nebo akce, která undo/redo umožní.
      */
     public static final int MSG_UNDOABLE_COMMAND_INVOKED = 10;
     /**
-     * Bylo stisknuto tlaï¿½ï¿½tko pro automatickï¿½ oznaï¿½ovï¿½nï¿½ artefaktï¿½.
+     * Bylo stisknuto tlaèítko pro automatické oznaèování artefaktù.
      */
     public static final int MSG_WAVELET_TRANSFORM = 11;
     /**
-     * Jsou dostupnï¿½ indexy epoch, kterï¿½ jsou urï¿½eny k prï¿½mï¿½rovï¿½nï¿½.
+     * Jsou dostupné indexy epoch, které jsou urèeny k prùmìrování.
      */
     public static final int MSG_NEW_INDEXES_FOR_AVERAGING_AVAILABLE = 12;
     /**
-     * Byla provedena oprava base-line a vytvoï¿½il se novï¿½ buffer.
+     * Byla provedena oprava base-line a vytvoøil se nový buffer.
      */
     public static final int MSG_NEW_BUFFER = 13;
     /**
-     * Zmï¿½na ve zpï¿½sobu zobrazenï¿½ prï¿½bï¿½hu signï¿½lu.
+     * Zmìna ve zpùsobu zobrazení prùbìhu signálu.
      */
     public static final int MSG_INVERTED_SIGNALS_VIEW_CHANGED = 15;
     /**
-     * Zobrazenï¿½ okna pro import.
+     * Zobrazení okna pro import.
      */
     public static final int MSG_SHOW_IMPORT_DIALOG = 16;
     /**
-     * Byl zavï¿½en modï¿½lnï¿½ dialog.
+     * Byl zavøen modální dialog.
      */
     public static final int MSG_MODAL_DIALOG_CLOSED = 17;
     /**
-     * Zprï¿½va o chybï¿½ pï¿½i wt.
+     * Zpráva o chybì pøi wt.
      */
     public static final int MSG_WAVELET_ERROR = 18;
     /**
-     * Zprï¿½va o zruï¿½enï¿½ wt.
+     * Zpráva o zrušení wt.
      */
     public static final int MSG_WAVELET_STORNO = 19;
     /**
-     * Zprï¿½va o neprovedenï¿½ dwt.
+     * Zpráva o neprovedení dwt.
      */
     public static final int MSG_DWT_DISABLED = 20;
+    
+    public static final int MSG_AVERAGING = 21;
+    
+    public static final int MSG_DETECTION = 22;
+    
+    public static final int MSG_MP_PREPROCESSING = 23;
+    
+    public static final int MSG_DETECTION_STOP = 24;
     
     SessionManager app = null;
     //DataFileInfoWindow dfiw;
@@ -148,25 +156,25 @@ public class GuiController extends Observable {
     }
 
     /**
-     * Rozeï¿½le zprï¿½vu vï¿½em registrovanï¿½m providerï¿½m.
-     * @param message Hodnota zprï¿½vy:<br/>
-     * <code>MSG_PROJECT_CLOSED</code> - Projekt byl uzavï¿½en a nenï¿½ otevï¿½en ï¿½ï¿½dnï¿½ projekt.<br/>
-     * <code>MSG_CURRENT_PROJECT_CHANGED</code> - Aktuï¿½lnï¿½ projekt byl zmï¿½nï¿½n na jinï¿½.<br/>
-     * <code>MSG_SIGNAL_PLAYBACK_START</code> - Pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu bylo spuï¿½tï¿½no.<br/>
-     * <code>MSG_SIGNAL_PLAYBACK_STOP</code> - Pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu bylo zastaveno.<br/>
-     * <code>MSG_SIGNAL_PLAYBACK_PAUSE</code> - Pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu bylo pozastaveno.<br/>
-     * <code>MSG_SIGNAL_PLAYBACK_RESUME</code> - Pï¿½ehrï¿½vï¿½nï¿½ signï¿½lu bylo po pozastavenï¿½ opï¿½t spuï¿½tï¿½no.<br/>
-     * <code>MSG_CHANNEL_SELECTED</code> - Byl zmï¿½nï¿½n poï¿½et signï¿½lï¿½ vybranï¿½ch k zobrazenï¿½.<br/>
-     * <code>MSG_NEW_AVERAGES_AVAILABLE</code> - Byly vytvoï¿½eny novï¿½ prï¿½mï¿½ry.<br/>
-     * <code>MSG_RUN_AVERAGES_EXPORT</code> - Je poï¿½adovï¿½no spuï¿½tï¿½nï¿½ exportnï¿½ho okna.<br/>
-     * <code>MSG_UNDOABLE_COMMAND_INVOKED</code> - Byla vyvolï¿½no undo, redo a nebo akce, kterï¿½ undo/redo umoï¿½nï¿½.<br/>
-     * <code>MSG_AUTOMATIC_ARTEFACT_SELECTION</code> - Byla vyvolï¿½no undo, redo a nebo akce, kterï¿½ undo/redo umoï¿½nï¿½.<br/>
-     * <code>MSG_NEW_INDEXES_FOR_AVERAGING_AVAILABLE</code> - Jsou dostupnï¿½ indexy epoch, kterï¿½ jsou urï¿½eny k prï¿½mï¿½rovï¿½nï¿½.<br/>
-     * <code>MSG_NEW_BUFFER</code> - Byla provedena oprava base-line a vytvoï¿½il se novï¿½ buffer.<br/>
-     * <code>MSG_BASELINE_CORRECTION_INTERVAL_SELECTED</code> - Byla oznaï¿½en interval pro opravu baseliny.<br/>
-     * <code>MSG_INVERTED_SIGNALS_VIEW_CHANGED</code> - Zmï¿½na ve zpï¿½sobu zobrazenï¿½ prï¿½bï¿½hu signï¿½lu.<br/>
-     * <code>MSG_SHOW_IMPORT_DIALOG</code> - Zobrazenï¿½ okna pro import prï¿½mï¿½rï¿½.
-     * <code>MSG_MODAL_DIALOG_CLOSED</code> - Byl zavï¿½en modï¿½lnï¿½ dialog.
+     * Rozešle zprávu všem registrovaným providerùm.
+     * @param message Hodnota zprávy:<br/>
+     * <code>MSG_PROJECT_CLOSED</code> - Projekt byl uzavøen a není otevøen žádný projekt.<br/>
+     * <code>MSG_CURRENT_PROJECT_CHANGED</code> - Aktuální projekt byl zmìnìn na jiný.<br/>
+     * <code>MSG_SIGNAL_PLAYBACK_START</code> - Pøehrávání signálu bylo spuštìno.<br/>
+     * <code>MSG_SIGNAL_PLAYBACK_STOP</code> - Pøehrávání signálu bylo zastaveno.<br/>
+     * <code>MSG_SIGNAL_PLAYBACK_PAUSE</code> - Pøehrávání signálu bylo pozastaveno.<br/>
+     * <code>MSG_SIGNAL_PLAYBACK_RESUME</code> - Pøehrávání signálu bylo po pozastavení opìt spuštìno.<br/>
+     * <code>MSG_CHANNEL_SELECTED</code> - Byl zmìnìn poèet signálù vybraných k zobrazení.<br/>
+     * <code>MSG_NEW_AVERAGES_AVAILABLE</code> - Byly vytvoøeny nové prùmìry.<br/>
+     * <code>MSG_RUN_AVERAGES_EXPORT</code> - Je požadováno spuštìní exportního okna.<br/>
+     * <code>MSG_UNDOABLE_COMMAND_INVOKED</code> - Byla vyvoláno undo, redo a nebo akce, která undo/redo umožní.<br/>
+     * <code>MSG_AUTOMATIC_ARTEFACT_SELECTION</code> - Byla vyvoláno undo, redo a nebo akce, která undo/redo umožní.<br/>
+     * <code>MSG_NEW_INDEXES_FOR_AVERAGING_AVAILABLE</code> - Jsou dostupné indexy epoch, které jsou urèeny k prùmìrování.<br/>
+     * <code>MSG_NEW_BUFFER</code> - Byla provedena oprava base-line a vytvoøil se nový buffer.<br/>
+     * <code>MSG_BASELINE_CORRECTION_INTERVAL_SELECTED</code> - Byla oznaèen interval pro opravu baseliny.<br/>
+     * <code>MSG_INVERTED_SIGNALS_VIEW_CHANGED</code> - Zmìna ve zpùsobu zobrazení prùbìhu signálu.<br/>
+     * <code>MSG_SHOW_IMPORT_DIALOG</code> - Zobrazení okna pro import prùmìrù.
+     * <code>MSG_MODAL_DIALOG_CLOSED</code> - Byl zavøen modální dialog.
      */
     public void sendMessage(int message) {
         this.setChanged();
@@ -212,22 +220,22 @@ public class GuiController extends Observable {
     }
 
     /**
-     * Naï¿½ï¿½tï¿½ ikony ze souboru.
-     * 
-     * Bug fix 11. 7. 2013 lvareka - chybne sestaveni cesty
-     * 
-     * 
+     * Naèítá ikony ze souboru.
      * @param name 
-     * @return Naï¿½tenï¿½ ikona.
+     * @return Naètená ikona.
      */
     public ImageIcon loadIcon(String name) {
         ImageIcon imageIcon;
-        String relPath = "images" + File.separator + name;
-        imageIcon = new ImageIcon(relPath);
+        URLClassLoader urlLoader = (URLClassLoader) this.getClass().getClassLoader();
+        imageIcon = new ImageIcon(urlLoader.getResource("images/" + name));
         return imageIcon;
     }
     
-    public void sendProgressUnits(double units) {
-        mainWindowProvider.sendProgressUnits(units);
+    public void sendWaveletProgressUnits(double units) {
+        mainWindowProvider.sendWaveletProgressUnits(units);
+    }
+    
+    public void sendDetectionProgressUnits(double units) {
+        mainWindowProvider.sendDetectionProgressUnits(units);
     }
 }

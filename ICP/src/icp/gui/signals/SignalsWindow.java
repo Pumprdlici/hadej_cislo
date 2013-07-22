@@ -1,10 +1,10 @@
 package icp.gui.signals;
 
 import icp.Const;
-import icp.gui.signals.OptionMenu;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 
@@ -116,7 +116,7 @@ public class SignalsWindow extends JPanel {
             endEpochLB.setMinimumSize(new Dimension(endEpochLB.getPreferredSize().width, BUTT_HEIGHT));
             endEpochLB.setMaximumSize(new Dimension(endEpochLB.getPreferredSize().width, BUTT_HEIGHT));
             startEpoch = new JSpinner(new SpinnerNumberModel(SPINN_VALUE_START, SPINN_LOWER_LIMIT,
-                                                             SPINN_UPPER_LIMIT, SPINN_STEP));
+                                                             0, SPINN_STEP));
             startEpoch.setPreferredSize(new Dimension(SPINNER_WIDTH, BUTT_HEIGHT));
             startEpoch.setMinimumSize(new Dimension(SPINNER_WIDTH, BUTT_HEIGHT));
             startEpoch.setMaximumSize(new Dimension(SPINNER_WIDTH, BUTT_HEIGHT));

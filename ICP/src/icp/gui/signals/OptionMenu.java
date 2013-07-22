@@ -1,6 +1,7 @@
 package icp.gui.signals;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 
 /**

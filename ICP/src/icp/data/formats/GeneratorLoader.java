@@ -4,10 +4,7 @@ package icp.data.formats;
 import icp.data.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-
-import java.util.Random;
+import java.util.*;
 
 /**
  * Tøída slouží k testování. Generuje volitelný poèet funkcí sinus s volitelnou frekvencí framù

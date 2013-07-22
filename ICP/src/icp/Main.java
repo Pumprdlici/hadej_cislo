@@ -1,6 +1,6 @@
 package icp;
 
-import icp.aplication.SessionManager;
+//import icp.aplication.SessionManager;
 
 /**
  * Hlavní spouštìcí tøída aplikace.
@@ -8,6 +8,7 @@ import icp.aplication.SessionManager;
 public class Main {
 
 	public static void main(String[] args) {
-		new SessionManager().startGui();
+		System.out.println("Hello");
+		//new SessionManager().startGui();
 	}
 }

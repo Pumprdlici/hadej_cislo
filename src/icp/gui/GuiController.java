@@ -226,8 +226,8 @@ public class GuiController extends Observable {
      */
     public ImageIcon loadIcon(String name) {
         ImageIcon imageIcon;
-        URLClassLoader urlLoader = (URLClassLoader) this.getClass().getClassLoader();
-        imageIcon = new ImageIcon(urlLoader.getResource("images/" + name));
+        //URLClassLoader urlLoader = (URLClassLoader) this.getClass().getClassLoader();
+        imageIcon = new ImageIcon("images/" + name);
         return imageIcon;
     }
     

@@ -3,7 +3,7 @@ package icp;
 import icp.aplication.SessionManager;
 
 /**
- * Hlavní spouštìcí tøída aplikace. Test comment.
+ * Hlavní spouštìcí tøída aplikace.
  */
 public class Main {
 

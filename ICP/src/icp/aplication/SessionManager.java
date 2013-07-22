@@ -59,7 +59,7 @@ public class SessionManager {
      */
     public void startGui() {
         final SessionManager app = this;
-        
+
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {

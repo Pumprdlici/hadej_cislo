@@ -2,7 +2,7 @@ package icp.gui.result;
 
 
 import icp.algorithm.mp.DetectionAlgorithm;
-import icp.aplication.*;
+import icp.application.*;
 import icp.gui.*;
 
 import java.awt.*;

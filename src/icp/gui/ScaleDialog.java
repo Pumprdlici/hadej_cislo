@@ -4,7 +4,7 @@ import icp.Const;
 import icp.algorithm.cwt.CWT;
 import icp.algorithm.dwt.DWT;
 import icp.algorithm.math.Mathematic;
-import icp.aplication.Element;
+import icp.application.Element;
 
 import java.awt.*;
 import java.awt.event.*;

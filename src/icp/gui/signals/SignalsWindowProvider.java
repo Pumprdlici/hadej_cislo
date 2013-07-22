@@ -1,7 +1,7 @@
 package icp.gui.signals;
 
 import icp.Const;
-import icp.aplication.*;
+import icp.application.*;
 import icp.data.Header;
 import icp.gui.GuiController;
 

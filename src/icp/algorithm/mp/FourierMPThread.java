@@ -1,6 +1,6 @@
 package icp.algorithm.mp;
 
-import icp.aplication.SessionManager;
+import icp.application.SessionManager;
 
 import java.util.Arrays;
 

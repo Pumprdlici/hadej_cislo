@@ -1,7 +1,7 @@
 package icp.algorithm.cwt;
 
 import icp.algorithm.cwt.wavelets.WaveletCWT;
-import icp.aplication.ProgressInterface;
+import icp.application.ProgressInterface;
 
 /**
  * Tøída spojité waveletové transfromace.

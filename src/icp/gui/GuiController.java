@@ -1,7 +1,7 @@
 package icp.gui;
 
 import icp.Const;
-import icp.aplication.SessionManager;
+import icp.application.SessionManager;
 import icp.data.formats.CorruptedFileException;
 import icp.gui.signals.SignalsWindowProvider;
 

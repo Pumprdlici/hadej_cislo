@@ -1,7 +1,7 @@
 package icp.algorithm.mp;
 
-import icp.aplication.Element;
-import icp.aplication.SessionManager;
+import icp.application.Element;
+import icp.application.SessionManager;
 
 import java.util.List;
 

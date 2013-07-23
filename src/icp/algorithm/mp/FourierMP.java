@@ -114,4 +114,12 @@ public class FourierMP
 		}
 		return collection;
 	}
+	
+	public void setBases(Base ... bases) {
+		this.bases = bases;
+	}
+	
+	public Base[] getBases() {
+		return bases;
+	}
 }

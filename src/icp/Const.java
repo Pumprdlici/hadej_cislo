@@ -139,4 +139,11 @@ public class Const {
     public static final int BOTH_POLARITY = 0;
     public static final int N_POLARITY = 1;
     public static final int P_POLARITY = 2;
+    
+    
+    /*
+     * Parametry signalu
+     *  
+     */
+    public static final int NUMBER_OF_CHANNELS = 19;
 }

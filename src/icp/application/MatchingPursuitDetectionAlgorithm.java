@@ -54,12 +54,12 @@ public final class MatchingPursuitDetectionAlgorithm extends Thread
 		int maxIndex;
 		//DetectionAlgorithm maxCA; //Bude se ukládat pro zdùvodnìní výsledkù detekce.
 		unit = 100D / (8D * (double) elements.size());
-		for (Element e: elements)
+		for (Element e: elements) // odpovida parametru prumerovani - 1
 		{
 			max = Double.MIN_VALUE;
 			maxIndex = -1;
 			//maxCA = null;
-			for (int i = 0; i < 4; i++) //Magické èíslo 4
+			for (int i = 0; i < 4; i++) //Magické èíslo 4 = pocet radek?
 			{
 				if (stop)
 					return;
@@ -86,18 +86,18 @@ public final class MatchingPursuitDetectionAlgorithm extends Thread
 				if (max < ca.getMaxEvaluation())
 				{
 					max = ca.getMaxEvaluation();
-					maxIndex = i;
+					maxIndex = i; // vyber vitezny radek
 					//maxCA = ca;
 				}
 			}
 			
-			e.setDetectedRow(maxIndex);
+			e.setDetectedRow(maxIndex); // nastav vitezny radek
 			
 			max = Double.MIN_VALUE;
 			maxIndex = -1;
 			//maxCA = null;
 			
-			for (int i = 4; i < e.getRowsAndColumnsEpoch().length; i++) //Magické èíslo 4
+			for (int i = 4; i < e.getRowsAndColumnsEpoch().length; i++) //Magické èíslo 4 - pocet sloupcu
 			{
 				if (stop)
 					return;

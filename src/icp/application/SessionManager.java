@@ -3,6 +3,10 @@ package icp.application;
 import icp.algorithm.cwt.CWT;
 import icp.algorithm.dwt.DWT;
 import icp.algorithm.mp.*;
+import icp.application.classification.FilterFeatureExtraction;
+import icp.application.classification.IERPClassifier;
+import icp.application.classification.IFeatureExtraction;
+import icp.application.classification.MLPClassifier;
 import icp.data.*;
 import icp.data.formats.CorruptedFileException;
 import icp.gui.GuiController;
@@ -28,6 +32,8 @@ public class SessionManager {
 	
 	public static final int MP_PREPROCESSING = 3;
 	
+	public static final int CLASSIFIER = 4;
+	
     private GuiController guiController;
     private Transformation transform;
     private SignalsSegmentation signalsSegmentation;
@@ -40,6 +46,7 @@ public class SessionManager {
     private Averaging averaging;
     private MatchingPursuitDetectionAlgorithm mpda;
     private WaveletTransformDetectionAlgorithm wtda;
+    private ERPDetectionAlgorithm erpda;
     private int lastUsedDetection;
     private int lastUsedProcess;
     private MatchingPreprocessing mpp;
@@ -279,10 +286,11 @@ public class SessionManager {
     
     public void waveletTransformationDetection()
     {
-    	lastUsedDetection = WAVELET_DETECTION;
+       	lastUsedDetection = WAVELET_DETECTION;
     	lastUsedProcess = WAVELET_DETECTION;
     	wtda = new WaveletTransformDetectionAlgorithm(this, averaging.getElements());
     	wtda.start();
+    	
     }
     
     public WaveletTransformDetectionAlgorithm getWTDetectionAlgorithm()
@@ -313,4 +321,19 @@ public class SessionManager {
     {
     	guiController.sendMessage(GuiController.MSG_MP_PREPROCESSING);
     }
+
+	public void classifierDetection() {
+		lastUsedDetection = CLASSIFIER;
+    	lastUsedProcess = CLASSIFIER;
+    	
+    	
+    	// for testing only
+    	IERPClassifier classifier = new MLPClassifier();
+    	IFeatureExtraction fe = new FilterFeatureExtraction();
+    	classifier.setFeatureExtraction(fe);
+    	classifier.load("data/classifier.txt");
+    	erpda = new ERPDetectionAlgorithm(this, classifier, averaging.getElements());
+    	erpda.start();
+		
+	}
 }

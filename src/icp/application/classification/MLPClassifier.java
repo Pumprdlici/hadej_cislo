@@ -16,7 +16,7 @@ import org.neuroph.nnet.learning.BackPropagation;
  * @author Lukas Vareka
  *
  */
-public class MLPClassifier implements IERPClassifier {
+public class MLPClassifier extends ERPClassifierAdapter {
 	private NeuralNetwork neuralNetwork; 		/* neural network implementation */
 	private IFeatureExtraction fe; /* feature extraction used to decompose each epoch */
 	private final int DEFAULT_OUTPUT_NEURONS = 1; /* number of output neurons */
@@ -110,9 +110,14 @@ public class MLPClassifier implements IERPClassifier {
 	}
 
 	@Override
-	public void save(OutputStream dest) {
-		//this.neuralNetwork.save(dest);
+	public void save(String file) {
+		this.neuralNetwork.save(file);
 		//mlp.save();
 		
+	}
+	
+	@Override
+	public void load(String file) {
+		this.neuralNetwork = NeuralNetwork.load(file);
 	}
 }

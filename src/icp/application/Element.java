@@ -1,5 +1,8 @@
 package icp.application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import icp.Const;
 
 public class Element
@@ -8,29 +11,38 @@ public class Element
 													{'4','5','6','-'},
 													{'7','8','9','*'},
 													{'0','=','c','/'}};
-	private double[][] rowsAndColumnsEpoch;
+	private double[][] rowsAndColumnsEpochAverages;
+	private List<double[][]>[] rowsAndColumnsRawData; // array of A cols / rows for list of B channels x C time samples 
 	private int detectedRow;
 	private int detectedColumn;
 	private int channelIndex;
 	
+	
+	
 	public Element()
 	{
-		rowsAndColumnsEpoch = new double[Const.ROWS_COLS_COUNT_OF_ELEMENT][0];
+		rowsAndColumnsEpochAverages = new double[Const.ROWS_COLS_COUNT_OF_ELEMENT][0];
+		rowsAndColumnsRawData = new List[Const.ROWS_COLS_COUNT_OF_ELEMENT];
+		//for (int i = 0; i < Const.ROWS_COLS_COUNT_OF_ELEMENT; i++)
+		//	rowsAndColumnsRawData[i] = new ArrayList<double[][]>();
 	}
 	
 	public void setRowsAndColumnsEpoch(int index, double[] epochs)
 	{
-		rowsAndColumnsEpoch[index] = epochs;
+		rowsAndColumnsEpochAverages[index] = epochs;
 	}
 	
 	public void setRowsAndColumnsEpoch(double[][] epochs)
 	{
-		rowsAndColumnsEpoch = epochs;
+		rowsAndColumnsEpochAverages = epochs;
 	}
+	
+	
+	
 	
 	public double[][] getRowsAndColumnsEpoch()
 	{
-		return rowsAndColumnsEpoch;
+		return rowsAndColumnsEpochAverages;
 	}
 	
 	public char getDetectedChar()
@@ -67,4 +79,15 @@ public class Element
 	{
 		return channelIndex;
 	}
+
+	public List<double[][]>[] getRowsAndColumnsRawData() {
+		return rowsAndColumnsRawData;
+	}
+
+	public void setRowsAndColumnsRawData(
+			int index, List<double[][]> rowsAndColumnsRawData) {
+		this.rowsAndColumnsRawData[index] = rowsAndColumnsRawData;
+	}
+	
+	
 }

@@ -1,5 +1,6 @@
 package icp.application;
 
+import icp.Const;
 import icp.data.*;
 
 import java.util.*;
@@ -15,6 +16,8 @@ public class Averaging
 	private boolean[] artefactInEpoch;
 	private String[] epochTypes = {"S  1", "S  2", "S  3", "S  4", "S  5", "S  6", "S  7", "S  8"};
 	
+
+	
 	public Averaging(SessionManager appCore, SignalsSegmentation sigSegmentation)
 	{
 		this.appCore = appCore;
@@ -27,11 +30,16 @@ public class Averaging
 	public void averagingElements(int epochsCountForElement, int channelIndex, boolean useBaselineCorection, int shiftValue)
 	{
 		elements = new ArrayList<Element>();
+		
+		// contains list of epochs for the given element - M channels x N time samples 
+		List<double[][]> allEpochs = new ArrayList<double[][]>(); 
+		
 		int start = sigSegmentation.getStartEpoch();
 		int end = sigSegmentation.getEndEpoch();
 		int interval = start+end;
 		ArrayList<Epoch> epochs = header.getEpochs();
 		double[] epoch = new double[interval];
+		double[][] wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval]; // complete epoch - M x N
 		Arrays.fill(epoch, 0);
 		Element element = new Element();
 		int index = 0, epochsCount = 0, realEpochsCount = 0;
@@ -60,15 +68,25 @@ public class Averaging
 				{
 					epochsCount++;				
 					
+					
 					if(!artefactInEpoch[i])
 					{
 						realEpochsCount++;
-						index = 0;
-						for(int j = (int)epochs.get(i).getPosition()-start; j < (int)epochs.get(i).getPosition()+ end - 1;j++)
-						{
-							epoch[index] += buffer.getValue(channelIndex, j)-totalShiftValue;
-							index++;
+						
+						for (int l = 0; l < Const.NUMBER_OF_CHANNELS; l++) { // for all EEG channels
+							index = 0;
+							for(int j = (int)epochs.get(i).getPosition()-start; j < (int)epochs.get(i).getPosition()+ end - 1;j++) // for all time samples
+							{
+								wholeEpoch[l][index] = buffer.getValue(l, j)-totalShiftValue; // complete epoch data
+								if (l == channelIndex) 
+									epoch[index] += buffer.getValue(l, j)-totalShiftValue; // single epoch data - may become obsolete
+								index++;
+							}
 						}
+						
+						allEpochs.add(wholeEpoch); // add a new valid epoch
+						System.out.println("Adding epoch: " + allEpochs);
+						
 					}
 					
 					if(epochsCount%epochsCountForElement == 0)
@@ -77,12 +95,20 @@ public class Averaging
 						{
 							epoch[k] = (double)epoch[k]/(double)realEpochsCount;
 						}
-						element.setRowsAndColumnsEpoch(0, epoch);
+						
+						// set new element parameters
+						element.setRowsAndColumnsEpoch(0, epoch); 
+						element.setRowsAndColumnsRawData(0, allEpochs);
+						System.out.println("Adding all epochs");
 						elements.add(element);
 						
+						
+						// init data for a new element
 						element = new Element();
 						element.setChannelIndex(channelIndex);
 						epoch = new double[interval];
+						allEpochs = new ArrayList<double[][]>();
+						wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval];
 						Arrays.fill(epoch, 0);
 						realEpochsCount = 0;
 					}
@@ -104,11 +130,18 @@ public class Averaging
 						{
 							realEpochsCount++;
 							index = 0;
-							for(int j = (int)epochs.get(i).getPosition()-start; j < (int)epochs.get(i).getPosition()+ end - 1;j++)
-							{
-								epoch[index] += buffer.getValue(channelIndex, j)-totalShiftValue;
-								index++;
+							for (int l = 0; l < Const.NUMBER_OF_CHANNELS; l++) { // for all EEG channels
+								index = 0;
+								for(int j = (int)epochs.get(i).getPosition()-start; j < (int)epochs.get(i).getPosition()+ end - 1;j++) // for all time samples
+								{
+									wholeEpoch[l][index] = buffer.getValue(l, j)-totalShiftValue; // complete epoch data
+									if (l == channelIndex) 
+										epoch[index] += buffer.getValue(l, j)-totalShiftValue; // single epoch data - may become obsolete
+									index++;
+								}
 							}
+							allEpochs.add(wholeEpoch); // add a new valid epoch
+							System.out.println("Adding epoch: " + allEpochs);
 						}
 						
 						if(epochsCount%epochsCountForElement == 0)
@@ -119,8 +152,12 @@ public class Averaging
 							}
 							
 							element = elements.get((epochsCount/epochsCountForElement) - 1);
+							
+							// correct rows and cols
 							element.setRowsAndColumnsEpoch(type, epoch);
+							element.setRowsAndColumnsRawData(type, allEpochs);
 							epoch = new double[interval];
+							allEpochs = new ArrayList<double[][]>();
 							Arrays.fill(epoch, 0);
 							realEpochsCount = 0;
 						}

@@ -86,8 +86,6 @@ public class ClassificationStatistics {
 		       
 		       "Non-targets: " + class1sum  + "\n" +
 		       "Targets: " + class2sum  + "\n";
-		       
-		       
 	}
 	
 	

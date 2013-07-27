@@ -56,6 +56,8 @@ public class MainWindow extends JFrame {
     protected JButton detectionWT_BT;
     protected JButton detectionMP_BT;
     protected JButton detectionMPandWT_BT;
+    
+    protected JButton detectionUniversal;
     protected WaveletTransformDialog waveletDialog;
     protected AveragingDialog averagingDialog;
     protected ResultDialog resultDialog;
@@ -185,6 +187,7 @@ public class MainWindow extends JFrame {
             detectionWT_BT = new JButton("Detection WT");
             detectionMP_BT = new JButton("Detection MP");
             detectionMPandWT_BT = new JButton("Detection MP+WT");
+            detectionUniversal = new JButton("Classifier-based Detection");
             waveletDialogBT.setEnabled(false);
             matchingDialogJB.setEnabled(false);
             detectionWT_BT.setEnabled(false);
@@ -200,6 +203,8 @@ public class MainWindow extends JFrame {
             detectionWT_BT.addActionListener(new DetectionWTListener());
             detectionMP_BT.addActionListener(new DetectionMPListener());
             detectionMPandWT_BT.addActionListener(new DetectionMPandWTListener());
+            detectionUniversal.addActionListener(new ClassifierDetectionListener());
+            
             matchingDialogJB.addActionListener(new MatchingDialogListener());
 
             toolBar.add(openButton);
@@ -209,6 +214,7 @@ public class MainWindow extends JFrame {
             toolBar.add(detectionWT_BT);
             toolBar.add(detectionMP_BT);
             toolBar.add(detectionMPandWT_BT);
+            toolBar.add(detectionUniversal);
             toolBar.addSeparator();
             toolBar.add(infoButton);
             toolBar.setFloatable(false);
@@ -300,6 +306,15 @@ public class MainWindow extends JFrame {
         public void actionPerformed(ActionEvent e) {
         	progressDialog = new ProgressDialog(MainWindow.this, "MP-preprocessing complete...", mainWindowProvider);
         	mainWindowProvider.mpPreprocessing();
+        }
+    }
+    
+    
+    private class ClassifierDetectionListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+        	progressDialog = new ProgressDialog(MainWindow.this, "Processing complete...", mainWindowProvider);
+        	mainWindowProvider.app.classifierDetection();
         }
     }
     

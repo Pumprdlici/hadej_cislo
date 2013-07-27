@@ -28,6 +28,7 @@ public class FirFilter implements IFilter {
         }
         if (++count >= length) count = 0;
         return result;
+        //return Math.random();
     }
 
 }

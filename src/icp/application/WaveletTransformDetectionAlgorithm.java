@@ -54,8 +54,12 @@ public class WaveletTransformDetectionAlgorithm extends Thread implements Progre
 		double[] highestCoefInInterval;
 		int[] indexesHighestCoefInInterval;
 		
+		System.out.println("Elements size: " + elements.size());
+		
+		
 		for(int i = 0; i < elements.size();i++)
 		{
+			System.out.println("Element: " + i + ": " + elements.get(i).getRowsAndColumnsEpoch().length);
 			waveletTransformOfElement(elements.get(i));
 			highestCoefInInterval = new double[Const.ROWS_COLS_COUNT_OF_ELEMENT];
 			Arrays.fill(highestCoefInInterval, -Double.MAX_VALUE);
@@ -75,6 +79,7 @@ public class WaveletTransformDetectionAlgorithm extends Thread implements Progre
 				
 			elements.get(i).setDetectedRow(indexesHighestWCForElementsRows[i]);
 			elements.get(i).setDetectedColumn(indexesHighestWCForElementsColumns[i]);
+			
 		}		
 	}
 	

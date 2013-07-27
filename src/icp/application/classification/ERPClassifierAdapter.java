@@ -44,5 +44,15 @@ public class ERPClassifierAdapter implements IERPClassifier {
 	public void save(OutputStream dest) {
 		throw new NotImplementedException();
 	}
+	
+	@Override
+	public void load(String file) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void save(String file) {
+		throw new NotImplementedException();
+	}
 
 }

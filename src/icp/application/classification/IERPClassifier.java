@@ -61,4 +61,8 @@ public interface IERPClassifier {
 	 * @param dest destination stream
 	 */
 	public void save(OutputStream dest);
+	
+	public void save(String file);
+	
+	public void load(String file);
 }

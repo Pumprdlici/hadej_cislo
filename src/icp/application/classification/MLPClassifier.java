@@ -2,6 +2,7 @@ package icp.application.classification;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -57,11 +58,11 @@ public class MLPClassifier extends ERPClassifierAdapter {
 		// feature vector dimension must correspond to the number of input neurons
 		if (featureVector.length != neuralNetwork.getInputsCount())
             throw new ArrayIndexOutOfBoundsException("Feature vector dimension must be the same as the number of input neurons.");
-		
+		System.out.println(Arrays.toString(featureVector));
         neuralNetwork.setInput(featureVector);
         neuralNetwork.calculate();
         double[] output = neuralNetwork.getOutput();
-        
+        System.out.println("MLPOutput:" + output[0]);
         return output[0];
 	}
 

@@ -18,6 +18,7 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 	private List<Element> elements;
 	private IERPClassifier classifier;
 	private boolean stop;
+	private double unit;
 	
 	
 	
@@ -29,11 +30,16 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 	}
 
 
-
+	
+	/**
+	 * Determines appropriate rows and columns associated with
+	 * each element
+	 * 
+	 */
 	@Override
 	public void run() {
 		stop = false;
-		double unit = 100D / (8D * (double) elements.size()); // ?
+		unit = 100D / (8D * (double) elements.size()); // ?
 		int numberOfRowsOrCols = 4; // 4 x 4 matrix
 		
 		for (Element e: elements) // for each character to be detected
@@ -60,7 +66,7 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 				
 				if (stop)
 					return;
-				
+				sm.sendProgressUnits(unit);
 				for (double[][] epoch: epochs[i]) {
 					double result = classifier.classify(epoch);
 					rowResults[i] += result;
@@ -75,7 +81,7 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 				
 				if (stop)
 					return;
-				
+				sm.sendProgressUnits(unit);
 				for (double[][] epoch: epochs[i]) {
 					double result = classifier.classify(epoch);
 					colsResults[i - numberOfRowsOrCols] += result;

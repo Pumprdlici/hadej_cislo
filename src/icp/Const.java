@@ -141,7 +141,7 @@ public class Const {
     public static final int P_POLARITY = 2;
     
     
-    /*
+    /**
      * Parametry signalu
      *  
      */

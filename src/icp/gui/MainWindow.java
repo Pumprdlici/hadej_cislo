@@ -31,7 +31,6 @@ import javax.swing.JToolBar;
  * @author Petr Soukal
  */
 public class MainWindow extends JFrame {
-
     private static final int SPLIT_DIVIDER_SIZE = 7;
     private static final long serialVersionUID = 1L;
     private MainWindowProvider mainWindowProvider;
@@ -193,6 +192,7 @@ public class MainWindow extends JFrame {
             detectionWT_BT.setEnabled(false);
             detectionMP_BT.setEnabled(false);
             detectionMPandWT_BT.setEnabled(false);
+            detectionUniversal.setEnabled(false);
             
             Font buttonsFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 
@@ -228,6 +228,7 @@ public class MainWindow extends JFrame {
     	detectionWT_BT.setEnabled(enabled);
     	detectionMP_BT.setEnabled(enabled);
     	detectionMPandWT_BT.setEnabled(enabled);
+        detectionUniversal.setEnabled(enabled);
     }
     
     public void sendProgressUnits(double units) {	

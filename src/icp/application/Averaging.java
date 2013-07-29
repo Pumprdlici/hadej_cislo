@@ -5,6 +5,15 @@ import icp.data.*;
 
 import java.util.*;
 
+
+/**
+ * 
+ * Averages epochs together and stores the data
+ * for off-line classifiers
+ * 
+ * 
+ *
+ */
 public class Averaging
 {
 	private final int ARTEFACT_LEVEL = 70;
@@ -30,22 +39,33 @@ public class Averaging
 	public void averagingElements(int epochsCountForElement, int channelIndex, boolean useBaselineCorection, int shiftValue)
 	{
 		elements = new ArrayList<Element>();
+			
+		// parameters of an epoch
+		int start = sigSegmentation.getStartEpoch();
+		int end = sigSegmentation.getEndEpoch();
+		int interval = start + end;
+		
+		// data structures
+		ArrayList<Epoch> epochs = header.getEpochs();
 		
 		// contains list of epochs for the given element - M channels x N time samples 
 		List<double[][]> allEpochs = new ArrayList<double[][]>(); 
 		
-		int start = sigSegmentation.getStartEpoch();
-		int end = sigSegmentation.getEndEpoch();
-		int interval = start+end;
-		ArrayList<Epoch> epochs = header.getEpochs();
+		// averaged epoch
 		double[] epoch = new double[interval];
-		double[][] wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval]; // complete epoch - M x N
+		
+		// complete epoch - M EEG channels x N time samples
+		double[][] wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval];
+		
+		// empty the arrays
 		Arrays.fill(epoch, 0);
+		for (double[] row : wholeEpoch)
+		    Arrays.fill(row, 0);
+		
 		Element element = new Element();
 		int index = 0, epochsCount = 0, realEpochsCount = 0;
 		double totalShiftValue = 0;
 		findArtefacts(channelIndex);
-			
 		
 		try
 		{
@@ -85,7 +105,8 @@ public class Averaging
 						}
 						
 						allEpochs.add(wholeEpoch); // add a new valid epoch
-						System.out.println("Adding epoch: " + allEpochs);
+						wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval];
+						//System.out.println("Adding epoch: " + allEpochs);
 						
 					}
 					
@@ -108,7 +129,6 @@ public class Averaging
 						element.setChannelIndex(channelIndex);
 						epoch = new double[interval];
 						allEpochs = new ArrayList<double[][]>();
-						wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval];
 						Arrays.fill(epoch, 0);
 						realEpochsCount = 0;
 					}
@@ -141,6 +161,7 @@ public class Averaging
 								}
 							}
 							allEpochs.add(wholeEpoch); // add a new valid epoch
+							wholeEpoch = new double[Const.NUMBER_OF_CHANNELS][interval];
 							System.out.println("Adding epoch: " + allEpochs);
 						}
 						

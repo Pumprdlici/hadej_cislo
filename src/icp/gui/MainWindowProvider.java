@@ -142,7 +142,7 @@ public class MainWindowProvider implements Observer {
             	mainWindow.resultItem.setEnabled(false);
             	mainWindow.waveletDialogBT.setEnabled(true);
             	mainWindow.matchingDialogJB.setEnabled(true);
-                break;
+            	break;
                
             case GuiController.MSG_DETECTION:
             	mainWindow.createResultDialog();

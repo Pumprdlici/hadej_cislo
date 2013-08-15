@@ -13,10 +13,10 @@ import icp.algorithm.math.SignalProcessing;
  *
  */
 public class FilterFeatureExtraction implements IFeatureExtraction {
-	private final int[] CHANNELS       = {9, 17, 18, 19}; /* EEG channels to be transformed to feature vectors */
+	private final int[] CHANNELS       = {17, 18, 19}; /* EEG channels to be transformed to feature vectors */
 	private final int EPOCH_SIZE       = 256; /* number of samples to be used - Fs = 1000 Hz expected */
-	private final int DOWN_SMPL_FACTOR = 32;  /* subsampling factor */
-	private final int SKIP_SAMPLES     = 200; /* skip initial samples in each epoch */
+	private final int DOWN_SMPL_FACTOR = 16;  /* subsampling factor */
+	private final int SKIP_SAMPLES     = 180; /* skip initial samples in each epoch */
 	
 	private final double[] lowPassCoeffs = {0.000308, // low pass 0 - 8 Hz, M = 19 
 			                                0.001094, 

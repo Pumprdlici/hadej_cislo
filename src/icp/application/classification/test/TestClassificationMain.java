@@ -57,12 +57,12 @@ public class TestClassificationMain {
 		try {
 			// open source data streams and load data
 			int counter = 0;
-			/*for (Integer channel: trainingSourceFiles.keySet() ) {
+			for (Integer channel: trainingSourceFiles.keySet() ) {
 				isTrainData[counter] = new BufferedInputStream(new FileInputStream(trainingSourceFiles.get(channel)));
 				List<double[]> epochs = trainingParser.readEpochs(isTrainData[counter]);
 				trainingParser.join(epochs, channel);
 				counter++;
-			}*/
+			}
 			counter = 0;
 			for (Integer channel: testingSourceFiles.keySet() ) {
 				isTestData[counter] = new BufferedInputStream(new FileInputStream(testingSourceFiles.get(channel)));
@@ -70,9 +70,9 @@ public class TestClassificationMain {
 				testingParser.join(epochs, channel);
 				counter++;
 			}
-			/*isTrainTargets = new BufferedInputStream(new FileInputStream(targetsTrainFileName));
+			isTrainTargets = new BufferedInputStream(new FileInputStream(targetsTrainFileName));
 			List<Double> trainingTargets = trainingParser.readTargets(isTrainTargets);
-			List<double[][]> trainingEpochs = trainingParser.getEpochs();*/
+			List<double[][]> trainingEpochs = trainingParser.getEpochs();
 			
 			isTestTargets = new BufferedInputStream(new FileInputStream(targetsTestFileName));
 			List<Double> testingTargets = testingParser.readTargets(isTestTargets);
@@ -81,7 +81,7 @@ public class TestClassificationMain {
 			// create classifiers
 			IFeatureExtraction fe = new FilterFeatureExtraction();
 			int numberOfInputNeurons = fe.getFeatureDimension();
-			int middleNeurons        = 8;
+			int middleNeurons        = 25;
 			int outputNeurons 	     = 1;
 			Vector<Integer> nnStructure = new Vector<Integer>();
 			nnStructure.add(numberOfInputNeurons); nnStructure.add(middleNeurons); nnStructure.add(outputNeurons);
@@ -89,10 +89,10 @@ public class TestClassificationMain {
 			
 			
 			// training
-			// classifier.train(trainingEpochs, trainingTargets, 1000, fe);
+			classifier.train(trainingEpochs, trainingTargets, 2000, fe);
 			
-			classifier.load("data/classifier.txt");
-			classifier.setFeatureExtraction(fe);
+			//classifier.load("data/classifier.txt");
+			//classifier.setFeatureExtraction(fe);
 			
 			// testing
 			ClassificationStatistics statistics = classifier.test(testingEpochs, testingTargets);
@@ -100,7 +100,7 @@ public class TestClassificationMain {
 			// print the results of classification
 			System.out.println(statistics);
 			
-			//classifier.save("data/classifier.txt");
+			classifier.save("data/classifier.txt");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

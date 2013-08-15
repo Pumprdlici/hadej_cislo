@@ -19,10 +19,15 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 	private IERPClassifier classifier;
 	private boolean stop;
 	private double unit;
+	private static final int AVERAGING = 1;
 	
-	
-	
-	
+	/**
+	 * 	
+	 * 
+	 * @param sm Session Manager
+	 * @param classifier any ERP classifier implementing the interface
+	 * @param elements elements for off-line classification
+	 */
 	public ERPDetectionAlgorithm(SessionManager sm, IERPClassifier classifier, List<Element> elements) {
 		this.sm = sm;
 		this.classifier = classifier;
@@ -59,7 +64,9 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 				
 			
 			List<double[][]>[] epochs = e.getRowsAndColumnsRawData();
+			int avg = 0;
 			
+			EpochAverage avgEpoch = new EpochAverage();
 			// find the correct row
 			for (int i = 0; i < numberOfRowsOrCols; i++) //Magické èíslo 4 = pocet radek?
 			{
@@ -68,12 +75,19 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 					return;
 				sm.sendProgressUnits(unit);
 				for (double[][] epoch: epochs[i]) {
-					double result = classifier.classify(epoch);
-					rowResults[i] += result;
-					rowCounters[i]++;
+					
+					avgEpoch.addToAverage(epoch);
+					if (avgEpoch.getCounter() == AVERAGING) {
+						double result = classifier.classify(avgEpoch.getAveragedEpoch());
+						rowResults[i] += result;
+						rowCounters[i]++;
+						avgEpoch.reset();
+						
+					}
 				}
 			}
 			
+			avgEpoch.reset();
 			
 			// find the correct column
 			for (int i = numberOfRowsOrCols; i < numberOfRowsOrCols * 2; i++) //Magické èíslo 4 = pocet sloupcu?
@@ -83,9 +97,13 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 					return;
 				sm.sendProgressUnits(unit);
 				for (double[][] epoch: epochs[i]) {
-					double result = classifier.classify(epoch);
-					colsResults[i - numberOfRowsOrCols] += result;
-					colsCounters[i - numberOfRowsOrCols]++;
+					avgEpoch.addToAverage(epoch);
+					if (avgEpoch.getCounter() == AVERAGING) {
+						double result = classifier.classify(avgEpoch.getAveragedEpoch());
+						colsResults[i - numberOfRowsOrCols] += result;
+						colsCounters[i - numberOfRowsOrCols]++;
+						avgEpoch.reset();
+					}
 				}
 			}
 			
@@ -121,6 +139,10 @@ public class ERPDetectionAlgorithm extends Thread implements ProgressInterface {
 
 	}
 	
+	
+
+
+
 	public void stopDetection() {
 		this.stop = true;
 	}

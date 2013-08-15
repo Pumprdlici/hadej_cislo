@@ -16,6 +16,8 @@ public class SignalProcessing {
 			features[i] = features[i] / size;
 		return features;
 	}
+	
+	
 
 	private static double getSizeOfVector(double[] features) {
 		double size = 0;
@@ -23,4 +25,6 @@ public class SignalProcessing {
 			size += Math.pow(features[i], 2);
 		return Math.sqrt(size);
 	}
+	
+	
 }

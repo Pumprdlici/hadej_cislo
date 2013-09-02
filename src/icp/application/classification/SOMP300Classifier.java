@@ -49,4 +49,16 @@ public class SOMP300Classifier implements IERPClassifier {
 		
 	}
 
+	@Override
+	public void save(String file) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void load(String file) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -48,6 +48,7 @@ public class MainWindow extends JFrame {
     protected JMenuItem averagingItem;
     protected JMenuItem resultItem;
     private JMenuItem aboutMenuItem;
+    private JMenuItem onlineDetectionMenuItem;
     protected JButton openButton;
     protected JButton infoButton;
     protected JButton waveletDialogBT;
@@ -61,6 +62,7 @@ public class MainWindow extends JFrame {
     protected AveragingDialog averagingDialog;
     protected ResultDialog resultDialog;
     private ProgressDialog progressDialog;
+    private OnlineDialog onlineDialog; 
 
     /**
      * Vytváøí instanci tøídy.
@@ -81,6 +83,7 @@ public class MainWindow extends JFrame {
         this.setVisible(true);
         this.pack();
         this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
+        this.onlineDialog = new OnlineDialog(mainWindow, mainWindowProvider);
         this.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -126,11 +129,11 @@ public class MainWindow extends JFrame {
 
         averagingItem = new JMenuItem("Averaging");
         resultItem = new JMenuItem("Results");
-
+        onlineDetectionMenuItem = new JMenuItem("On-line Detection");
         aboutMenuItem = new JMenuItem("About");
 
         openMenuItem.addActionListener(new OpenFileListener());
-
+        onlineDetectionMenuItem.addActionListener(new OnlineDetectionListener());
         averagingItem.addActionListener(new AveragingListener());
         resultItem.addActionListener(new ResultListener());
 
@@ -149,6 +152,7 @@ public class MainWindow extends JFrame {
         
         toolsMenu.add(averagingItem);
         toolsMenu.add(resultItem);
+        toolsMenu.add(onlineDetectionMenuItem);
 
         helpMenu.add(aboutMenuItem);
 
@@ -386,7 +390,16 @@ public class MainWindow extends JFrame {
             mainWindowProvider.about();
         }
     }
+    
+    private class OnlineDetectionListener implements ActionListener {
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			onlineDialog.setVisible(true);
+			
+		}
+    	
+    }
 
 
 }

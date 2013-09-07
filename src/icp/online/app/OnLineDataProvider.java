@@ -1,28 +1,17 @@
 package icp.online.app;
 
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-
 import icp.online.tcpip.DataTokenizer;
 import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 
-/**
- * Název úlohy: Jednoduché BCI
- * Třída: BCI
- * @author Bohumil Podlesák
- * První verze vytvořena: 25.3.2010
- * @version 2.0
- * 
- * Třída, která řídí celý proces získávání a zpracování dat. Vytvoří dvě vlákna - jedno pro
- * čtení dat, druhé pro jejich dekódování. Pak začne data ve smyčce číst a zároveň s tím je
- * zpracovávat. Zpracování probíhá přídáváním hodnot z Message objektů do Bufferu. Odtud se
- * vybírají jako pole hodnot a používají se k vytvoření epoch. Epochy, patřící do stejné
- * kategorie (podle stimulu) se zprůměrují. Index epochy, která se podobá P-300 vlně se zapíše
- * do třídy Zaposivac.
- */
-public class BCI{
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+public class OnLineDataProvider {
+	
+	private float[] epochs[][];
+	
 	private static final int DELKABUFFERU = 10000;
 	private static final int POCETHODNOTPREDEPOCHOU = 100;
 	private static final int POCETHODNOTZAEPOCHOU = 1000;
@@ -62,7 +51,7 @@ public class BCI{
 	 * Tato vlna se nastaví pomocí O-Q testu, a náísledně se používá k porovnávání s
 	 * průměrnými epochami číslic
 	 */
-	public BCI(String ip_adr, int port, JTextField vystup, JLabel[] reakce){
+	public OnLineDataProvider(String ip_adr, int port, JTextField vystup, JLabel[] reakce){
 		TCPIPClient client = new TCPIPClient(ip_adr, port);
 		client.start();
 		DataTokenizer dtk = new DataTokenizer(client);
@@ -118,4 +107,3 @@ public class BCI{
 		log.log("Nejsilnější reakce byla zaznamenána na číslo " + nejvetsiReakce);
 	}
 }
-

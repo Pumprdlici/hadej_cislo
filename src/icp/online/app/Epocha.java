@@ -2,7 +2,7 @@ package icp.online.app;
 
 import java.io.IOException;
 
-import presentation.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Název úlohy: Jednoduché BCI
@@ -38,7 +38,7 @@ public class Epocha {
 	 */
 	private int pocetPrumVln;
 	
-	private Logger log;
+	private Logger logger = Logger.getLogger(Epocha.class);
 	
 	/**
 	 * Statická metoda, která vytvoří zprůměrovanou epochu z pole epoch.
@@ -89,7 +89,7 @@ public class Epocha {
 			vysledneFloatHodnoty[i] = (float)vysledneDoubleHodnoty[i];
 		}
 		
-		return new Epocha(epochy[0].predMarkerem, epochy[0].zaMarkerem, vysledneFloatHodnoty, vaha, epochy[0].getLog());
+		return new Epocha(epochy[0].predMarkerem, epochy[0].zaMarkerem, vysledneFloatHodnoty, vaha);
 	}
 	
 	/**
@@ -98,10 +98,9 @@ public class Epocha {
 	 * @param pocetZa - počet položek v poli hodnoty, které jsou za markerem
 	 * @param hodnoty - hodnoty EEG signálu dane Epochy
 	 */
-	public Epocha(int pocetPred, int pocetZa, float[] hodnoty, Logger log){
+	public Epocha(int pocetPred, int pocetZa, float[] hodnoty){
 		this.predMarkerem = pocetPred;
 		this.zaMarkerem = pocetZa;	
-		this.log = log;
 		this.hodnoty = hodnoty;
 		this.pocetPrumVln = 1;
 		srovnej();
@@ -114,19 +113,14 @@ public class Epocha {
 	 * @param hodnoty - hodnoty EEG signálu dané Epochy
 	 * @param vaha - váha vlny (počet vln, které byly použity na zprůměrování této vlny)
 	 */
-	public Epocha(int pocetPred, int pocetZa, float[] hodnoty, int vaha, Logger log){
+	public Epocha(int pocetPred, int pocetZa, float[] hodnoty, int vaha){
 		this.predMarkerem = pocetPred;
 		this.zaMarkerem = pocetZa;
-		this.log = log;
 		for(int i = 0; i < (this.predMarkerem + this.zaMarkerem); i++){
 			this.hodnoty[i] = hodnoty[i];
 		}		
 		this.pocetPrumVln = vaha;
 		srovnej();
-	}
-	
-	public Logger getLog(){
-		return this.log;
 	}
 	
 	public int getPocetPrumVln(){
@@ -136,10 +130,10 @@ public class Epocha {
 	public float[] getHodnoty(int odIndexu, int doIndexu){
 		if((odIndexu >= this.zaMarkerem) || (doIndexu > this.zaMarkerem)
 				|| (odIndexu < 0) || (doIndexu < 0)){
-			log.log("Chyba - pokus o vybrání hodnot vlny na indexech mimo rozsah epochy.");
+			logger.error("Chyba - pokus o vybrání hodnot vlny na indexech mimo rozsah epochy.");
 			return null;
 		}else if((doIndexu - odIndexu) < 0){
-			log.log("Chyba - obrácené pořadí indexů.");
+			logger.error("Chyba - obrácené pořadí indexů.");
 			return null;
 		}
 		float[] hodnoty = new float[doIndexu - odIndexu];
@@ -164,7 +158,7 @@ public class Epocha {
 	 */
 	public void zprumeruj(Epocha dalsiEpocha){
 		if((this.predMarkerem != dalsiEpocha.getPocetPred()) && (this.zaMarkerem != dalsiEpocha.getPocetZa())){
-			log.log("Chyba, pokus o prumerovani ruzne dlouhych epoch!");
+			logger.error("Chyba, pokus o prumerovani ruzne dlouhych epoch!");
 			return;
 		}
 		
@@ -259,10 +253,10 @@ public class Epocha {
 		double nejvetsiSoucet = -Double.MAX_VALUE;		
 		if((odIndexu >= this.zaMarkerem) || (doIndexu > this.zaMarkerem)
 				|| (odIndexu < 0) || (doIndexu < 0)){
-			log.log("Chyba - pokus o porovnavani vlny s epochou na indexech mimo rozsah epochy");
+			logger.error("Chyba - pokus o porovnavani vlny s epochou na indexech mimo rozsah epochy");
 			return nejvetsiSoucet;
 		}else if((doIndexu - odIndexu) < vlna.length){
-			log.log("Chyba - pokus o porovnavani vlny s epochou na indexech, jejichz rozpeti je mensi nez delka vlny");
+			logger.error("Chyba - pokus o porovnavani vlny s epochou na indexech, jejichz rozpeti je mensi nez delka vlny");
 			return nejvetsiSoucet;
 		}
 		int pocetOpakovani = doIndexu - odIndexu - vlna.length;

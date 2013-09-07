@@ -1,9 +1,9 @@
-package aplication;
+package icp.online.app;
 
 import java.util.LinkedList;
 
-import data.objects.RDA_Marker;
-import data.objects.RDA_MessageData;
+import icp.online.tcpip.objects.RDA_Marker;
+import icp.online.tcpip.objects.RDA_MessageData;
 
 /**
  * Název úlohy: Jednoduché BCI

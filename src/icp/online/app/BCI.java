@@ -64,10 +64,10 @@ public class BCI{
 	 * Tato vlna se nastaví pomocí O-Q testu, a náísledně se používá k porovnávání s
 	 * průměrnými epochami číslic
 	 */
-	public BCI(String ip_adr, int port, Logger log, JTextField vystup, float[] p300, JLabel[] reakce){
-		TCPIPClient client = new TCPIPClient(ip_adr, port, log);
+	public BCI(String ip_adr, int port, JTextField vystup, float[] p300, JLabel[] reakce){
+		TCPIPClient client = new TCPIPClient(ip_adr, port);
 		client.start();
-		DataTokenizer dtk = new DataTokenizer(client, log);
+		DataTokenizer dtk = new DataTokenizer(client);
 		dtk.start();
 
 		this.p300 = p300;

@@ -1,13 +1,13 @@
 package icp.online.app;
 
+import icp.online.tcpip.DataTokenizer;
+import icp.online.tcpip.TCPIPClient;
+import icp.online.tcpip.objects.RDA_Marker;
+import icp.online.tcpip.objects.RDA_MessageData;
+
 import javax.swing.JTextField;
 
-import data.DataTokenizer;
-import data.TCPIPClient;
-import data.objects.RDA_Marker;
-import data.objects.RDA_MessageData;
-
-import presentation.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Název úlohy: Jednoduché BCI
@@ -42,7 +42,9 @@ public class OQ {
 	private int poradiO = 0;
 	private int pocetZapsanychVln = 0;
 	private int pocetNezapsanychVln = 0;
-
+	
+	private Logger logger = Logger.getLogger(OQ.class);
+	
 	/**
 	 * Konstruktor, který vytvoří instanci této řídící třídy.
 	 * @param ip_adr - IP adresa serveru, na který se napojí client
@@ -50,10 +52,10 @@ public class OQ {
 	 * @param log - loger pro logování událostí
 	 * @param vystup - přijatý znak (ze stimulu)
 	 */
-	public OQ(String ip_adr, int port, Logger log, JTextField vystup){
-		TCPIPClient client = new TCPIPClient(ip_adr, port, log);
+	public OQ(String ip_adr, int port, JTextField vystup){
+		TCPIPClient client = new TCPIPClient(ip_adr, port);
 		client.start();
-		DataTokenizer dtk = new DataTokenizer(client, log);
+		DataTokenizer dtk = new DataTokenizer(client);
 		dtk.start();
 
 		/* delku bufferu je nutno zvolit libovolne vhodne */
@@ -94,7 +96,7 @@ public class OQ {
 			}
 			if(buffer.jePlny() || (cisloStimulu > POCETSTIMULU)){
 				for(HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()){
-					Epocha epocha = new Epocha(POCETHODNOTPREDEPOCHOU,POCETHODNOTZAEPOCHOU,data.getHodnoty(),log);
+					Epocha epocha = new Epocha(POCETHODNOTPREDEPOCHOU,POCETHODNOTZAEPOCHOU,data.getHodnoty());
 					if(!epocha.existujeArtefakt(ZAKAZANYEXTREM)){
 						if(this.epocha != null){
 							this.epocha.zprumeruj(epocha);
@@ -110,7 +112,7 @@ public class OQ {
 			}
 
 		}
-		log.log("OQ TEST SKONČIL, můžete ukončit měření");
+		logger.debug("OQ TEST SKONČIL, můžete ukončit měření");
 
 		if(this.epocha != null){
 			this.p300 = this.epocha.getHodnoty(0, POCETHODNOTZAEPOCHOU);

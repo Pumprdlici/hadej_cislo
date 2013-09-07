@@ -62,9 +62,6 @@ public class OnLineDataProvider {
 		/* delku bufferu je nutno zvolit libovolne vhodne */
 		this.buffer = new Buffer(DELKABUFFERU,POCETHODNOTPREDEPOCHOU,POCETHODNOTZAEPOCHOU);
 
-		/* pokud zaznamenám reakci na dané číslo tak použiji třídu zapisovač a zaznamenám ji */
-		this.zapisovac = new Zapisovac(log, reakce);
-
 		int cisloStimulu = 0;
 		while(cisloStimulu < POCETSTIMULU + 1){
 			Object o = dtk.retrieveDataBlock();

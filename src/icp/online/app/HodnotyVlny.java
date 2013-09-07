@@ -12,19 +12,31 @@ package icp.online.app;
  * @author Bohumil Podlesák
  */
 public class HodnotyVlny {
-	private float[] hodnoty;
+	private float[] hodnotyFZ;
+	private float[] hodnotyCZ;
+	private float[] hodnotyPZ;
 	private int typStimulu;
 	
-	public HodnotyVlny(float[] hodnoty, int typStimulu){
-		this.hodnoty = hodnoty;
+	public HodnotyVlny(float[] hodnotyFZ, float[] hodnotyCZ, float[] hodnotyPZ, int typStimulu){
+		this.hodnotyFZ = hodnotyFZ;
+		this.hodnotyCZ = hodnotyCZ;
+		this.hodnotyPZ = hodnotyPZ;
 		this.typStimulu = typStimulu;
-	}
-	
-	public float[] getHodnoty(){
-		return this.hodnoty;
 	}
 	
 	public int getTypStimulu(){
 		return this.typStimulu;
+	}
+
+	public float[] getHodnotyFZ() {
+		return hodnotyFZ;
+	}
+
+	public float[] getHodnotyCZ() {
+		return hodnotyCZ;
+	}
+
+	public float[] getHodnotyPZ() {
+		return hodnotyPZ;
 	}
 }

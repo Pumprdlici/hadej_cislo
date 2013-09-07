@@ -38,7 +38,11 @@ public class Buffer {
 	 */
 	private static final int INDEXCZ = 18;
 		
-	private float[] data;
+	private float[] dataFZ;
+	private float[] dataCZ;
+	private float[] dataPZ;
+	
+	
 	private int konec;
 	private int delka;
 	private int predMarkerem;
@@ -58,9 +62,15 @@ public class Buffer {
 	 */
 	public Buffer(int delka, int predMarkerem, int zaMarkerem){
 		this.delka = delka;
-		this.data = new float[this.delka];
+		
+		this.dataFZ = new float[delka];
+		this.dataCZ = new float[delka];
+		this.dataPZ = new float[delka];
+		
 		for(int i = 0; i < this.delka; i++){
-			this.data[i] = Float.MAX_VALUE;
+			this.dataFZ[i] = Float.MAX_VALUE;
+			this.dataCZ[i] = Float.MAX_VALUE;
+			this.dataPZ[i] = Float.MAX_VALUE;
 		}
 		this.konec = predMarkerem;
 		this.predMarkerem = predMarkerem;
@@ -78,11 +88,26 @@ public class Buffer {
 	 * @param pomerCZ - poměr pro vážený průměr z elektrody CZ
 	 * @return zprůměrované pole vypočtené z elektrod FZ, PZ a CZ
 	 */	
-	private float[] vyberFZPZCZ(float[] pole, int pomerFZ, int pomerPZ, int pomerCZ){
+	private float[] vyberFZ(float[] pole){
 		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
 		for(int i = 0; i < POCETHODNOTELEKTRODY; i++){
-			vybraneHodnoty[i] = (pomerFZ * pole[INDEXFZ + 19*i] + pomerPZ * pole[INDEXPZ + 19*i]
-			               + pomerCZ * pole[INDEXCZ + 19*i]) / (pomerFZ + pomerPZ + pomerCZ);
+			vybraneHodnoty[i] = pole[INDEXFZ + 19*i];
+		}
+		return vybraneHodnoty;
+	}
+	
+	private float[] vyberPZ(float[] pole){
+		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
+		for(int i = 0; i < POCETHODNOTELEKTRODY; i++){
+			vybraneHodnoty[i] = pole[INDEXPZ + 19*i];
+		}
+		return vybraneHodnoty;
+	}
+	
+	private float[] vyberCZ(float[] pole){
+		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
+		for(int i = 0; i < POCETHODNOTELEKTRODY; i++){
+			vybraneHodnoty[i] = pole[INDEXCZ + 19*i];
 		}
 		return vybraneHodnoty;
 	}
@@ -95,14 +120,21 @@ public class Buffer {
 	 * @param datObjekt - objekt, obsahující pole dat pro zápis do bufferu
 	 */
 	public void zapis(RDA_MessageData datObjekt){
-		float[] hodnoty = vyberFZPZCZ(datObjekt.getfData(), 1, 1, 1);
+		float[] hodnotyFZ = vyberFZ(datObjekt.getfData());
+		float[] hodnotyCZ = vyberCZ(datObjekt.getfData());
+		float[] hodnotyPZ = vyberPZ(datObjekt.getfData());
+		
 		/* pokud zbyva malo mista v bufferu */
-		if(this.delka - this.konec <= hodnoty.length){
-			this.data = zvetsi();//pak zvetsi pole hodnot
+		if(this.delka - this.konec <= hodnotyFZ.length){
+			this.dataFZ = zvetsi(this.dataFZ);//pak zvetsi pole hodnot
+			this.dataCZ = zvetsi(this.dataCZ);
+			this.dataPZ = zvetsi(this.dataPZ);
 		}
 		/* zapis hodnot do pole bufferu */
-		for(int i = 0; i < hodnoty.length; i++){
-			this.data[this.konec + i] = hodnoty[i];
+		for(int i = 0; i < hodnotyFZ.length; i++){
+			this.dataFZ[this.konec + i] = hodnotyFZ[i];
+			this.dataCZ[this.konec + i] = hodnotyCZ[i];
+			this.dataPZ[this.konec + i] = hodnotyPZ[i];
 		}		
 		RDA_Marker[] markery = datObjekt.getMarkers();
 		if(markery != null){
@@ -117,7 +149,7 @@ public class Buffer {
 			}
 		}
 		
-		this.konec += hodnoty.length;
+		this.konec += hodnotyFZ.length;
 	}
 	
 	/**
@@ -126,12 +158,12 @@ public class Buffer {
 	 * (délka, index začátku a konce)
 	 * @return - nové dvojnásobně zvětšené pole
 	 */
-	private float[] zvetsi(){
+	private float[] zvetsi(float[] pole){
 		System.out.println("*** VOLANA METODA ZVETSI Z INTANCE BUFFERU ***");
 		int novaDelka = 2 * this.delka;
 		float[] novaData = new float[novaDelka];
 		for(int i = 0; i < this.konec; i++){
-			novaData[i] = this.data[i];
+			novaData[i] = pole[i];
 		}
 		for(int i = this.konec; i < novaDelka; i++){
 			novaData[i] = Float.MAX_VALUE;
@@ -159,15 +191,21 @@ public class Buffer {
 			/* pak se take vrati null */
 			return null;
 		}
-		float[] vybraneHodnoty = new float[this.predMarkerem + this.zaMarkerem];
+		
+		float[] vybraneHodnotyFZ = new float[this.predMarkerem + this.zaMarkerem];
+		float[] vybraneHodnotyCZ = new float[vybraneHodnotyFZ.length];
+		float[] vybraneHodnotyPZ = new float[vybraneHodnotyFZ.length];
+		
 		/* index markeru minus pocet hodnot pred markerem je indexem prvni polozky, kterou vybereme */
 		/* nutno kvuli zaznamenani, na ktery stimul byla tato reakce zaznamenana */
 		int typVlny = this.frontaTypuStimulu.removeFirst();
 		int index = this.frontaIndexu.removeFirst() - this.predMarkerem;		
 		for(int i = 0; i < (this.predMarkerem + this.zaMarkerem); i++){
-			vybraneHodnoty[i] = this.data[index + i];
+			vybraneHodnotyFZ[i] = this.dataFZ[index + i];
+			vybraneHodnotyCZ[i] = this.dataCZ[index + i];
+			vybraneHodnotyPZ[i] = this.dataPZ[index + i];
 		}
-		return new HodnotyVlny(vybraneHodnoty,typVlny);
+		return new HodnotyVlny(vybraneHodnotyFZ, vybraneHodnotyCZ, vybraneHodnotyPZ, typVlny);
 	}
 	
 	/**
@@ -214,11 +252,15 @@ public class Buffer {
 		/* this.konec minus index je delka bloku (nebo vice bloku dohromady) */
 		for(int i = 0; i < this.konec - indexPredMarkerem; i++){
 			/* tento se prekopiruje na pocatek pole, pouzitim in-place algoritmu */
-			this.data[i] = this.data[indexPredMarkerem + i];
+			this.dataFZ[i] = this.dataFZ[indexPredMarkerem + i];
+			this.dataCZ[i] = this.dataCZ[indexPredMarkerem + i];
+			this.dataPZ[i] = this.dataPZ[indexPredMarkerem + i];
 		}
 		/* zbytek pole se vymaze - nastavi se hodnota Float.MAX_VALUE */
 		for(int i = this.konec - indexPredMarkerem; i < this.delka; i++){
-			this.data[i] = Float.MAX_VALUE;
+			this.dataFZ[i] = Float.MAX_VALUE;
+			this.dataCZ[i] = Float.MAX_VALUE;
+			this.dataPZ[i] = Float.MAX_VALUE;
 		}
 		
 		/* pokud zustaly indexy markeru ve fronte indexu, musi se prepsat na nove hodnoty */

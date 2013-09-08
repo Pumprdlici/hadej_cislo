@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 
 public class OnLineDataProvider {
 	
-	private float[] epochs[][];
+	private float[][][] epochs;
 	
 	private static final int DELKABUFFERU = 10000;
 	private static final int POCETHODNOTPREDEPOCHOU = 100;
@@ -102,5 +102,14 @@ public class OnLineDataProvider {
 		vystup.setText("" + nejvetsiReakce);
 		log.log("EXPERIMENT SKONČIL, můžete ukončit měření");
 		log.log("Nejsilnější reakce byla zaznamenána na číslo " + nejvetsiReakce);
+	}
+	
+	/**
+	 * 
+	 * @return dostupné epochy pro všechny dostupné kanály. [index_kanálu][index_epochy][index_vzorku_epochy]
+	 */
+	public float[][][] getEpochs()
+	{
+		
 	}
 }

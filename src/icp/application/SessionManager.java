@@ -53,6 +53,7 @@ public class SessionManager {
     private int lastUsedProcess;
     private MatchingPreprocessing mpp;
     private IERPClassifier classifier;
+    private OnlineDetection onlineDetection;
     
     /**
      * Konstruktor vytvoøí instanci tøídy.
@@ -63,6 +64,7 @@ public class SessionManager {
         signalsSegmentation = new SignalsSegmentation(this);
         mpda = null;
         classifier = null;
+        onlineDetection = new OnlineDetection(classifier);
         lastUsedDetection = NO_DETECTION;
     }
 

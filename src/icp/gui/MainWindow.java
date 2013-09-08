@@ -45,6 +45,9 @@ public class MainWindow extends JFrame {
     private JMenu toolsMenu;
     private JMenu helpMenu;
     protected JMenuItem openMenuItem;
+    protected JMenuItem autoLoadClassifierMenuItem;
+    protected JMenuItem loadClassifierMenuItem;
+    protected JMenuItem trainClassifierMenuItem;
     protected JMenuItem averagingItem;
     protected JMenuItem resultItem;
     private JMenuItem aboutMenuItem;
@@ -126,13 +129,22 @@ public class MainWindow extends JFrame {
         toolsMenu = new JMenu("Tools");
 
         openMenuItem = new JMenuItem("Open...");
+        autoLoadClassifierMenuItem = new JMenuItem("Classifier AutoLoad");
+        loadClassifierMenuItem     = new JMenuItem("Load classifier");
+        trainClassifierMenuItem    = new JMenuItem("Train classifier");
+        trainClassifierMenuItem.setEnabled(false);
+        
 
         averagingItem = new JMenuItem("Averaging");
         resultItem = new JMenuItem("Results");
         onlineDetectionMenuItem = new JMenuItem("On-line Detection");
         aboutMenuItem = new JMenuItem("About");
+        onlineDetectionMenuItem.setEnabled(false);
 
         openMenuItem.addActionListener(new OpenFileListener());
+        autoLoadClassifierMenuItem.addActionListener(new LoadClassifierListener(true));
+        loadClassifierMenuItem.addActionListener(new LoadClassifierListener(false));
+        
         onlineDetectionMenuItem.addActionListener(new OnlineDetectionListener());
         averagingItem.addActionListener(new AveragingListener());
         resultItem.addActionListener(new ResultListener());
@@ -147,6 +159,10 @@ public class MainWindow extends JFrame {
         resultItem.setEnabled(false);
 
         fileMenu.add(openMenuItem);
+        fileMenu.add(new JSeparator());
+        fileMenu.add(autoLoadClassifierMenuItem);
+        fileMenu.add(loadClassifierMenuItem);
+        fileMenu.add(trainClassifierMenuItem);
         fileMenu.add(new JSeparator());
         fileMenu.add(exitMenuItem);
         
@@ -233,6 +249,12 @@ public class MainWindow extends JFrame {
     	detectionMP_BT.setEnabled(enabled);
     	detectionMPandWT_BT.setEnabled(enabled);
         detectionUniversal.setEnabled(enabled);
+    }
+    
+    public void setEnabledClassifierDetection(boolean enabled)
+    {
+    	onlineDetectionMenuItem.setEnabled(enabled);
+    	//detectionUniversal.setEnabled(enabled);
     }
     
     public void sendProgressUnits(double units) {	
@@ -396,6 +418,21 @@ public class MainWindow extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			onlineDialog.setVisible(true);
+			
+		}
+    	
+    }
+    
+    private class LoadClassifierListener implements ActionListener {
+    	private boolean auto;
+    	
+    	public LoadClassifierListener(boolean auto) {
+    		this.auto = auto;
+    	}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mainWindowProvider.loadClassifier(auto);
 			
 		}
     	

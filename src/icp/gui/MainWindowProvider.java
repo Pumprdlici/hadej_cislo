@@ -248,4 +248,17 @@ public class MainWindowProvider implements Observer {
     {
     	app.mpPreprocessing();
     }
+
+	public void loadClassifier(boolean auto) {
+		if (auto)
+			app.loadClassifier(null);
+		else {
+			final JFileChooser fc = new JFileChooser();
+            fc.showOpenDialog(mainWindow);
+            app.loadClassifier(fc.getSelectedFile().getAbsolutePath());
+		}
+		
+		mainWindow.setEnabledClassifierDetection(true);
+		
+	}
 }

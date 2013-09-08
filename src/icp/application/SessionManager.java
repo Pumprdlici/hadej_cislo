@@ -32,7 +32,9 @@ public class SessionManager {
 	
 	public static final int MP_PREPROCESSING = 3;
 	
-	public static final int CLASSIFIER = 4;
+	public static final int OFF_LINE_CLASSIFIER = 4;
+	
+	public static final String DEFAULT_CLASSIFIER_SRC = "data/classifier.txt";
 	
     private GuiController guiController;
     private Transformation transform;
@@ -50,6 +52,8 @@ public class SessionManager {
     private int lastUsedDetection;
     private int lastUsedProcess;
     private MatchingPreprocessing mpp;
+    private IERPClassifier classifier;
+    
     /**
      * Konstruktor vytvoøí instanci tøídy.
      */
@@ -58,6 +62,7 @@ public class SessionManager {
         header = null;
         signalsSegmentation = new SignalsSegmentation(this);
         mpda = null;
+        classifier = null;
         lastUsedDetection = NO_DETECTION;
     }
 
@@ -323,17 +328,27 @@ public class SessionManager {
     }
 
 	public void classifierDetection() {
-		lastUsedDetection = CLASSIFIER;
-    	lastUsedProcess = CLASSIFIER;
+		lastUsedDetection = OFF_LINE_CLASSIFIER;
+    	lastUsedProcess = OFF_LINE_CLASSIFIER;
     	
     	
-    	// for testing only
-    	IERPClassifier classifier = new MLPClassifier();
-    	IFeatureExtraction fe = new FilterFeatureExtraction();
-    	classifier.setFeatureExtraction(fe);
-    	classifier.load("data/classifier.txt");
     	erpda = new ERPDetectionAlgorithm(this, classifier, averaging.getElements());
     	erpda.start();
+		
+	}
+
+	public void loadClassifier(String source) {
+		// TODO Auto-generated method stub
+		classifier = new MLPClassifier();
+		IFeatureExtraction fe = new FilterFeatureExtraction();
+		classifier.setFeatureExtraction(fe);
+
+    	// for testing only
+		if (source == null) {
+			classifier.load(DEFAULT_CLASSIFIER_SRC);
+		} else {
+			classifier.load(source);
+		}
 		
 	}
 }

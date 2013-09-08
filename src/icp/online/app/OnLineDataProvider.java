@@ -5,9 +5,6 @@ import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 public class OnLineDataProvider {
 	
 	private float[][][] epochs;
@@ -32,7 +29,7 @@ public class OnLineDataProvider {
 	/**
 	 * Zapisovač pro ukládání počtu podobností jednotlivých (zprůměrovaných) epoch s P-300 vlnou.
 	 */
-	private Zapisovac zapisovac;
+	//private Zapisovac zapisovac;
 
 
 	/**
@@ -51,7 +48,7 @@ public class OnLineDataProvider {
 	 * Tato vlna se nastaví pomocí O-Q testu, a náísledně se používá k porovnávání s
 	 * průměrnými epochami číslic
 	 */
-	public OnLineDataProvider(String ip_adr, int port, JTextField vystup, JLabel[] reakce){
+	public OnLineDataProvider(String ip_adr, int port){
 		TCPIPClient client = new TCPIPClient(ip_adr, port);
 		client.start();
 		DataTokenizer dtk = new DataTokenizer(client);
@@ -87,28 +84,28 @@ public class OnLineDataProvider {
 					}
 				}
 				buffer.vymaz();
-				for(int i = 0; i < this.epochaCisla.length; i++){
+				/*for(int i = 0; i < this.epochaCisla.length; i++){
 					if(this.epochaCisla[i] != null){
 						double shodujeSeNa = this.epochaCisla[i].porovnej(this.p300, 0, POCETHODNOTZAEPOCHOU);
 						if(shodujeSeNa > SHODA){
 							this.zapisovac.zaznamenejReakci(i);
 						}
 					}
-				}
+				}*/
 			}
 		}
-		int nejvetsiReakce = this.zapisovac.getNejvetsiReakci();
+		//int nejvetsiReakce = this.zapisovac.getNejvetsiReakci();
 
-		vystup.setText("" + nejvetsiReakce);
-		log.log("EXPERIMENT SKONČIL, můžete ukončit měření");
-		log.log("Nejsilnější reakce byla zaznamenána na číslo " + nejvetsiReakce);
+		//vystup.setText("" + nejvetsiReakce);
+		//log.log("EXPERIMENT SKONČIL, můžete ukončit měření");
+		//log.log("Nejsilnější reakce byla zaznamenána na číslo " + nejvetsiReakce);
 	}
 	
 	/**
-	 * 
+	 * @param stimul číslo stimulu - 1 pro číslo jedna, 2 pro číslo dva, atd. až 9
 	 * @return dostupné epochy pro všechny dostupné kanály. [index_kanálu][index_epochy][index_vzorku_epochy]
 	 */
-	public float[][][] getEpochs()
+	public float[][][] getEpochs(int stimul)
 	{
 		
 	}

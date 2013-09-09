@@ -17,7 +17,9 @@ public class OnlineDetection extends Observable implements Observer   {
 	private Logger log;
 	
 
-	public OnlineDetection(IERPClassifier classifier) {
+	public OnlineDetection(IERPClassifier classifier, Observer observer) {
+		super();
+		this.addObserver(observer);
 		this.classifier = classifier;
 		this.classificationCounters = new int[NUMBERS];
 		this.classificationResults  = new double[NUMBERS];
@@ -42,8 +44,8 @@ public class OnlineDetection extends Observable implements Observer   {
 		classificationCounters[stimulusID]++;
 		classificationResults[stimulusID] += classificationResult;
 		double[] weightedResults = this.calcClassificationResults();
-		System.out.println(Arrays.toString(classificationCounters));
-		hasChanged();
+		//System.out.println(Arrays.toString(classificationCounters));
+		setChanged();
 		notifyObservers(weightedResults);
 	}
 	

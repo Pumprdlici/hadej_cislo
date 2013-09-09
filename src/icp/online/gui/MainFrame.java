@@ -3,6 +3,7 @@ package icp.online.gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -85,8 +86,10 @@ public class MainFrame extends JFrame implements Observer {
 	
 	@Override
 	public void update(Observable sender, Object message) throws IllegalArgumentException {
+		
 		if (message instanceof double[]) {
 			double[] probabilities = (double[]) message;
+			log.debug(Arrays.toString(probabilities));
 			
 			for (int i = 0; i < probabilities.length; i++)
 				data.setValueAt(probabilities[i], i, 1);

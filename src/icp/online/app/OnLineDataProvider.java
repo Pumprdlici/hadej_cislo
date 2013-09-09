@@ -66,7 +66,9 @@ public class OnLineDataProvider extends Observable {
 	 * Tato vlna se nastaví pomocí O-Q testu, a náísledně se používá k porovnávání s
 	 * průměrnými epochami číslic
 	 */
-	public OnLineDataProvider(String ip_adr, int port){
+	public OnLineDataProvider(String ip_adr, int port, Observer obs){
+		super();
+		addObserver(obs);
 		TCPIPClient client = new TCPIPClient(ip_adr, port);
 		client.start();
 		DataTokenizer dtk = new DataTokenizer(client);
@@ -111,7 +113,7 @@ public class OnLineDataProvider extends Observable {
 					
 					this.setChanged();
 					this.notifyObservers(em);
-					//System.out.println(em);
+					System.out.println(em);
 						/*if(this.epochaCisla[data.getTypStimulu()] != null){
 							this.epochaCisla[data.getTypStimulu()].zprumeruj(epocha);
 						}else{

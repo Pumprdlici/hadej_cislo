@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -29,7 +30,11 @@ public class MainFrame extends JFrame implements Observer {
 	
 	private static final int MAIN_WINDOW_HEIGHT = 320;
 	
+	private static final String UNKNOWN_RESULT = "?";
+	
 	private AbstractTableModel data;
+	
+	private JTextPane winnerJTA;
 	
 	private Logger log;
 	
@@ -56,7 +61,7 @@ public class MainFrame extends JFrame implements Observer {
 	}
 	
 	private JTextPane createWinnerJTA(){
-		JTextPane winnerJTA = new JTextPane();
+		winnerJTA = new JTextPane();
 		Font font = new Font("Arial", Font.BOLD, 250);
 		winnerJTA.setFont(font);
 		winnerJTA.setBackground(Color.BLACK);
@@ -65,7 +70,7 @@ public class MainFrame extends JFrame implements Observer {
 		SimpleAttributeSet center = new SimpleAttributeSet();
 		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
-		winnerJTA.setText("?");
+		winnerJTA.setText(UNKNOWN_RESULT);
 		return winnerJTA;
 	}
 	
@@ -78,23 +83,25 @@ public class MainFrame extends JFrame implements Observer {
 		return jsp;
 	}
 	
-	private void updateWinner() {
-		/*double maxValue = -1d;
-		
-		for (int i = 0; i < data.get)*/
-	}
-	
 	@Override
 	public void update(Observable sender, Object message) throws IllegalArgumentException {
-		
 		if (message instanceof double[]) {
 			double[] probabilities = (double[]) message;
-			log.debug(Arrays.toString(probabilities));
 			
+	        Integer[] ranks = new Integer[probabilities.length];
+	        for(int i = 0; i < ranks.length; ++i) {
+	            ranks[i] = i;
+	        }
+	       // Comparator<Integer> gc = new ProbabilityComparator(probabilities);
+	       // Arrays.sort(ranks, gc);
+	        
+	        winnerJTA.setText(String.valueOf(ranks[0] + 1));
 			for (int i = 0; i < probabilities.length; i++)
-				data.setValueAt(probabilities[i], i, 1);
+			{
+				data.setValueAt(probabilities[ranks[i]], ranks[i], 1);
+			}
 			
-			updateWinner();
+			
 			
 			this.validate();
 			this.repaint();

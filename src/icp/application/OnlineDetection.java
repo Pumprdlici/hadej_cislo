@@ -21,7 +21,7 @@ public class OnlineDetection extends Observable implements Observer   {
 		this.classifier = classifier;
 		this.classificationCounters = new int[NUMBERS];
 		this.classificationResults  = new double[NUMBERS];
-		this.log = Logger.getLogger(this.getClass());
+	//	this.log = Logger.getLogger(this.getClass());
 		
 		
 		for (int i = 0; i < NUMBERS; i++) {
@@ -32,14 +32,15 @@ public class OnlineDetection extends Observable implements Observer   {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		EpochMessenger epochCrane = (EpochMessenger) arg;
-		double classificationResult = this.classifier.classify(epochCrane.getEpoch());
-		int stimulusID = epochCrane.getStimulusIndex();
+		System.out.println("Update");
+		EpochMessenger epochMsg = (EpochMessenger) arg;
+		double classificationResult = this.classifier.classify(epochMsg.getEpoch());
+		int stimulusID = epochMsg.getStimulusIndex();
 		
 		classificationCounters[stimulusID]++;
 		classificationResults[stimulusID] += classificationResult;
 		double[] weightedResults = this.calcClassificationResults();
-		log.debug(Arrays.toString(weightedResults));
+		System.out.println(Arrays.toString(weightedResults));
 		hasChanged();
 		notifyObservers(weightedResults);
 	}

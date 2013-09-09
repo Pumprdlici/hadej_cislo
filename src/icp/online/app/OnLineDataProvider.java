@@ -100,7 +100,7 @@ public class OnLineDataProvider extends Observable {
 					epochs[1][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyCZ();
 					epochs[2][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyPZ();
 					
-					this.setChanged();
+					
 					EpochMessenger em = new EpochMessenger();
 					em.setStimulusIndex(data.getTypStimulu());
 					em.setFZ(epochs[0][data.getTypStimulu()][counters[data.getTypStimulu()]]);
@@ -109,6 +109,7 @@ public class OnLineDataProvider extends Observable {
 					
 					counters[data.getTypStimulu()]++;
 					
+					this.setChanged();
 					this.notifyObservers(em);
 					System.out.println(em);
 						/*if(this.epochaCisla[data.getTypStimulu()] != null){

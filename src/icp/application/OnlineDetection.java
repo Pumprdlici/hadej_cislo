@@ -13,7 +13,7 @@ public class OnlineDetection extends Observable implements Observer   {
 	private IERPClassifier classifier;
 	private double[] classificationResults;
 	private int[]   classificationCounters;
-	private static final int NUMBERS = 10;
+	private static final int NUMBERS = 9;
 	private Logger log;
 	
 
@@ -31,8 +31,10 @@ public class OnlineDetection extends Observable implements Observer   {
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		System.out.println("Update");
+	public void update(Observable o, Object arg) throws IllegalArgumentException {
+		if (!(arg instanceof EpochMessenger))
+			throw new IllegalArgumentException("Unexpected reference received.");
+		
 		EpochMessenger epochMsg = (EpochMessenger) arg;
 		double classificationResult = this.classifier.classify(epochMsg.getEpoch());
 		int stimulusID = epochMsg.getStimulusIndex();
@@ -40,7 +42,7 @@ public class OnlineDetection extends Observable implements Observer   {
 		classificationCounters[stimulusID]++;
 		classificationResults[stimulusID] += classificationResult;
 		double[] weightedResults = this.calcClassificationResults();
-		System.out.println(Arrays.toString(weightedResults));
+		System.out.println(Arrays.toString(classificationCounters));
 		hasChanged();
 		notifyObservers(weightedResults);
 	}

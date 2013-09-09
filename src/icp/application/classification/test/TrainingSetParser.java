@@ -66,7 +66,8 @@ public class TrainingSetParser {
 	        	}
 	        }
 	        epochs.add(epoch);
-	        
+	        if (epochs.size() % 10 == 0)
+	        	System.out.println(epochs.size() );
 	    } // end while
 		return epochs;
 		

@@ -57,7 +57,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
 		
 		// feature vector dimension must correspond to the number of input neurons
 		if (featureVector.length != neuralNetwork.getInputsCount())
-            throw new ArrayIndexOutOfBoundsException("Feature vector dimension must be the same as the number of input neurons.");
+            throw new ArrayIndexOutOfBoundsException("Feature vector dimension " + featureVector.length + " must be the same as the number of input neurons: " + neuralNetwork.getInputsCount() + ".");
 		System.out.println(Arrays.toString(featureVector));
         neuralNetwork.setInput(featureVector);
         neuralNetwork.calculate();

@@ -33,17 +33,16 @@ public class TestClassificationMain {
 		// set data paths
 		String basePath = "data/split_set/";
 		Map<Integer, String> trainingSourceFiles = new HashMap<Integer, String>();
-		trainingSourceFiles.put(17, basePath + "tagged_training_data/raw_epochs_Fz.txt");
-		trainingSourceFiles.put(18, basePath + "tagged_training_data/raw_epochs_Cz.txt");
-		trainingSourceFiles.put(19, basePath + "tagged_training_data/raw_epochs_Pz.txt");
-		trainingSourceFiles.put(9, basePath + "tagged_training_data/raw_epochs_O1.txt");
+		trainingSourceFiles.put(1, basePath + "tagged_training_data/raw_epochs_Fz.txt");
+		trainingSourceFiles.put(2, basePath + "tagged_training_data/raw_epochs_Cz.txt");
+		trainingSourceFiles.put(3, basePath + "tagged_training_data/raw_epochs_Pz.txt");
+		
 		
 		String targetsTrainFileName =  basePath + "tagged_training_data/targets.txt";
 		Map<Integer, String> testingSourceFiles = new HashMap<Integer, String>();
-		testingSourceFiles.put(17, basePath + "tagged_testing_data/raw_epochs_Fz.txt");
-		testingSourceFiles.put(18, basePath + "tagged_testing_data/raw_epochs_Cz.txt");
-		testingSourceFiles.put(19, basePath + "tagged_testing_data/raw_epochs_Pz.txt");
-		testingSourceFiles.put(9, basePath + "tagged_testing_data/raw_epochs_O1.txt");
+		testingSourceFiles.put(1, basePath + "tagged_testing_data/raw_epochs_Fz.txt");
+		testingSourceFiles.put(2, basePath + "tagged_testing_data/raw_epochs_Cz.txt");
+		testingSourceFiles.put(3, basePath + "tagged_testing_data/raw_epochs_Pz.txt");
 		String targetsTestFileName =  basePath + "tagged_testing_data/targets.txt";
 		
 		InputStream[] isTrainData = new InputStream[testingSourceFiles.keySet().size()];
@@ -54,13 +53,16 @@ public class TestClassificationMain {
 		TrainingSetParser trainingParser = new TrainingSetParser();
 		TrainingSetParser testingParser = new TrainingSetParser();
 		
+		System.out.println("Data loaded.");
 		try {
 			// open source data streams and load data
 			int counter = 0;
+			System.out.println("Training data.");
 			for (Integer channel: trainingSourceFiles.keySet() ) {
 				isTrainData[counter] = new BufferedInputStream(new FileInputStream(trainingSourceFiles.get(channel)));
 				List<double[]> epochs = trainingParser.readEpochs(isTrainData[counter]);
 				trainingParser.join(epochs, channel);
+				System.out.println(counter);
 				counter++;
 			}
 			counter = 0;
@@ -89,10 +91,11 @@ public class TestClassificationMain {
 			
 			
 			// training
+			System.out.println("Training started.");
 			classifier.train(trainingEpochs, trainingTargets, 2000, fe);
 			
 			//classifier.load("data/classifier.txt");
-			//classifier.setFeatureExtraction(fe);
+			classifier.setFeatureExtraction(fe);
 			
 			// testing
 			ClassificationStatistics statistics = classifier.test(testingEpochs, testingTargets);

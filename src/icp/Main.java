@@ -10,6 +10,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		//new SessionManager().startGui();
-		OnLineDataProvider odp = new OnLineDataProvider(args[0], Integer.valueOf(args[1]).intValue());
+		OnLineDataProvider odp = new OnLineDataProvider("147.228.64.220", 51244);
 	}
 }

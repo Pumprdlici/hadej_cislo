@@ -1,13 +1,16 @@
 package icp.online.app;
 
-import org.apache.log4j.Logger;
-
 import icp.online.tcpip.DataTokenizer;
 import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 
-public class OnLineDataProvider {
+import java.util.Observable;
+import java.util.Observer;
+
+import org.apache.log4j.Logger;
+
+public class OnLineDataProvider extends Observable {
 	
 	private float[][][][] epochs;
 	
@@ -97,11 +100,18 @@ public class OnLineDataProvider {
 				for(HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()){
 					//Epocha epocha = new Epocha(POCETHODNOTPREDEPOCHOU,POCETHODNOTZAEPOCHOU,data.getHodnoty(),log);
 					
-					
 					epochs[0][data.getTypStimulu()][counterFZ++] = data.getHodnotyFZ();
 					epochs[1][data.getTypStimulu()][counterCZ++] = data.getHodnotyCZ();
 					epochs[2][data.getTypStimulu()][counterPZ++] = data.getHodnotyPZ();
 					
+					this.setChanged();
+					EpochMessenger em = new EpochMessenger();
+					em.setStimulusIndex(data.getTypStimulu());
+					em.setFZ(epochs[0][data.getTypStimulu()][counterFZ - 1]);
+					em.setCZ(epochs[1][data.getTypStimulu()][counterCZ - 1]);
+					em.setPZ(epochs[2][data.getTypStimulu()][counterPZ - 1]);
+					this.notifyObservers(em);
+					System.out.println(em);
 						/*if(this.epochaCisla[data.getTypStimulu()] != null){
 							this.epochaCisla[data.getTypStimulu()].zprumeruj(epocha);
 						}else{

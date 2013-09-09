@@ -1,14 +1,15 @@
 package icp;
 
-import icp.application.SessionManager;
+import icp.online.app.OnLineDataProvider;
 
 /**
- * Hlavní spouštìcí tøída aplikace.
+ * Hlavnï¿½ spouï¿½tï¿½cï¿½ tï¿½ï¿½da aplikace.
  * 
  */
 public class Main {
 
 	public static void main(String[] args) {
-		new SessionManager().startGui();
+		//new SessionManager().startGui();
+		OnLineDataProvider odp = new OnLineDataProvider(args[0], Integer.valueOf(args[1]).intValue());
 	}
 }

@@ -3,20 +3,26 @@ package icp.application;
 import icp.application.classification.IERPClassifier;
 import icp.online.app.EpochMessenger;
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
-public class OnlineDetection implements Observer  {
+import org.apache.log4j.Logger;
+
+public class OnlineDetection extends Observable implements Observer   {
 	private IERPClassifier classifier;
 	private double[] classificationResults;
 	private int[]   classificationCounters;
 	private static final int NUMBERS = 10;
+	private Logger log;
 	
 
 	public OnlineDetection(IERPClassifier classifier) {
 		this.classifier = classifier;
 		this.classificationCounters = new int[NUMBERS];
 		this.classificationResults  = new double[NUMBERS];
+		this.log = Logger.getLogger(this.getClass());
+		
 		
 		for (int i = 0; i < NUMBERS; i++) {
 			classificationResults[i] = 0;
@@ -32,6 +38,10 @@ public class OnlineDetection implements Observer  {
 		
 		classificationCounters[stimulusID]++;
 		classificationResults[stimulusID] += classificationResult;
+		double[] weightedResults = this.calcClassificationResults();
+		log.debug(Arrays.toString(weightedResults));
+		hasChanged();
+		notifyObservers(weightedResults);
 	}
 	
 	

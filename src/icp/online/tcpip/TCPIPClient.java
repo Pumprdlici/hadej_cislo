@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 /**
@@ -47,7 +46,6 @@ public class TCPIPClient extends Thread{
 	public TCPIPClient(String ip,int port){
 		this.ip= ip;
 		this.port = port;
-		BasicConfigurator.configure();
 	}
 
 	/**

@@ -111,7 +111,7 @@ public class OnLineDataProvider extends Observable {
 					
 					this.setChanged();
 					this.notifyObservers(em);
-					System.out.println(em);
+					//System.out.println(em);
 						/*if(this.epochaCisla[data.getTypStimulu()] != null){
 							this.epochaCisla[data.getTypStimulu()].zprumeruj(epocha);
 						}else{

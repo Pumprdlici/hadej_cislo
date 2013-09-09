@@ -5,6 +5,7 @@ import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -42,11 +43,7 @@ public class OnLineDataProvider extends Observable {
 	
 	private Logger logger = Logger.getLogger(OnLineDataProvider.class);
 	
-	private int counterFZ;
-	
-	private int counterCZ;
-	
-	private int counterPZ;
+	private int[] counters;
 	
 	private void epochsInit() {
 		// 3: FZ, CZ, PZ
@@ -54,9 +51,8 @@ public class OnLineDataProvider extends Observable {
 		// 10 epochs per number
 		epochs = new float[3][10][10][POCETHODNOTZAEPOCHOU];
 		
-		counterFZ = 0;
-		counterCZ = 0;
-		counterPZ = 0;
+		counters = new int[10];
+		Arrays.fill(counters, 0);
 	}
 	
 	/**
@@ -100,16 +96,19 @@ public class OnLineDataProvider extends Observable {
 				for(HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()){
 					//Epocha epocha = new Epocha(POCETHODNOTPREDEPOCHOU,POCETHODNOTZAEPOCHOU,data.getHodnoty(),log);
 					
-					epochs[0][data.getTypStimulu()][counterFZ++] = data.getHodnotyFZ();
-					epochs[1][data.getTypStimulu()][counterCZ++] = data.getHodnotyCZ();
-					epochs[2][data.getTypStimulu()][counterPZ++] = data.getHodnotyPZ();
+					epochs[0][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyFZ();
+					epochs[1][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyCZ();
+					epochs[2][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyPZ();
 					
 					this.setChanged();
 					EpochMessenger em = new EpochMessenger();
 					em.setStimulusIndex(data.getTypStimulu());
-					em.setFZ(epochs[0][data.getTypStimulu()][counterFZ - 1]);
-					em.setCZ(epochs[1][data.getTypStimulu()][counterCZ - 1]);
-					em.setPZ(epochs[2][data.getTypStimulu()][counterPZ - 1]);
+					em.setFZ(epochs[0][data.getTypStimulu()][counters[data.getTypStimulu()]]);
+					em.setCZ(epochs[1][data.getTypStimulu()][counters[data.getTypStimulu()]]);
+					em.setPZ(epochs[2][data.getTypStimulu()][counters[data.getTypStimulu()]]);
+					
+					counters[data.getTypStimulu()]++;
+					
 					this.notifyObservers(em);
 					System.out.println(em);
 						/*if(this.epochaCisla[data.getTypStimulu()] != null){

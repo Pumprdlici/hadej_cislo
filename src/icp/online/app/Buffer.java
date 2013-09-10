@@ -205,7 +205,23 @@ public class Buffer {
 			vybraneHodnotyCZ[i] = this.dataCZ[index + i];
 			vybraneHodnotyPZ[i] = this.dataPZ[index + i];
 		}
-		return new HodnotyVlny(vybraneHodnotyFZ, vybraneHodnotyCZ, vybraneHodnotyPZ, typVlny);
+		
+		Baseline.correct(vybraneHodnotyFZ, this.predMarkerem);
+		Baseline.correct(vybraneHodnotyCZ, this.predMarkerem);
+		Baseline.correct(vybraneHodnotyPZ, this.predMarkerem);
+		
+		
+		float[] baselineFZ = new float[this.zaMarkerem];
+		float[] baselineCZ = new float[baselineFZ.length];
+		float[] baselinePZ = new float[baselineFZ.length];
+		
+		for (int i = 0; i < this.zaMarkerem; i++){
+			baselineFZ[i] = vybraneHodnotyFZ[i + this.predMarkerem];
+			baselineCZ[i] = vybraneHodnotyCZ[i + this.predMarkerem];
+			baselinePZ[i] = vybraneHodnotyPZ[i + this.predMarkerem];
+		}
+		
+		return new HodnotyVlny(baselineFZ, baselineCZ, baselinePZ, typVlny);
 	}
 	
 	/**

@@ -16,7 +16,7 @@ public class OnLineDataProvider extends Observable {
 	//private float[][][][] epochs;
 	
 	private static final int DELKABUFFERU = 10000;
-	private static final int POCETHODNOTPREDEPOCHOU = 0;
+	private static final int POCETHODNOTPREDEPOCHOU = 100;
 	private static final int POCETHODNOTZAEPOCHOU = 512;
 
 	/**

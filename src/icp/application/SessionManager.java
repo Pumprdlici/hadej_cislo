@@ -17,8 +17,8 @@ import java.util.*;
 
 
 /**
- * Tøída starající se o vytáøení, zavírání a ukládání projektù a pøístupu k nim.
- * @author Jiøí Kuèera
+ * Tï¿½ï¿½da starajï¿½cï¿½ se o vytï¿½ï¿½enï¿½, zavï¿½rï¿½nï¿½ a uklï¿½dï¿½nï¿½ projektï¿½ a pï¿½ï¿½stupu k nim.
+ * @author Jiï¿½ï¿½ Kuï¿½era
  */
 public class SessionManager {
 	
@@ -56,7 +56,7 @@ public class SessionManager {
     private OnlineDetection onlineDetection;
     
     /**
-     * Konstruktor vytvoøí instanci tøídy.
+     * Konstruktor vytvoï¿½ï¿½ instanci tï¿½ï¿½dy.
      */
     public SessionManager() {
     	buffer = null;
@@ -64,12 +64,12 @@ public class SessionManager {
         signalsSegmentation = new SignalsSegmentation(this);
         mpda = null;
         classifier = null;
-        onlineDetection = new OnlineDetection(classifier);
+        onlineDetection = new OnlineDetection(classifier, null);
         lastUsedDetection = NO_DETECTION;
     }
 
     /**
-     * Metoda spustí grafické uživatelské rozhraní.
+     * Metoda spustï¿½ grafickï¿½ uï¿½ivatelskï¿½ rozhranï¿½.
      */
     public void startGui() {
         final SessionManager app = this;
@@ -83,8 +83,8 @@ public class SessionManager {
     }
 
     /**
-     * Naète datový soubor zadaný objektem <code>file</code> a vytvoøí nad ním nový projekt, který nastaví jako aktuální.
-     * @param file Objekt reprezentující soubor pro naètení.
+     * Naï¿½te datovï¿½ soubor zadanï¿½ objektem <code>file</code> a vytvoï¿½ï¿½ nad nï¿½m novï¿½ projekt, kterï¿½ nastavï¿½ jako aktuï¿½lnï¿½.
+     * @param file Objekt reprezentujï¿½cï¿½ soubor pro naï¿½tenï¿½.
      * @throws IOException
      * @throws CorruptedFileException
      */

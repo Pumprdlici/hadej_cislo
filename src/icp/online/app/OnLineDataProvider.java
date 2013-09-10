@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 public class OnLineDataProvider extends Observable {
 	
-	private float[][][][] epochs;
+	//private float[][][][] epochs;
 	
 	private static final int DELKABUFFERU = 10000;
 	private static final int POCETHODNOTPREDEPOCHOU = 0;
@@ -22,7 +22,7 @@ public class OnLineDataProvider extends Observable {
 	/**
 	 *  Počet stimulů, po jakém se zastaví hlavní test.
 	 */
-	private static final int POCETSTIMULU = 100;
+	private static final int POCETSTIMULU = 400;
 
 	/**
 	 * Pole, ve kterém budou uloženy průměrné hodnoty EEG signálu pro jednotlivé čislice
@@ -43,16 +43,16 @@ public class OnLineDataProvider extends Observable {
 	
 	private Logger logger = Logger.getLogger(OnLineDataProvider.class);
 	
-	private int[] counters;
+	//private int[] counters;
 	
 	private void epochsInit() {
 		// 3: FZ, CZ, PZ
 		// 10: numbers from 1 to 9 . Object on zero index is not used
 		// 10 epochs per number
-		epochs = new float[3][10][10][POCETHODNOTZAEPOCHOU];
+		//epochs = new float[3][10][30][POCETHODNOTZAEPOCHOU];
 		
-		counters = new int[10];
-		Arrays.fill(counters, 0);
+		//counters = new int[10];
+		//Arrays.fill(counters, 0);
 	}
 	
 	/**
@@ -98,18 +98,18 @@ public class OnLineDataProvider extends Observable {
 				for(HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()){
 					//Epocha epocha = new Epocha(POCETHODNOTPREDEPOCHOU,POCETHODNOTZAEPOCHOU,data.getHodnoty(),log);
 					
-					epochs[0][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyFZ();
-					epochs[1][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyCZ();
-					epochs[2][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyPZ();
+					//epochs[0][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyFZ();
+					//epochs[1][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyCZ();
+					//epochs[2][data.getTypStimulu()][counters[data.getTypStimulu()]] = data.getHodnotyPZ();
 					
 					
 					EpochMessenger em = new EpochMessenger();
 					em.setStimulusIndex(data.getTypStimulu());
-					em.setFZ(epochs[0][data.getTypStimulu()][counters[data.getTypStimulu()]]);
-					em.setCZ(epochs[1][data.getTypStimulu()][counters[data.getTypStimulu()]]);
-					em.setPZ(epochs[2][data.getTypStimulu()][counters[data.getTypStimulu()]]);
+					em.setFZ(data.getHodnotyFZ());
+					em.setCZ(data.getHodnotyCZ());
+					em.setPZ(data.getHodnotyPZ());
 					
-					counters[data.getTypStimulu()]++;
+					//counters[data.getTypStimulu()]++;
 					
 					this.setChanged();
 					this.notifyObservers(em);
@@ -145,9 +145,9 @@ public class OnLineDataProvider extends Observable {
 	 * [index_stimulu (numbers from 1 to 9 . Object on zero index is not used)]
 	 * [index_epochy (from 0 to 9)]
 	 * [index_vzorku_epochy (0-511)]
-	 */
+	 *//*
 	public synchronized float[][][][] getEpochs()
 	{
 		return epochs;
-	}
+	}*/
 }

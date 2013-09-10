@@ -92,8 +92,8 @@ public class MainFrame extends JFrame implements Observer {
 	        for(int i = 0; i < ranks.length; ++i) {
 	            ranks[i] = i;
 	        }
-	       // Comparator<Integer> gc = new ProbabilityComparator(probabilities);
-	       // Arrays.sort(ranks, gc);
+	        Comparator<Integer> gc = new ProbabilityComparator(probabilities);
+	        Arrays.sort(ranks, gc);
 	        
 	        winnerJTA.setText(String.valueOf(ranks[0] + 1));
 			for (int i = 0; i < probabilities.length; i++)

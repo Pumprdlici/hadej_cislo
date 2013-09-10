@@ -1,5 +1,6 @@
 package icp.online.app;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import icp.online.tcpip.objects.RDA_Marker;
@@ -210,16 +211,9 @@ public class Buffer {
 		Baseline.correct(vybraneHodnotyCZ, this.predMarkerem);
 		Baseline.correct(vybraneHodnotyPZ, this.predMarkerem);
 		
-		
-		float[] baselineFZ = new float[this.zaMarkerem];
-		float[] baselineCZ = new float[baselineFZ.length];
-		float[] baselinePZ = new float[baselineFZ.length];
-		
-		for (int i = 0; i < this.zaMarkerem; i++){
-			baselineFZ[i] = vybraneHodnotyFZ[i + this.predMarkerem];
-			baselineCZ[i] = vybraneHodnotyCZ[i + this.predMarkerem];
-			baselinePZ[i] = vybraneHodnotyPZ[i + this.predMarkerem];
-		}
+		float[]	baselineFZ = Arrays.copyOfRange(vybraneHodnotyFZ, this.predMarkerem, vybraneHodnotyFZ.length);
+		float[]	baselineCZ = Arrays.copyOfRange(vybraneHodnotyCZ, this.predMarkerem, vybraneHodnotyCZ.length);
+		float[]	baselinePZ = Arrays.copyOfRange(vybraneHodnotyPZ, this.predMarkerem, vybraneHodnotyPZ.length);
 		
 		return new HodnotyVlny(baselineFZ, baselineCZ, baselinePZ, typVlny);
 	}

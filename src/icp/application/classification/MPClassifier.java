@@ -1,8 +1,7 @@
 package icp.application.classification;
 
-import java.util.List;
-
-import icp.algorithm.mp.*;
+import icp.algorithm.mp.Base;
+import icp.algorithm.mp.FourierMP;
 
 public class MPClassifier extends ERPClassifierAdapter {
 	

@@ -1,9 +1,6 @@
 package icp;
 
-import icp.algorithm.mp.DetectionAtom;
 import icp.application.OnlineDetection;
-import icp.application.SessionManager;
-import icp.application.classification.ERPClassifierAdapter;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;

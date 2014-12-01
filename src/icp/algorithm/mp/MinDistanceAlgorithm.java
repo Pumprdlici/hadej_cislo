@@ -2,6 +2,7 @@ package icp.algorithm.mp;
 
 import java.util.Arrays;
 
+
 public class MinDistanceAlgorithm extends DetectionAlgorithm
 {
 	private double minDistanceValue;

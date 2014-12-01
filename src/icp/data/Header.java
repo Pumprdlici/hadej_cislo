@@ -1,6 +1,8 @@
 package icp.data;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Tøída uchovávající informace o naèteném souboru.

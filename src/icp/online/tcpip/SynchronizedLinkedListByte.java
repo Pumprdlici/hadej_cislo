@@ -2,6 +2,7 @@ package icp.online.tcpip;
 
 import java.util.LinkedList;
 
+
 /**
  * Název úlohy: Jednoduché BCI
  * Třída: SynchronizedLinkedListByte

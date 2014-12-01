@@ -1,6 +1,11 @@
 package icp.gui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 
 /**
  * Rozesílaè zpráv pøi použití návrhového vzoru Observer/Observable. Zjednodušuje posílání objektù mezi 

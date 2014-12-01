@@ -1,12 +1,14 @@
 package icp.online.tcpip.objects;
 
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
+
+
+
 
 /**
  * Název úlohy: Jednoduché BCI

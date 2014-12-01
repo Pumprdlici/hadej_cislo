@@ -1,8 +1,13 @@
 package icp.data;
 
-import java.io.*;
-import java.nio.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+
 
 /**
  * Tøída pro abstrakci ètení dat ze souboru s využitím <code>java.nio</code> knihoven.

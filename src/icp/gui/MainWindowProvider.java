@@ -7,13 +7,17 @@ package icp.gui;
 import icp.algorithm.cwt.CWT;
 import icp.algorithm.dwt.DWT;
 import icp.algorithm.mp.UserBase;
-import icp.application.*;
+import icp.application.SessionManager;
+import icp.application.Transformation;
 import icp.data.InvalidFrameIndexException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 
 

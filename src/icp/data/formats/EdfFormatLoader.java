@@ -1,9 +1,16 @@
 package icp.data.formats;
 
-import icp.data.*;
+import icp.data.BufferCreator;
+import icp.data.Channel;
+import icp.data.Epoch;
+import icp.data.Header;
+import icp.data.NioInputStream;
 
-import java.io.*;
-import java.util.*;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -204,7 +211,7 @@ public class EdfFormatLoader implements DataFormatLoader {
     private void loadChannelsHeader() throws CorruptedFileException {
         nrOfSamplesInDRs = new int[numberOfSignals];
 
-        channels = new Channel[numberOfSignals];
+        Channel[] channels = new Channel[numberOfSignals];
         physicalMinimums = new float[numberOfSignals];
         physicalMaximums = new float[numberOfSignals];
 

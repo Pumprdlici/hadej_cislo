@@ -1,11 +1,18 @@
 package icp.gui.result;
 
-import icp.algorithm.mp.*;
+import icp.algorithm.mp.Const;
+import icp.algorithm.mp.DetectionAlgorithm;
+import icp.algorithm.mp.UsersAtom;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.Arrays;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 
 @SuppressWarnings("serial")

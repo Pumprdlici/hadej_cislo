@@ -1,15 +1,27 @@
 package icp.gui.signals;
 
 import icp.Const;
-import icp.application.*;
+import icp.application.SessionManager;
+import icp.application.SignalsSegmentation;
 import icp.data.Header;
 import icp.gui.GuiController;
 
 import java.awt.Color;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 /**
  * Rozhraní mezi aplikaèní a prezentaèní vrstvou.

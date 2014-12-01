@@ -1,8 +1,11 @@
 package icp.application;
 
-import icp.data.*;
+import icp.data.Artefact;
+import icp.data.Epoch;
+import icp.data.Header;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**

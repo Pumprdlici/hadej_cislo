@@ -2,15 +2,29 @@ package icp.gui.result;
 
 
 import icp.algorithm.mp.DetectionAlgorithm;
-import icp.application.*;
-import icp.gui.*;
+import icp.application.Element;
+import icp.application.SessionManager;
+import icp.application.WaveletTransformDetectionAlgorithm;
+import icp.gui.ResultDialog;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 
 @SuppressWarnings("serial")

@@ -1,14 +1,55 @@
 package icp.gui;
 
 import icp.algorithm.cwt.CWT;
-import icp.algorithm.cwt.wavelets.*;
+import icp.algorithm.cwt.wavelets.ComplexGaussian;
+import icp.algorithm.cwt.wavelets.ComplexMorlet;
+import icp.algorithm.cwt.wavelets.Gaussian;
+import icp.algorithm.cwt.wavelets.MexicanHat;
+import icp.algorithm.cwt.wavelets.Morlet;
+import icp.algorithm.cwt.wavelets.WaveletCWT;
 import icp.algorithm.dwt.DWT;
-import icp.algorithm.dwt.wavelets.*;
+import icp.algorithm.dwt.wavelets.Coiflet12;
+import icp.algorithm.dwt.wavelets.Coiflet18;
+import icp.algorithm.dwt.wavelets.Coiflet24;
+import icp.algorithm.dwt.wavelets.Coiflet30;
+import icp.algorithm.dwt.wavelets.Coiflet6;
+import icp.algorithm.dwt.wavelets.Daubechies10;
+import icp.algorithm.dwt.wavelets.Daubechies12;
+import icp.algorithm.dwt.wavelets.Daubechies14;
+import icp.algorithm.dwt.wavelets.Daubechies16;
+import icp.algorithm.dwt.wavelets.Daubechies18;
+import icp.algorithm.dwt.wavelets.Daubechies20;
+import icp.algorithm.dwt.wavelets.Daubechies4;
+import icp.algorithm.dwt.wavelets.Daubechies6;
+import icp.algorithm.dwt.wavelets.Daubechies8;
+import icp.algorithm.dwt.wavelets.Haar;
+import icp.algorithm.dwt.wavelets.Symmlet4;
+import icp.algorithm.dwt.wavelets.Symmlet6;
+import icp.algorithm.dwt.wavelets.Symmlet8;
+import icp.algorithm.dwt.wavelets.WaveletDWT;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
+
 
 
 /**

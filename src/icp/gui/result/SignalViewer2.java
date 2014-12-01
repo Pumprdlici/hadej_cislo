@@ -1,13 +1,26 @@
 package icp.gui.result;
 
-import icp.algorithm.mp.*;
+import icp.algorithm.mp.Atom;
+import icp.algorithm.mp.GaborsAtom;
+import icp.algorithm.mp.UsersAtom;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.Observable;
+import java.util.Observer;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 
 @SuppressWarnings("serial")

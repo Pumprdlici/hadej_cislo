@@ -2,9 +2,11 @@ package icp.application;
 
 import icp.Const;
 import icp.algorithm.cwt.CWT;
-import icp.algorithm.cwt.wavelets.*;
+import icp.algorithm.cwt.wavelets.MexicanHat;
+import icp.algorithm.cwt.wavelets.WaveletCWT;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class WaveletTransformDetectionAlgorithm extends Thread implements ProgressInterface
 {

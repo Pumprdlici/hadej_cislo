@@ -4,9 +4,11 @@ import icp.Const;
 import icp.algorithm.cwt.CWT;
 import icp.algorithm.dwt.DWT;
 import icp.algorithm.math.Mathematic;
-import icp.data.*;
+import icp.data.Buffer;
+import icp.data.Header;
+import icp.data.InvalidFrameIndexException;
 
-import java.util.*;
+import java.util.ArrayList;
 
 public class Transformation extends Thread implements ProgressInterface
 {

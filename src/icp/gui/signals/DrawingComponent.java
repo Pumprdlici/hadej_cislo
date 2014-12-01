@@ -3,10 +3,20 @@ package icp.gui.signals;
 
 //import static java.awt.Container.dbg;
 import icp.Const;
-import icp.data.*;
+import icp.data.Buffer;
+import icp.data.Header;
+import icp.data.InvalidFrameIndexException;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

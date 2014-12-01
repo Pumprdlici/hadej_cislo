@@ -1,6 +1,8 @@
 package icp;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+
 
 /**
  * Obsahuje konstanty používané v aplikaci.

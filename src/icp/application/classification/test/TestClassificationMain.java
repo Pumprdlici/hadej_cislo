@@ -1,10 +1,10 @@
 package icp.application.classification.test;
 
-import icp.application.classification.FilterFeatureExtraction;
-import icp.application.classification.IFeatureExtraction;
-import icp.application.classification.IERPClassifier;
-import icp.application.classification.MLPClassifier;
 import icp.application.classification.ClassificationStatistics;
+import icp.application.classification.FilterFeatureExtraction;
+import icp.application.classification.IERPClassifier;
+import icp.application.classification.IFeatureExtraction;
+import icp.application.classification.MLPClassifier;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

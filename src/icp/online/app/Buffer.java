@@ -76,8 +76,8 @@ public class Buffer {
 		this.konec = predMarkerem;
 		this.predMarkerem = predMarkerem;
 		this.zaMarkerem = zaMarkerem;
-		this.frontaIndexu = new LinkedList<Integer>();
-		this.frontaTypuStimulu = new LinkedList<Integer>();
+		this.frontaIndexu = new LinkedList<>();
+		this.frontaTypuStimulu = new LinkedList<>();
 	}
 	
 	/**
@@ -132,22 +132,21 @@ public class Buffer {
 			this.dataPZ = zvetsi(this.dataPZ);
 		}
 		/* zapis hodnot do pole bufferu */
-		for(int i = 0; i < hodnotyFZ.length; i++){
-			this.dataFZ[this.konec + i] = hodnotyFZ[i];
-			this.dataCZ[this.konec + i] = hodnotyCZ[i];
-			this.dataPZ[this.konec + i] = hodnotyPZ[i];
-		}		
+                System.arraycopy(hodnotyFZ, 0, this.dataFZ, konec, hodnotyFZ.length);
+                System.arraycopy(hodnotyCZ, 0, this.dataCZ, konec, hodnotyCZ.length);
+                System.arraycopy(hodnotyPZ, 0, this.dataPZ, konec, hodnotyPZ.length);
+		
 		RDA_Marker[] markery = datObjekt.getMarkers();
 		if(markery != null){
-			for(int i = 0; i < markery.length; i++){
-				/* promenna index znaci index prave vybraneho markeru;
-				   je to aktualni pozice v poli (neaktualizovany this.konec po nahrani novych dat)
-				   + relativni pozice markeru uvnitr datoveho objektu */
-				int index = this.konec + (int)markery[i].getnPosition();
-				this.frontaIndexu.addLast(index);
-				/* nutno ulozit zaroven index stimulu do fronty */
-				this.frontaTypuStimulu.addLast(Integer.parseInt(markery[i].getsTypeDesc().substring(11,13).trim()) - 1);
-			}
+                    for (RDA_Marker marker : markery) {
+                        /* promenna index znaci index prave vybraneho markeru;
+                        je to aktualni pozice v poli (neaktualizovany this.konec po nahrani novych dat)
+                        + relativni pozice markeru uvnitr datoveho objektu */
+                        int index = this.konec + (int) marker.getnPosition();
+                        this.frontaIndexu.addLast(index);
+                        /* nutno ulozit zaroven index stimulu do fronty */
+                        this.frontaTypuStimulu.addLast(Integer.parseInt(marker.getsTypeDesc().substring(11, 13).trim()) - 1);
+                    }
 		}
 		
 		this.konec += hodnotyFZ.length;
@@ -163,9 +162,7 @@ public class Buffer {
 		System.out.println("*** VOLANA METODA ZVETSI Z INTANCE BUFFERU ***");
 		int novaDelka = 2 * this.delka;
 		float[] novaData = new float[novaDelka];
-		for(int i = 0; i < this.konec; i++){
-			novaData[i] = pole[i];
-		}
+                System.arraycopy(pole, 0, novaData, 0, this.konec);
 		for(int i = this.konec; i < novaDelka; i++){
 			novaData[i] = Float.MAX_VALUE;
 		}
@@ -274,7 +271,7 @@ public class Buffer {
 		}
 		
 		/* pokud zustaly indexy markeru ve fronte indexu, musi se prepsat na nove hodnoty */
-		LinkedList<Integer> novaFrontaIndexu = new LinkedList<Integer>();
+		LinkedList<Integer> novaFrontaIndexu = new LinkedList<>();
 		while(!this.frontaIndexu.isEmpty()){
 			/* všechny indexy markerů z fronty se musí přepsat -> odečíst od nich
 			   indexPredMarkerem; tím se všechny posunou na začátek  */

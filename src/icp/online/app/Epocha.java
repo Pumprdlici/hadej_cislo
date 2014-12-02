@@ -51,22 +51,6 @@ public class Epocha {
 		this.pocetPrumVln = 1;
 	}
 	
-	/**
-	 * Konstruktor nové epochy
-	 * @param pocetPred - počet položek v poli hodnoty, které jsou před markerem
-	 * @param pocetZa - počet položek v poli hodnoty, které jsou za markerem
-	 * @param hodnoty - hodnoty EEG signálu dané Epochy
-	 * @param vaha - váha vlny (počet vln, které byly použity na zprůměrování této vlny)
-	 */
-	public Epocha(int pocetPred, int pocetZa, float[] hodnoty, int vaha){
-		this.predMarkerem = pocetPred;
-		this.zaMarkerem = pocetZa;
-		for(int i = 0; i < (this.predMarkerem + this.zaMarkerem); i++){
-			this.hodnoty[i] = hodnoty[i];
-		}		
-		this.pocetPrumVln = vaha;
-	}
-	
 	public int getPocetPrumVln(){
 		return this.pocetPrumVln;
 	}
@@ -80,11 +64,11 @@ public class Epocha {
 			logger.error("Chyba - obrácené pořadí indexů.");
 			return null;
 		}
-		float[] hodnoty = new float[doIndexu - odIndexu];
+		float[] vals = new float[doIndexu - odIndexu];
 		for(int i = 0; i < doIndexu - odIndexu; i++){
-			hodnoty[i] = this.hodnoty[odIndexu + i];
+			vals[i] = this.hodnoty[odIndexu + i];
 		}
-		return hodnoty;
+		return vals;
 	}
 	
 	public int getPocetPred(){

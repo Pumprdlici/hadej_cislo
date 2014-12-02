@@ -20,10 +20,15 @@ public class Main {
 		classifier.load("data/classifier.txt");
 		IFeatureExtraction fe = new FilterFeatureExtraction();
 		classifier.setFeatureExtraction(fe);
-		
+				
 		MainFrame gui = new MainFrame();
 		OnlineDetection detection = new OnlineDetection(classifier, gui);
-		OnLineDataProvider odp = new OnLineDataProvider("147.228.64.220", 51244, detection);		
+		
+		
+		String recorderIPAddress = "147.228.127.95";
+		int port = 51244;
+		
+		OnLineDataProvider odp = new OnLineDataProvider(recorderIPAddress, port, detection);		
 		
 		
 		

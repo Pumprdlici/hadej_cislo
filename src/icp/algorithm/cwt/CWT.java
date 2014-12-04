@@ -256,7 +256,7 @@ public class CWT
 	}
 	
 	/**
-	 * @return nastavení povolení transformace.
+        * @param enabled
 	 */
 	public void setTransform(boolean enabled)
 	{

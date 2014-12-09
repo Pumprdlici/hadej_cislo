@@ -54,7 +54,6 @@ public class CWT
 	 * Spojitá waveletová transformace.
 	 * 
 	 * @param inputSignal - vstupní signál.
-	 * @return dvourozmìrné pole koeficientù po transformaci.
 	 */
 	public void transform(double[] inputSignal)
 	{
@@ -66,8 +65,8 @@ public class CWT
 		indexesHighestCoeficients = new int[cwtDataReal.length];
 		int b, x, scale = 0;
 		double t, a;
-		double highestCoef = 0; 
-		int indexHighestCoef = 0;
+		double highestCoef; 
+		int indexHighestCoef;
 		
 		
 		for (a = minScale; a <= maxScale; a += stepScale)
@@ -233,6 +232,7 @@ public class CWT
 	
 	/**
 	 * Nastavuje objekt transformation.
+         * @param progress
 	 */
 	public void setProgressInterface(ProgressInterface progress)
 	{

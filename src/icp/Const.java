@@ -148,4 +148,8 @@ public class Const {
      *  
      */
     public static final int NUMBER_OF_CHANNELS = 19;
+    
+    
+    public static final String DEF_IP_ADDRESS = "147.228.127.95";
+    public static final String[] DEF_PORTS = {"51244"};
 }

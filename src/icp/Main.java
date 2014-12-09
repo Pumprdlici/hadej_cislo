@@ -15,7 +15,6 @@ import icp.online.gui.MainFrame;
 public class Main {
 
 	public static void main(String[] args) {
-		//new SessionManager().startGui();
 		IERPClassifier classifier = new MLPClassifier();
 		classifier.load("data/classifier.txt");
 		IFeatureExtraction fe = new FilterFeatureExtraction();

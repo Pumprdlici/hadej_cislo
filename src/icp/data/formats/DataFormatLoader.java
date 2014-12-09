@@ -6,27 +6,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Rozhraní, které by melo být implementováno každým programem
- * podporovaným formátem. Vynucuje implementaci metody load, se kterou
- * pracuje rozhraní mezi datovou a aplikaèní vrstvou.
- * @author Jiøí Kuèera
+ * Rozhrani, ktere by melo byt implementovano kazdym programem
+ * podporovanym formatem. Vynucuje implementaci metody load, se kterou
+ * pracuje rozhrani mezi datovou a aplikacni vrstvou.
+ * @author Jiri Kucera
  * @version 14. 11. 2007
  */
 public interface DataFormatLoader {
     
     /**
-     * Naète data z datového souboru do <code>BufferCreator</code>u a vrátí hlavièku <code>Header</code>.
-     * Cestu k datovému souboru poskytne <code>BufferCreator</code>.
+     * Nacte data z datoveho souboru do <code>BufferCreator</code>u a vrati hlavicku <code>Header</code>.
+     * Cestu k datovemu souboru poskytne <code>BufferCreator</code>.
      * @param loader
-     * @return Hlavièka typu <code>Header</code> s informacemi o naèteném souboru.
+     * @return Hlavicka typu <code>Header</code> s informacemi o nactenem souboru.
      * @throws java.io.IOException
      * @throws cz.zcu.kiv.jerpstudio.data.formats.CorruptedFileException
      */
     public Header load(BufferCreator loader) throws IOException, CorruptedFileException;
 
     /**
-     * Vrací ArrayList obsahující markery.
-     * @return ArrayList obsahující markery.
+     * Vraci ArrayList obsahujici markery.
+     * @return ArrayList obsahujici markery.
      */
     public ArrayList<Epoch> getEpochs();
 }

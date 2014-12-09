@@ -3,14 +3,14 @@ package icp.online.tcpip.objects;
 import java.util.LinkedList;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: SynchronizedLinkedListByte
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: SynchronizedLinkedListByte
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Thread-safe linked list, pouÅ¾Ã­vanÃ½ jako buffer bajtÅ¯ pro tcp/ip clienta.
- * PÅ™etÃ­Å¾eny jsou pouze pouÅ¾Ã­vanÃ© metody.
+ * Thread-safe linked list, pouívanı jako buffer bajtù pro tcp/ip clienta.
+ * Pøetíeny jsou pouze pouívané metody.
  */
 
 

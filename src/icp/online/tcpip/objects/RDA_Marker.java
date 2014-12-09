@@ -1,30 +1,30 @@
 package icp.online.tcpip.objects;
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: RDA_Marker
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: RDA_Marker
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Tento objekt reprezentuje pÅ™Ã­chozÃ­ markery. Obsahuje informace o jeho velikosti, relativnÃ­m
- * odsazenÃ­m v datovÃ©m bloku (mÅ¯Å¾e bÃ½t od 0 aÅ¾ po velikost tohoto bloku) a poÄtu obsaÅ¾enÃ½ch
- * datovÃ½ch blokÅ¯ (toto ÄÃ­slo je standartnÄ› 1). DÃ¡le obsahuje inforamci o tom ke kterÃ© elektrodÄ› 
- * pÅ™Ã­sluÅ¡Ã­. JelikoÅ¾ vÅ¡ak server doposud nemÃ¡ implemetovanou funkci pro zasÃ­lÃ¡nÃ­ markerÅ¯ pouze z
- * urÄitÃ©ho poÄtu elektrod, je tato hodnota standartnÄ› nastavena na -1, coÅ¾ znamenÃ¡, Å¾e platÃ­ pro
- * vÅ¡echny elektrody. NejdÅ¯leÅ¾itÄ›jÅ¡Ã­ ÄÃ¡stÃ­ tohoto objektu je vÅ¡ak informace o nÃ¡zvu tohoto impulzu,
- * kterÃ¡ je oddÄ›lenÃ¡ nulovÃ½mi znaky (/0).
+ * Tento objekt reprezentuje pøíchozí markery. Obsahuje informace o jeho velikosti, relativním
+ * odsazením v datovém bloku (mùe bıt od 0 a po velikost tohoto bloku) a poètu obsaenıch
+ * datovıch blokù (toto èíslo je standartnì 1). Dále obsahuje inforamci o tom ke které elektrodì 
+ * pøísluší. Jeliko však server doposud nemá implemetovanou funkci pro zasílání markerù pouze z
+ * urèitého poètu elektrod, je tato hodnota standartnì nastavena na -1, co znamená, e platí pro
+ * všechny elektrody. Nejdùleitìjší èástí tohoto objektu je však informace o názvu tohoto impulzu,
+ * která je oddìlená nulovımi znaky (/0).
  */
 
 public class RDA_Marker {
 	/** Velikost tohoto bloku v bajtech. **/
 	private long nSize;
-	/** RelativnÃ­ odsazenÃ­ v datovÃ©m bloku. **/
+	/** Relativní odsazení v datovém bloku. **/
 	private long nPosition;
-	/** PoÄet obsaÅ¾enÃ½ch blokÅ¯ (standartnÄ› 1). **/
+	/** Poèet obsaenıch blokù (standartnì 1). **/
 	private long nPoints;
-	/** ZasaÅ¾enÃ½ kanÃ¡l (standartnÄ› -1 - vÅ¡echny kanÃ¡ly). **/
+	/** Zasaenı kanál (standartnì -1 - všechny kanály). **/
 	private long nChannel;
-	/** NÃ¡zev pÅ™Ã­chozÃ­ho markeru. **/
+	/** Název pøíchozího markeru. **/
 	private String sTypeDesc;
 	
 	public RDA_Marker(long nSize, long nPosition, long nPoints, long nChannel,

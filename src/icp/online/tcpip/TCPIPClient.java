@@ -9,39 +9,39 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: SynchronizedLinkedListByte
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: SynchronizedLinkedListByte
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 2.0
  * 
- * TCP/IP klient pro napojenÃ­ na RDA server. PÅ™ipojenÃ­ je zajiÅ¡tÄ›no pouÅ¾itÃ­m tÅ™Ã­dy
- * Socket a oÅ¡etÅ™enÃ­m patÅ™iÄnÃ½ch vÃ½jimek. Data jsou zpracovÃ¡vÃ¡na po jednotlivÃ½ch bajtech,
- * protoÅ¾e je tak server (bohuÅ¾el) zasÃ­lÃ¡. VyuÅ¾Ã­vÃ¡ vyrovnÃ¡vacÃ­ pamÄ›Å¥ (linkedlist) do kterÃ©
- * zapisuje zÃ­skanÃ© bajty ze serveru. Nadstavbou tÃ©to tÅ™Ã­dy je bÄ›Å¾nÄ› tÅ™Ã­da typu dataTokenizer,
- * kterÃ¡ zÃ­skanÃ© bajty pÅ™evÃ¡dÃ­ do podoby srozumitelnÄ›jÅ¡Ã­ch objektÅ¯. Bajty lze zÃ­skat pomocÃ­
+ * TCP/IP klient pro napojení na RDA server. Pøipojení je zajištìno pouitím tøídy
+ * Socket a ošetøením patøiènıch vıjimek. Data jsou zpracovávána po jednotlivıch bajtech,
+ * protoe je tak server (bohuel) zasílá. Vyuívá vyrovnávací pamì (linkedlist) do které
+ * zapisuje získané bajty ze serveru. Nadstavbou této tøídy je bìnì tøída typu dataTokenizer,
+ * která získané bajty pøevádí do podoby srozumitelnìjších objektù. Bajty lze získat pomocí
  * metody read().
  */
 
 public class TCPIPClient extends Thread{
-	/** DatovÃ½ stream pÅ™Ã­chozÃ­ch bajtÅ¯. **/
+	/** Datovı stream pøíchozích bajtù. **/
 	private DataInputStream Sinput;	
-	/** Instance tÅ™Ã­dy socket pro navÃ¡zÃ¡nÃ­ spojenÃ­ se serverem. **/
+	/** Instance tøídy socket pro navázání spojení se serverem. **/
 	private Socket socket;
-	/** Linked list jako vyrovnÃ¡vacÃ­ pamÄ›Å¥ pro zÃ­skÃ¡vÃ¡nÃ­ bajtÅ¯. **/
+	/** Linked list jako vyrovnávací pamì pro získávání bajtù. **/
 	private  SynchronizedLinkedListByte buffer = new SynchronizedLinkedListByte();
-	/** Reference na logger udÃ¡lostÃ­. **/
+	/** Reference na logger událostí. **/
 	private static Logger logger = Logger.getLogger(TCPIPClient.class);
-	/** IP adresa, na kterÃ© bÄ›Å¾Ã­ server. **/
+	/** IP adresa, na které bìí server. **/
 	private String ip;
-	/** Port na kterÃ©m server naslouchÃ¡. **/
+	/** Port na kterém server naslouchá. **/
 	private int port;
 
 	/**
-	 * Konstruktor TCP/IP clienta. V parametrech mÃ¡ na jakou IP a na jakÃ½ port se napojuje.
-	 * Je pouÅ¾it defaultnÃ­ logger.
-	 * @param ip na jakou ip se mÃ¡ pÅ™ipojit
-	 * @param port na jakÃ©m portu mÃ¡ naslouchat
+	 * Konstruktor TCP/IP clienta. V parametrech má na jakou IP a na jakı port se napojuje.
+	 * Je pouit defaultní logger.
+	 * @param ip na jakou ip se má pøipojit
+	 * @param port na jakém portu má naslouchat
 	 */
 	public TCPIPClient(String ip,int port){
 		this.ip= ip;
@@ -49,33 +49,33 @@ public class TCPIPClient extends Thread{
 	}
 
 	/**
-	 * Metoda pro spuÅ¡tÄ›nÃ­ vlÃ¡kna pro ÄtenÃ­ bajtÅ¯ ze serveru. JelikoÅ¾ tento proces musÃ­ proÃ­hat
-	 * paraelnÄ› s pÅ™evÃ¡dÄ›nÃ­m jednotlivÃ½ch bajtÅ¯ na datovÃ© bloky, muselo bÃ½t pouÅ¾ito vlÃ¡knovÃ©ho 
-	 * pÅ™Ã­stupu.
+	 * Metoda pro spuštìní vlákna pro ètení bajtù ze serveru. Jeliko tento proces musí proíhat
+	 * paraelnì s pøevádìním jednotlivıch bajtù na datové bloky, muselo bıt pouito vláknového 
+	 * pøístupu.
 	 */
 	public void run() {
 
-		//vytvoÅ™enÃ­ instance tÅ™Ã­dy socket - napojenÃ­ na server
+		//vytvoøení instance tøídy socket - napojení na server
 
 		try {
 			socket = new Socket(ip, port);
 		} catch(Exception e) {
-			logger.error("Error pÅ™i pÅ™ipojovÃ¡nÃ­ na server:" + e);
+			logger.error("Error pøi pøipojování na server:" + e);
 			return;
 		}
-		logger.debug("PÅ™ipojenÃ­ navÃ¡zÃ¡no: " +
+		logger.debug("Pøipojení navázáno: " +
 				socket.getInetAddress() + ":" +
 				socket.getPort());
 
-		//vytvÃ¡Å™Ã­m datastream pro ÄtenÃ­ ze serveru
+		//vytváøím datastream pro ètení ze serveru
 		try{
 			Sinput  = new DataInputStream(socket.getInputStream());
 		} catch (IOException e) {
-			logger.error("VÃ½jimka pÅ™i vytvÃ¡Å™enÃ­ novÃ©ho input streamu: " + e);
+			logger.error("Vıjimka pøi vytváøení nového input streamu: " + e);
 			return;
 		}
 
-		// Ätu data ze serveru a uklÃ¡dÃ¡m je do bufferu
+		// ètu data ze serveru a ukládám je do bufferu
 		Byte response;
 		try {
 			while(true){
@@ -87,7 +87,7 @@ public class TCPIPClient extends Thread{
 				}
 			}
 		} catch(Exception e) {
-			logger.error("ProblÃ©m pÅ™i ÄtenÃ­ ze serveru: " + e);
+			logger.error("Problém pøi ètení ze serveru: " + e);
 		}
 
 		try{
@@ -96,9 +96,9 @@ public class TCPIPClient extends Thread{
 	}  
 
 	/**
-	 * VrÃ¡tÃ­ pole bajtÅ¯ o zadanÃ© velikosti. JednotlivÃ© bajty zÃ­skÃ¡vÃ¡ z bufferu.
-	 * @param value pole jakÃ© velikost potÅ™ebuji
-	 * @return pole bajtÅ¯ o zadanÃ© velikosti
+	 * Vrátí pole bajtù o zadané velikosti. Jednotlivé bajty získává z bufferu.
+	 * @param value pole jaké velikost potøebuji
+	 * @return pole bajtù o zadané velikosti
 	 */
 	public byte[] read(int value){
 		byte[] response = new byte[value];
@@ -121,8 +121,8 @@ public class TCPIPClient extends Thread{
 	}
 
 	/**
-	 * Tato metoda zjiÅ¡Å¥uje, jestli je zÃ¡sobnÃ­k prÃ¡zdnÃ½. 
-	 * @return zda-li je zÃ¡sobnÃ­k prÃ¡zdnÃ½
+	 * Tato metoda zjišuje, jestli je zásobník prázdnı. 
+	 * @return zda-li je zásobník prázdnı
 	 */
 	public boolean hasNext(){
 		return buffer.isEmpty();

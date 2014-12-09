@@ -7,35 +7,35 @@ import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: Buffer
- * @author Bohumil PodlesÃ¡k
- * PrvnÃ­ verze vytvoÅ™ena: 28.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: Buffer
+ * @author Bohumil Podlesák
+ * První verze vytvoøena: 28.3.2010
  * @version 2.0
  * 
- * TÅ™Ã­da, do kterÃ© se mohou prÅ¯bÄ›Å¾nÄ› uklÃ¡dat datovÃ© objekty RDA MessageData.
- * Tyto objekty jsou nÃ¡slednÄ› zpracovÃ¡ny a mohou bÃ½t vrÃ¡ceny jako pole typu float.
+ * Tøída, do které se mohou prùbìnì ukládat datové objekty RDA MessageData.
+ * Tyto objekty jsou následnì zpracovány a mohou bıt vráceny jako pole typu float.
  */
 public class Buffer {
 	/**
-	 * Rezerva pro zaplnÄ›nost pole bufferu.
-	 * UrÄuje, kolik poloÅ¾ek zÅ¯stane maximÃ¡lnÄ› volnÃ½ch, aby metoda jePlny() vratila true.
+	 * Rezerva pro zaplnìnost pole bufferu.
+	 * Urèuje, kolik poloek zùstane maximálnì volnıch, aby metoda jePlny() vratila true.
 	 */
 	private static final int REZERVA = 20;
 	/**
-	 * UrÄuje poÄet hodnot pÅ™Ã­sluÅ¡ejÃ­cÃ­ jednÃ© elektrodÄ› v jednom datovÃ©m bloku.
+	 * Urèuje poèet hodnot pøíslušející jedné elektrodì v jednom datovém bloku.
 	 */
 	private static final int POCETHODNOTELEKTRODY = 20;	
 	/**
-	 * Index elektrody FZ. Tato elektroda je v poli zapsÃ¡na jako Å¡estnÃ¡ctÃ¡ v poÅ™adÃ­.
+	 * Index elektrody FZ. Tato elektroda je v poli zapsána jako šestnáctá v poøadí.
 	 */
 	private static final int INDEXFZ = 16;
 	/**
-	 * Index elektrody PZ. Tato elektroda je v poli zapsÃ¡na jako sedmnÃ¡ctÃ¡ v poÅ™adÃ­.
+	 * Index elektrody PZ. Tato elektroda je v poli zapsána jako sedmnáctá v poøadí.
 	 */
 	private static final int INDEXPZ = 17;
 	/**
-	 * Index elektrody FZ. Tato elektroda je v poli zapsÃ¡na jako osmnÃ¡ctÃ¡ v poÅ™adÃ­.
+	 * Index elektrody FZ. Tato elektroda je v poli zapsána jako osmnáctá v poøadí.
 	 */
 	private static final int INDEXCZ = 18;
 		
@@ -54,12 +54,12 @@ public class Buffer {
 	
 	/**
 	 * Konstruktor
-	 * Z prvu je nutnÃ© zaÄÃ­nat plnit buffer aÅ¾ od indexu predMarkerem, protoÅ¾e jinak by
-	 * v pÅ™Ã­padÄ› brzkÃ©ho pÅ™Ã­chodu markeru bylo nutno vybÃ­rat hodnoty mimo rozsah pole.
-	 * DÃ©lka pole hodnot v Bufferu by mÄ›la bÃ½t mnohem vÄ›tÅ¡Ã­ neÅ¾ predMarkerem + zaMarkerem
-	 * @param delka - poÄÃ¡teÄnÃ­ dÃ©lka pole, do kterÃ©ho Buffer uklÃ¡dÃ¡ hodnoty
-	 * @param predMarkerem - poÄet poloÅ¾ek pole, kterÃ© se budou vybÃ­rat pÅ™ed markerem
-	 * @param zaMarkerem - poÄet poloÅ¾ek pole, kterÃ© se budou vybÃ­rat za markerem
+	 * Z prvu je nutné zaèínat plnit buffer a od indexu predMarkerem, protoe jinak by
+	 * v pøípadì brzkého pøíchodu markeru bylo nutno vybírat hodnoty mimo rozsah pole.
+	 * Délka pole hodnot v Bufferu by mìla bıt mnohem vìtší ne predMarkerem + zaMarkerem
+	 * @param delka - poèáteèní délka pole, do kterého Buffer ukládá hodnoty
+	 * @param predMarkerem - poèet poloek pole, které se budou vybírat pøed markerem
+	 * @param zaMarkerem - poèet poloek pole, které se budou vybírat za markerem
 	 */
 	public Buffer(int delka, int predMarkerem, int zaMarkerem){
 		this.delka = delka;
@@ -81,13 +81,13 @@ public class Buffer {
 	}
 	
 	/**
-	 * VÃ½bÄ›r hodnot pouze ze tÅ™Ã­ elektrod (FZ, PZ, CZ).
-	 * Data ze tÄ›hto tÅ™Ã­ elektrod se zprÅ¯mÄ›rujÃ­ vÃ¡Å¾enÃ½m aritmetickÃ½m prÅ¯mÄ›rem.
-	 * @param pole - pole hodnot, ve kterÃ©m jsou zÃ¡znamy vÅ¡ech elektrod
-	 * @param pomerFZ - pomÄ›r pro vÃ¡Å¾enÃ½ prÅ¯mÄ›r z elektrody FZ
-	 * @param pomerPZ - pomÄ›r pro vÃ¡Å¾enÃ½ prÅ¯mÄ›r z elektrody PZ
-	 * @param pomerCZ - pomÄ›r pro vÃ¡Å¾enÃ½ prÅ¯mÄ›r z elektrody CZ
-	 * @return zprÅ¯mÄ›rovanÃ© pole vypoÄtenÃ© z elektrod FZ, PZ a CZ
+	 * Vıbìr hodnot pouze ze tøí elektrod (FZ, PZ, CZ).
+	 * Data ze tìhto tøí elektrod se zprùmìrují váenım aritmetickım prùmìrem.
+	 * @param pole - pole hodnot, ve kterém jsou záznamy všech elektrod
+	 * @param pomerFZ - pomìr pro váenı prùmìr z elektrody FZ
+	 * @param pomerPZ - pomìr pro váenı prùmìr z elektrody PZ
+	 * @param pomerCZ - pomìr pro váenı prùmìr z elektrody CZ
+	 * @return zprùmìrované pole vypoètené z elektrod FZ, PZ a CZ
 	 */	
 	private float[] vyberFZ(float[] pole){
 		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
@@ -114,11 +114,11 @@ public class Buffer {
 	}
 	
 	/**
-	 * ZÃ¡pis dat do bufferu (do pole data) a pÅ™idÃ¡nÃ­ markeru do fronty.
-	 * Pokud by byl buffer pÅ™Ã­liÅ¡ zaplnÄ›n a neveÅ¡ly by se do nÄ›j informace o dalÅ¡Ã­m prvku,
-	 * pak se jeho velikost zdvojnÃ¡sobÃ­. V ideÃ¡lnÃ­m pÅ™Ã­padÄ› se ale bude pouÅ¾Ã­vat tak,
-	 * aby jeho zvÄ›tÅ¡ovÃ¡nÃ­ nemuselo nastÃ¡vat.
-	 * @param datObjekt - objekt, obsahujÃ­cÃ­ pole dat pro zÃ¡pis do bufferu
+	 * Zápis dat do bufferu (do pole data) a pøidání markeru do fronty.
+	 * Pokud by byl buffer pøíliš zaplnìn a nevešly by se do nìj informace o dalším prvku,
+	 * pak se jeho velikost zdvojnásobí. V ideálním pøípadì se ale bude pouívat tak,
+	 * aby jeho zvìtšování nemuselo nastávat.
+	 * @param datObjekt - objekt, obsahující pole dat pro zápis do bufferu
 	 */
 	public void zapis(RDA_MessageData datObjekt){
 		float[] hodnotyFZ = vyberFZ(datObjekt.getfData());
@@ -153,10 +153,10 @@ public class Buffer {
 	}
 	
 	/**
-	 * DvojnÃ¡sobnÃ© zvÄ›tÅ¡enÃ­ stÃ¡vajÃ­cÃ­ho pole dat.
-	 * ZÃ¡roveÅˆ dojde k nastavenÃ­ vÅ¡ech potÅ™ebnÃ½ch atributÅ¯ tÅ™Ã­dy
-	 * (dÃ©lka, index zaÄÃ¡tku a konce)
-	 * @return - novÃ© dvojnÃ¡sobnÄ› zvÄ›tÅ¡enÃ© pole
+	 * Dvojnásobné zvìtšení stávajícího pole dat.
+	 * Zároveò dojde k nastavení všech potøebnıch atributù tøídy
+	 * (délka, index zaèátku a konce)
+	 * @return - nové dvojnásobnì zvìtšené pole
 	 */
 	private float[] zvetsi(float[] pole){
 		System.out.println("*** VOLANA METODA ZVETSI Z INTANCE BUFFERU ***");
@@ -171,13 +171,13 @@ public class Buffer {
 	}
 	
 	/**
-	 * VÃ½bÄ›r z Bufferu.
-	 * Pokud nenÃ­ v bufferu Å¾Ã¡dnÃ½ marker, pak v nÄ›m jistÄ› nejsou uÅ¾ Å¾Ã¡dnÃ¡ data, kterÃ¡ by
-	 * mÄ›la nÄ›jakou hodnotu (ve smyslu vybÃ­rÃ¡nÃ­ pole dat pro Epochu) a metoda vrati null.
+	 * Vıbìr z Bufferu.
+	 * Pokud není v bufferu ádnı marker, pak v nìm jistì nejsou u ádná data, která by
+	 * mìla nìjakou hodnotu (ve smyslu vybírání pole dat pro Epochu) a metoda vrati null.
 	 * Pokud neni v bufferu zapsanych dost hodnot za poslednim markerem, metoda take vrati null.
-	 * Tato metoda bude vybÃ­rat hodnoty z bufferu podle markerÅ¯ postupnÄ› (FIFO).
-	 * @return - pole floatÅ¯ o dÃ©lce (this.pred + this.po), obsahujÃ­cÃ­ hodnoty z bufferu
-	 * kolem poslednÃ­ho markeru plus ÄÃ­slo Stimulu (0 - 9)
+	 * Tato metoda bude vybírat hodnoty z bufferu podle markerù postupnì (FIFO).
+	 * @return - pole floatù o délce (this.pred + this.po), obsahující hodnoty z bufferu
+	 * kolem posledního markeru plus èíslo Stimulu (0 - 9)
 	 */
 	public HodnotyVlny vyber(){
 		if(this.frontaIndexu.isEmpty()){
@@ -216,23 +216,23 @@ public class Buffer {
 	}
 	
 	/**
-	 * Metoda pro kontrolu zaplnÄ›nosti bufferu.
-	 * SlouÅ¾i k tomu, aby tÅ™Ã­da, kterÃ¡ s nÃ­m bude pracovat vÄ›dela, kdy mÃ¡ zaÄÃ­t vybÃ­rat prvky
-	 * @return - true, kdyÅ¾ je buffer plnÃ½ (zbÃ½vÃ¡ v nÄ›m mÃ©nÄ› mÃ­sta neÅ¾ REZERVA)
+	 * Metoda pro kontrolu zaplnìnosti bufferu.
+	 * Sloui k tomu, aby tøída, která s ním bude pracovat vìdela, kdy má zaèít vybírat prvky
+	 * @return - true, kdy je buffer plnı (zbıvá v nìm ménì místa ne REZERVA)
 	 */
 	public boolean jePlny(){
 		return (this.delka - this.konec <= REZERVA);
 	}
 	
 	/**
-	 * UvolnÃ­ buffer. DoporuÄeno provÃ¡dÄ›t pokaÅ¾dÃ©, kdyÅ¾ se vyberou vÅ¡echny hodnoty, ktere
+	 * Uvolní buffer. Doporuèeno provádìt pokadé, kdy se vyberou všechny hodnoty, ktere
 	 * jdou pomoci metody vyber().
-	 * Tato metoda nastavÃ­ poloÅ¾ky pole float[] data na Float.MAX_VALUE.
-	 * Nebudou vÅ¡ak vymazÃ¡ny vÅ¡echy poloÅ¾ky, ponechÃ¡ se nÄ›kolik poloÅ¾ek pÅ™ed koncem (this.konec)
-	 * toto je z dÅ¯vodu, aby v pÅ™Ã­padÄ› brzkÃ©ho pÅ™Ã­chodu markeru mohl tento odkazovat na
-	 * starÃ© poloÅ¾ky. Marker oznaÄuje pozici, pÅ™ed kterou se berou data v metodÄ› vyber(). 
-	 * Je nutno pro nejhorÅ¡Ã­ pÅ™Ã­pad (marker pÅ™ijde hned v prvnÃ­m objektu) ponechat nejmÃ©nÄ›
-	 * this.predMarkerem starÃ½ch hodnot.
+	 * Tato metoda nastaví poloky pole float[] data na Float.MAX_VALUE.
+	 * Nebudou však vymazány všechy poloky, ponechá se nìkolik poloek pøed koncem (this.konec)
+	 * toto je z dùvodu, aby v pøípadì brzkého pøíchodu markeru mohl tento odkazovat na
+	 * staré poloky. Marker oznaèuje pozici, pøed kterou se berou data v metodì vyber(). 
+	 * Je nutno pro nejhorší pøípad (marker pøijde hned v prvním objektu) ponechat nejménì
+	 * this.predMarkerem starıch hodnot.
 	 * Pokud v bufferu zustal nejaky marker, tak se musi ponechat vice polozek.
 	 * V takovem pripade se v promazanem bufferu musi na pocatku objevit this.predMarkerem
 	 * hodnot pred indexem markeru ze stareho bufferu a zaroven i vsechna data po nem.
@@ -273,8 +273,8 @@ public class Buffer {
 		/* pokud zustaly indexy markeru ve fronte indexu, musi se prepsat na nove hodnoty */
 		LinkedList<Integer> novaFrontaIndexu = new LinkedList<>();
 		while(!this.frontaIndexu.isEmpty()){
-			/* vÅ¡echny indexy markerÅ¯ z fronty se musÃ­ pÅ™epsat -> odeÄÃ­st od nich
-			   indexPredMarkerem; tÃ­m se vÅ¡echny posunou na zaÄÃ¡tek  */
+			/* všechny indexy markerù z fronty se musí pøepsat -> odeèíst od nich
+			   indexPredMarkerem; tím se všechny posunou na zaèátek  */
 			int indexMarkeru = this.frontaIndexu.removeFirst() - indexPredMarkerem;			
 			novaFrontaIndexu.add(indexMarkeru);
 		}

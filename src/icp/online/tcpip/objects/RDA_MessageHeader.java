@@ -1,21 +1,21 @@
 package icp.online.tcpip.objects;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: RDA_MessageHeader
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: RDA_MessageHeader
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Tato tÅ™Ã­da reprezentuje datovÃ½ objekt kterÃ½ pÅ™ichÃ¡zÃ­ ze serveru. Je vÅ¾dy oznaÄen
- * unikÃ¡tnÃ­ posloupnostÃ­ bajtÅ¯. Nese informace o typu a velikosti nÃ¡sledujÃ­cÃ­ho datovÃ©ho
- * bloku. Tuto hlaviÄku obsahujÃ­ vÅ¡echny ostatnÃ­ datovÃ© objekty (s vÃ½jimkou objektu typu
- * RDA_Marker). DÃ­ky tÃ©to tÅ™Ã­dÄ› vÃ­m, jakÃ¡ data mÃ¡m zpracovÃ¡vat.
+ * Tato tøída reprezentuje datovı objekt kterı pøichází ze serveru. Je vdy oznaèen
+ * unikátní posloupností bajtù. Nese informace o typu a velikosti následujícího datového
+ * bloku. Tuto hlavièku obsahují všechny ostatní datové objekty (s vıjimkou objektu typu
+ * RDA_Marker). Díky této tøídì vím, jaká data mám zpracovávat.
  */
 public class RDA_MessageHeader {
-	/** Velikost celÃ©ho datovÃ©ho bloku. **/ 
+	/** Velikost celého datového bloku. **/ 
 	protected long nSize;
-	/** Typ datovÃ©ho bloku. **/
+	/** Typ datového bloku. **/
 	protected long nType;
 	
 	public RDA_MessageHeader(long nSize, long nType) {

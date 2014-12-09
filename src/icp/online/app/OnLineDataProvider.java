@@ -20,24 +20,24 @@ public class OnLineDataProvider extends Observable {
 	private static final int POCETHODNOTZAEPOCHOU = 512;
 
 	/**
-	 *  PoÄet stimulÅ¯, po jakÃ©m se zastavÃ­ hlavnÃ­ test.
+	 *  Poèet stimulù, po jakém se zastaví hlavní test.
 	 */
 	private static final int POCETSTIMULU = 400;
 
 	/**
-	 * Pole, ve kterÃ©m budou uloÅ¾eny prÅ¯mÄ›rnÃ© hodnoty EEG signÃ¡lu pro jednotlivÃ© Äislice
-	 * index pole oznaÄuje danÃ© Äislo (0-9)
+	 * Pole, ve kterém budou uloeny prùmìrné hodnoty EEG signálu pro jednotlivé èislice
+	 * index pole oznaèuje dané èislo (0-9)
 	 */
 	private Epocha[] epochaCisla;
 
 	/**
-	 * ZapisovaÄ pro uklÃ¡dÃ¡nÃ­ poÄtu podobnostÃ­ jednotlivÃ½ch (zprÅ¯mÄ›rovanÃ½ch) epoch s P-300 vlnou.
+	 * Zapisovaè pro ukládání poètu podobností jednotlivıch (zprùmìrovanıch) epoch s P-300 vlnou.
 	 */
 	//private Zapisovac zapisovac;
 
 
 	/**
-	 * Bufer, kterÃ½ se bude pouÅ¾Ã­vat pro uklÃ¡dÃ¡nÃ­ hodnot z datovÃ½ch objektÅ¯ RDA_MessageData
+	 * Bufer, kterı se bude pouívat pro ukládání hodnot z datovıch objektù RDA_MessageData
 	 */
 	private Buffer buffer;
 	
@@ -56,15 +56,15 @@ public class OnLineDataProvider extends Observable {
 	}
 	
 	/**
-	 * Konstruktor, kterÃ½ vytvoÅ™Ã­ instanci tÃ©to Å™Ã­dÃ­cÃ­ tÅ™Ã­dy.
-	 * @param ip_adr - IP adresa serveru, na kterÃ½ se napojÃ­ client
-	 * @param port - port, kterÃ½ se pouÅ¾ije pro komunikaci se serverem
-	 * @param log - loger pro logovÃ¡nÃ­ udÃ¡lostÃ­
-	 * @param vystup - pÅ™ijatÃ© ÄÃ­slo (ze stimulu)
-	 * @param reakce reference na zapisovaÄ reakcÃ­
+	 * Konstruktor, kterı vytvoøí instanci této øídící tøídy.
+	 * @param ip_adr - IP adresa serveru, na kterı se napojí client
+	 * @param port - port, kterı se pouije pro komunikaci se serverem
+	 * @param log - loger pro logování událostí
+	 * @param vystup - pøijaté èíslo (ze stimulu)
+	 * @param reakce reference na zapisovaè reakcí
 	 * @param p300 - 'idealni' P300 vlna
-	 * Tato vlna se nastavÃ­ pomocÃ­ O-Q testu, a nÃ¡Ã­slednÄ› se pouÅ¾Ã­vÃ¡ k porovnÃ¡vÃ¡nÃ­ s
-	 * prÅ¯mÄ›rnÃ½mi epochami ÄÃ­slic
+	 * Tato vlna se nastaví pomocí O-Q testu, a náíslednì se pouívá k porovnávání s
+	 * prùmìrnımi epochami èíslic
 	 */
 	public OnLineDataProvider(String ip_adr, int port, Observer obs){
 		super();
@@ -85,7 +85,7 @@ public class OnLineDataProvider extends Observable {
 		while(cisloStimulu < POCETSTIMULU + 1){
 			Object o = dtk.retrieveDataBlock();
 			if(o instanceof RDA_Marker){
-				/* takto zÃ­skÃ¡m pÅ™Ã­chozÃ­ ÄÃ­slo z markeru */
+				/* takto získám pøíchozí èíslo z markeru */
 				int cislo = ((Integer.parseInt(((RDA_Marker) o).getsTypeDesc().substring(11,13).trim()))-1);
 				logger.debug("" + cislo);
 				cisloStimulu++;
@@ -135,13 +135,13 @@ public class OnLineDataProvider extends Observable {
 		//int nejvetsiReakce = this.zapisovac.getNejvetsiReakci();
 
 		//vystup.setText("" + nejvetsiReakce);
-		logger.info("EXPERIMENT SKONÄŒIL, mÅ¯Å¾ete ukonÄit mÄ›Å™enÃ­");
-		//log.log("NejsilnÄ›jÅ¡Ã­ reakce byla zaznamenÃ¡na na ÄÃ­slo " + nejvetsiReakce);
+		logger.info("EXPERIMENT SKONÈIL, mùete ukonèit mìøení");
+		//log.log("Nejsilnìjší reakce byla zaznamenána na èíslo " + nejvetsiReakce);
 	}
 	
 	/**
-	 * @return dostupnÃ© epochy pro vÅ¡echny dostupnÃ© kanÃ¡ly. 
-	 * [index_kanÃ¡lu (FZ == 0, CZ == 1, PZ == 2)]
+	 * @return dostupné epochy pro všechny dostupné kanály. 
+	 * [index_kanálu (FZ == 0, CZ == 1, PZ == 2)]
 	 * [index_stimulu (numbers from 1 to 9 . Object on zero index is not used)]
 	 * [index_epochy (from 0 to 9)]
 	 * [index_vzorku_epochy (0-511)]

@@ -3,14 +3,14 @@ package icp.online.tcpip;
 import java.util.LinkedList;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: SynchronizedLinkedListObject
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: SynchronizedLinkedListObject
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Thread-safe linked list, pouÅ¾Ã­vanÃ½ jako buffer objektÅ¯ typu RDA.
- * PÅ™etÃ­Å¾eny jsou pouze pouÅ¾Ã­vanÃ© metody.
+ * Thread-safe linked list, pouívanı jako buffer objektù typu RDA.
+ * Pøetíeny jsou pouze pouívané metody.
  */
 
 public class SynchronizedLinkedListObject extends LinkedList<Object> {

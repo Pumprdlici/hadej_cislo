@@ -1,4 +1,4 @@
-package icp;
+﻿package icp;
 
 import icp.application.OnlineDetection;
 import icp.application.classification.FilterFeatureExtraction;
@@ -9,7 +9,7 @@ import icp.online.app.OnLineDataProvider;
 import icp.online.gui.MainFrame;
 
 /**
- * Hlavn� spou�t�c� t��da aplikace.
+ * Hlavni spousteci trida aplikace
  * 
  */
 public class Main {

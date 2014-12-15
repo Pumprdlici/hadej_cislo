@@ -12,22 +12,51 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author Prokop
  */
-public class StartingDialog extends javax.swing.JDialog {
+public class SetupDialogContent extends javax.swing.JPanel {
 
-    private String ip;
-    private int port;
-    
+    private static final String IPADDRESS_PATTERN
+            = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+
     /**
-     * Creates new form StartingDialog
-     * @param parent
-     * @param modal
+     * Creates new form SetupDialogContent
      */
-    public StartingDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        ip = Const.DEF_IP_ADDRESS;
+    public SetupDialogContent() {
         initComponents();
-        ipField.setText(ip);
-        portCombo.setModel(new DefaultComboBoxModel(Const.DEF_PORTS));
+        ipField.setText(Const.DEF_IP_ADDRESS);
+        portBox.setModel(new DefaultComboBoxModel(Const.DEF_PORTS));
+    }
+
+    /**
+     * Gets IP address from textfield and tries if it matches regular expresion
+     * of ip address.
+     *
+     * @return ip address or null if it does not match reg. expresion.
+     */
+    public String getIP() {
+        String ip = ipField.getText();
+        if (ip.matches(IPADDRESS_PATTERN)) {
+            return ip;
+        }
+        return null;
+    }
+
+    /**
+     * Gets port from combo box
+     *
+     * @return port or -1 if numberformatexception is catched.
+     */
+    public int getPort() {
+        String portString = portBox.getSelectedItem().toString();
+        int port;
+        try {
+            port = Integer.parseInt(portString);
+        } catch (NumberFormatException ex) {
+            port = -1;
+        }
+        return port;
     }
 
     /**
@@ -43,26 +72,20 @@ public class StartingDialog extends javax.swing.JDialog {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        portCombo = new javax.swing.JComboBox();
+        portBox = new javax.swing.JComboBox();
         ipField = new javax.swing.JTextField();
-        okBtn = new javax.swing.JButton();
-        stornoBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(300, 150));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Connection setup");
+        jLabel1.setText("Connection Setings");
 
-        jLabel2.setText("IP address:");
+        jLabel2.setText("IP Address:");
 
         jLabel3.setText("Port:");
 
-        okBtn.setText("OK");
-
-        stornoBtn.setText("Storno");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -76,16 +99,11 @@ public class StartingDialog extends javax.swing.JDialog {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel3))
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(portCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(portBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ipField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 87, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(stornoBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(okBtn)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -99,28 +117,22 @@ public class StartingDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(ipField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(portCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(okBtn)
-                    .addComponent(stornoBtn))
-                .addContainerGap())
+                    .addComponent(portBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField ipField;
+    public javax.swing.JTextField ipField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JButton okBtn;
-    private javax.swing.JComboBox portCombo;
-    private javax.swing.JButton stornoBtn;
+    public javax.swing.JComboBox portBox;
     // End of variables declaration//GEN-END:variables
+
 }

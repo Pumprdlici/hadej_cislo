@@ -1,27 +1,27 @@
 package icp.online.tcpip.objects;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: RDA_MessageData
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: RDA_MessageData
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Tato tÅ™Ã­da je obecnou datovou tÅ™Ã­dou zasÃ­lanou serverem. Obsahuje informace o poÄtu obsaÅ¾enÃ½ch
- * datovÃ½ch blokÅ¯, poÄtu obsaÅ¾enÃ½ch markerÅ¯ a relativnÃ­ poÅ™adÃ­ tohoto bloku od zaÄÃ¡tku komunikace.
- * DÃ¡le samozÅ™ejmÄ› obsahuje samotnÃ¡ data, kterÃ¡ jsou uloÅ¾ena v poli o dÃ©lce (poÄet kanÃ¡lÅ¯ * poÄet 
- * datovÃ½ch blokÅ¯). RovnÄ›Å¾ obsahuje informace o pÅ™Ã­tomnÃ½ch markerech.
+ * Tato tøída je obecnou datovou tøídou zasílanou serverem. Obsahuje informace o poètu obsaenıch
+ * datovıch blokù, poètu obsaenıch markerù a relativní poøadí tohoto bloku od zaèátku komunikace.
+ * Dále samozøejmì obsahuje samotná data, která jsou uloena v poli o délce (poèet kanálù * poèet 
+ * datovıch blokù). Rovnì obsahuje informace o pøítomnıch markerech.
  */
 public class RDA_MessageData extends RDA_MessageHeader {
-	/** PoÅ™adÃ­ tohoto bloku od poÄÃ¡tku komunikace. **/
+	/** Poøadí tohoto bloku od poèátku komunikace. **/
 	private long nBlock;
-	/** PoÄet obsaÅ¾enÃ½ch datovÃ½ch blokÅ¯. **/
+	/** Poèet obsaenıch datovıch blokù. **/
 	private long nPoints;
-	/** PoÄet obsaÅ¾enÃ½ch markerÅ¯. **/
+	/** Poèet obsaenıch markerù. **/
 	private long nMarkers;
-	/** Pole s uloÅ¾enÃ½mi hodnotami (samotnÃ¡ data). **/
+	/** Pole s uloenımi hodnotami (samotná data). **/
 	private float[] fData;
-	/** Pole s referencemi na obsaÅ¾enÃ© markery. **/
+	/** Pole s referencemi na obsaené markery. **/
 	private RDA_Marker[] markers;
 	
 	public RDA_MessageData(long nSize, long nType, long nBlock,

@@ -1,4 +1,4 @@
-package icp;
+﻿package icp;
 
 import icp.application.OnlineDetection;
 import icp.application.classification.FilterFeatureExtraction;
@@ -10,6 +10,7 @@ import icp.online.app.OnLineDataProvider;
 import icp.online.gui.MainFrame;
 import javax.swing.JOptionPane;
 
+ * Hlavni spousteci trida aplikace
 public class Main {
 
     public static void main(String[] args) {

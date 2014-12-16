@@ -32,18 +32,15 @@ public class MainWindowProvider implements Observer {
     protected SessionManager app;
     protected Transformation transform;
     private ImageIcon warningIcon;
-    protected int lastLeftSplitPosition;
-    protected int lastRightSplitPosition;
-    protected int lastSplitPosition;
+    
+    
+    
 
     public MainWindowProvider(SessionManager app, GuiController guiController) {
         this.app = app;
         this.guiController = guiController;
         mainWindow = new MainWindow(guiController, this);
-        lastLeftSplitPosition = mainWindow.getHeight() / 2;
-        lastRightSplitPosition = mainWindow.getHeight() / 2;
-        lastSplitPosition = mainWindow.getWidth() / 2;
-
+   
     }
 
     public void update(Observable o, Object arg) {
@@ -165,11 +162,7 @@ public class MainWindowProvider implements Observer {
 
     }
     
-    void setSplitPaneHistory() {
-        lastLeftSplitPosition = mainWindow.splitVerticalLeft.getDividerLocation();
-        lastRightSplitPosition = mainWindow.splitVerticalRight.getDividerLocation();
-        lastSplitPosition = mainWindow.split.getDividerLocation();
-    }
+   
 
     void importData() {
         guiController.sendMessage(GuiController.MSG_SHOW_IMPORT_DIALOG);

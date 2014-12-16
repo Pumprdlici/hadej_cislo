@@ -5,7 +5,7 @@ package icp.application.classification;
  * Holds results of classification
  * if the target data with expected classes
  * is provided.
- * Allows to calculated accuracy.
+ * Can calculate accuracy.
  * 
  * @author Lukas Vareka
  *

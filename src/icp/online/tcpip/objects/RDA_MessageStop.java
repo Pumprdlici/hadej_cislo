@@ -1,14 +1,14 @@
 package icp.online.tcpip.objects;
 		
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: RDA_MessageStop
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: RDA_MessageStop
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Tento prÃ¡zdnÃ½ objekt pÅ™ichÃ¡zÃ­ pÅ™i ukonÄenÃ­ komunikace se serverem.
- * @author Michal PatoÄka.
+ * Tento prázdnı objekt pøichází pøi ukonèení komunikace se serverem.
+ * @author Michal Patoèka.
  */
 public class RDA_MessageStop extends RDA_MessageHeader {
 

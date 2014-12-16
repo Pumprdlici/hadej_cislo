@@ -1,15 +1,15 @@
 package icp.online.app;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: HodnotyVlny
- * @author Bohumil PodlesÃ¡k
- * PrvnÃ­ verze vytvoÅ™ena: 8.4.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: HodnotyVlny
+ * @author Bohumil Podlesák
+ * První verze vytvoøena: 8.4.2010
  * @version 1.2
  * 
- * TÅ™Ã­da nahrazujÃ­cÃ­ v javÄ› neexistujÃ­cÃ­ datovÃ½ typ zÃ¡znam.
- * Je nutnÃ¡ kvÅ¯li metodÄ› vracejÃ­cÃ­ pole hodnot a typ stimulu.
- * @author Bohumil PodlesÃ¡k
+ * Tøída nahrazující v javì neexistující datovı typ záznam.
+ * Je nutná kvùli metodì vracející pole hodnot a typ stimulu.
+ * @author Bohumil Podlesák
  */
 public class HodnotyVlny {
 	private float[] hodnotyFZ;

@@ -3,46 +3,46 @@ package icp.online.app;
 import org.apache.log4j.Logger;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: Epocha
- * @author Bohumil PodlesÃ¡k
- * PrvnÃ­ verze vytvoÅ™ena: 8.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: Epocha
+ * @author Bohumil Podlesák
+ * První verze vytvoøena: 8.3.2010
  * @version 2.0
  * 
- * Instance tÃ©to tÅ™Ã­dy reprezetujÃ­ jednotlivÃ© epochy signÃ¡lu.
- * Epochy je nutno upravit, protoÅ¾e signÃ¡l mÅ¯Å¾e pÅ™ichÃ¡zet zkreslenÃ½, dÃ­ky pocenÃ­ subjektu.
- * V takovÃ©m pÅ™Ã­padÄ› je nutno srovnat baseline (respektive se baseline srovnÃ¡vÃ¡ vÅ¾dy).
- * Epochy se spolu dokÃ¡Å¾Ã­ prÅ¯mÄ›rovat a dÃ¡le zde existuje metoda na vyhodnocenÃ­ podobnosti
- * s polem floatÅ¯ jinÃ©ho signÃ¡lu.
- * Je vhodnÃ© vyuÅ¾Ã­vat rovnÄ›Å¾ metodu, kterÃ¡ upozorÅˆuje na extrÃ©mnÃ­ hodnoty v objektu epocha.
- * Na jejÃ­m zÃ¡kladÄ› se mÅ¯Å¾e vyhodnotit vznik artefaktu (mrknutÃ­).
+ * Instance této tøídy reprezetují jednotlivé epochy signálu.
+ * Epochy je nutno upravit, protože signál mùže pøicházet zkreslený, díky pocení subjektu.
+ * V takovém pøípadì je nutno srovnat baseline (respektive se baseline srovnává vždy).
+ * Epochy se spolu dokáží prùmìrovat a dále zde existuje metoda na vyhodnocení podobnosti
+ * s polem floatù jiného signálu.
+ * Je vhodné využívat rovnìž metodu, která upozoròuje na extrémní hodnoty v objektu epocha.
+ * Na jejím základì se mùže vyhodnotit vznik artefaktu (mrknutí).
  *
  */
 public class Epocha {
 	/**
-	 * PoÄet poloÅ¾ek v poli hodnoty, kterÃ© jsou pÅ™ed markerem.
+	 * Poèet položek v poli hodnoty, které jsou pøed markerem.
 	 */
 	private int predMarkerem;
 	/**
-	 * PoÄet poloÅ¾ek v poli hodnoty, kterÃ© jsou za markerem.
+	 * Poèet položek v poli hodnoty, které jsou za markerem.
 	 */
 	private int zaMarkerem;
 	/**
-	 * Hodnoty EEG signÃ¡lu danÃ© epochy.
+	 * Hodnoty EEG signálu dané epochy.
 	 */
 	private float[] hodnoty;	
 	/**
-	 * PoÄet jednotlivÃ½ch epoch, kterÃ© vytvoÅ™ily zprÅ¯mÄ›rovÃ¡nÃ­m instancÃ­ tÃ©to epochy.
+	 * Poèet jednotlivých epoch, které vytvoøily zprùmìrováním instancí této epochy.
 	 */
 	private int pocetPrumVln;
 	
 	private Logger logger = Logger.getLogger(Epocha.class);
 	
 	/**
-	 * Konstruktor novÃ© epochy
-	 * @param pocetPred - poÄet poloÅ¾ek v poli hodnoty, kterÃ© jsou pÅ™ed markerem
-	 * @param pocetZa - poÄet poloÅ¾ek v poli hodnoty, kterÃ© jsou za markerem
-	 * @param hodnoty - hodnoty EEG signÃ¡lu dane Epochy
+	 * Konstruktor nové epochy
+	 * @param pocetPred - poèet položek v poli hodnoty, které jsou pøed markerem
+	 * @param pocetZa - poèet položek v poli hodnoty, které jsou za markerem
+	 * @param hodnoty - hodnoty EEG signálu dane Epochy
 	 */
 	public Epocha(int pocetPred, int pocetZa, float[] hodnoty){
 		this.predMarkerem = pocetPred;
@@ -58,10 +58,10 @@ public class Epocha {
 	public float[] getHodnoty(int odIndexu, int doIndexu){
 		if((odIndexu >= this.zaMarkerem) || (doIndexu > this.zaMarkerem)
 				|| (odIndexu < 0) || (doIndexu < 0)){
-			logger.error("Chyba - pokus o vybrÃ¡nÃ­ hodnot vlny na indexech mimo rozsah epochy.");
+			logger.error("Chyba - pokus o vybrání hodnot vlny na indexech mimo rozsah epochy.");
 			return null;
 		}else if((doIndexu - odIndexu) < 0){
-			logger.error("Chyba - obrÃ¡cenÃ© poÅ™adÃ­ indexÅ¯.");
+			logger.error("Chyba - obrácené poøadí indexù.");
 			return null;
 		}
 		float[] vals = new float[doIndexu - odIndexu];

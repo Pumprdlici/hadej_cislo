@@ -1,25 +1,25 @@
 package icp.online.tcpip.objects;
 
 /**
- * NÃ¡zev Ãºlohy: JednoduchÃ© BCI
- * TÅ™Ã­da: RDA_MessageStart
- * @author Michal PatoÄka
- * PrvnÃ­ verze vytvoÅ™ena: 3.3.2010
+ * Název úlohy: Jednoduché BCI
+ * Tøída: RDA_MessageStart
+ * @author Michal Patoèka
+ * První verze vytvoøena: 3.3.2010
  * @version 1.0
  * 
- * Tento objekt pÅ™ichÃ¡zÃ­ obecnÄ› pÅ™i zapoÄetÃ­ komunikace se serverem. Obsahuje
- * informace o poÄtu kanÃ¡lÅ¯, snÃ­mkovacÃ­ frekvenci pÅ™Ã­stroje EEG a seznam jednotlivÃ½ch
- * kanÃ¡lÅ¯, spoleÄnÄ› s jejich jmÃ©ny a voltÃ¡Å¾emi.
+ * Tento objekt pøichází obecnì pøi zapoèetí komunikace se serverem. Obsahuje
+ * informace o poètu kanálù, snímkovací frekvenci pøístroje EEG a seznam jednotlivıch
+ * kanálù, spoleènì s jejich jmény a voltáemi.
  */
 
 public class RDA_MessageStart extends RDA_MessageHeader {
-	/** PoÄet kanÃ¡lÅ¯ pÅ™Ã­stroje EEG. **/
+	/** Poèet kanálù pøístroje EEG. **/
 	private long nChannels;
-	/** SnÃ­mkovacÃ­ frekvence. **/
+	/** Snímkovací frekvence. **/
 	private double dSamplingInterval;
-	/** VoltÃ¡Å¾e jednotlivÃ½ch elektrod. **/
+	/** Voltáe jednotlivıch elektrod. **/
 	private double[] dResolutions;
-	/** NÃ¡zvy jednotlivÃ½ch elektrod. **/
+	/** Názvy jednotlivıch elektrod. **/
 	private String[] sChannelNames;
 	
 	public RDA_MessageStart(long nSize, long nType, long nChannels,
@@ -35,7 +35,7 @@ public class RDA_MessageStart extends RDA_MessageHeader {
 	public String toString() {
 		
 		String navrat = "RDA_MessageStart (size = "+ nSize +  ") \n" +
-				"Sampling interval: " + dSamplingInterval + " ÂµS \n" +
+				"Sampling interval: " + dSamplingInterval + " µS \n" +
 				"Number of channels: " + nChannels + "\n"; 
 		
 		for(int i = 0; i < dResolutions.length; i++){

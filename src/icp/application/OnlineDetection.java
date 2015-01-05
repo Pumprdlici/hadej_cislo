@@ -3,7 +3,6 @@ package icp.application;
 import icp.application.classification.IERPClassifier;
 import icp.online.app.EpochMessenger;
 
-import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 

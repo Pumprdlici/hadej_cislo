@@ -16,14 +16,17 @@ import java.util.LinkedList;
 public class SynchronizedLinkedListObject extends LinkedList<Object> {
 	private static final long serialVersionUID = 1L;
 
+        @Override
 	public synchronized void addLast(Object o){
 		super.add(o);
 	}
 	
+        @Override
 	public synchronized Object removeFirst(){
 		return super.removeFirst();
 	}
 	
+        @Override
 	public synchronized boolean isEmpty(){
 		return super.isEmpty();
 	}

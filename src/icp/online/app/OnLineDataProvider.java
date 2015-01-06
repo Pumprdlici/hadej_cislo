@@ -89,6 +89,7 @@ public class OnLineDataProvider extends Observable {
             } else if (o instanceof RDA_MessageStart) {
                 RDA_MessageStart msg = (RDA_MessageStart) o;
                 String[] chNames = msg.getsChannelNames();
+                Buffer.numChannels = (int)msg.getnChannels();
                 for (int i = 0; i < chNames.length; i++) {
                     if (chNames[i].equalsIgnoreCase("cz")) {
                         Buffer.indexCz = i;

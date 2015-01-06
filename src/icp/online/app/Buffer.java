@@ -38,6 +38,8 @@ public class Buffer {
 	 * Index elektrody FZ. Tato elektroda je v poli zapsána jako osmnáctá v poøadí.
 	 */
 	public static int indexCz = 18;
+        
+        public static int numChannels = 19;
 		
 	private float[] dataFZ;
 	private float[] dataCZ;
@@ -92,7 +94,7 @@ public class Buffer {
 	private float[] vyberFZ(float[] pole){
 		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
 		for(int i = 0; i < POCETHODNOTELEKTRODY; i++){
-			vybraneHodnoty[i] = pole[indexFz + 19*i];
+			vybraneHodnoty[i] = pole[indexFz + numChannels*i];
 		}
 		return vybraneHodnoty;
 	}
@@ -100,7 +102,7 @@ public class Buffer {
 	private float[] vyberPZ(float[] pole){
 		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
 		for(int i = 0; i < POCETHODNOTELEKTRODY; i++){
-			vybraneHodnoty[i] = pole[indexPz + 19*i];
+			vybraneHodnoty[i] = pole[indexPz + numChannels*i];
 		}
 		return vybraneHodnoty;
 	}
@@ -108,7 +110,7 @@ public class Buffer {
 	private float[] vyberCZ(float[] pole){
 		float[] vybraneHodnoty = new float[POCETHODNOTELEKTRODY];
 		for(int i = 0; i < POCETHODNOTELEKTRODY; i++){
-			vybraneHodnoty[i] = pole[indexCz + 19*i];
+			vybraneHodnoty[i] = pole[indexCz + numChannels*i];
 		}
 		return vybraneHodnoty;
 	}

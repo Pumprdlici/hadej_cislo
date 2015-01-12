@@ -22,35 +22,40 @@ public class Main {
         boolean isOk = false;
         String recorderIPAddress = null;
         int port = -1;
+        int mode = 0;
         while (!isOk) {
             result = JOptionPane.showConfirmDialog(null, content, "Guess the Number: Setup", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (result == JOptionPane.CANCEL_OPTION) {
                 System.exit(result);
             }
 
-            recorderIPAddress = content.getIP();
-            port = content.getPort();
-            if (port != -1 && recorderIPAddress != null) {
-                isOk = true;
-            } else {
-                if (port == -1) {
-                    JOptionPane.showMessageDialog(null, "Invalid port number!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                if (recorderIPAddress == null) {
-                    JOptionPane.showMessageDialog(null, "Invalid IP address!", "Error", JOptionPane.ERROR_MESSAGE);
+            mode = content.getMode();
+            if (mode == 0) {
+                recorderIPAddress = content.getIP();
+                port = content.getPort();
+                if (port != -1 && recorderIPAddress != null) {
+                    isOk = true;
+                } else {
+                    if (port == -1) {
+                        JOptionPane.showMessageDialog(null, "Invalid port number!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (recorderIPAddress == null) {
+                        JOptionPane.showMessageDialog(null, "Invalid IP address!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }
 
-        IERPClassifier classifier = new MLPClassifier();
-        classifier.load("data/classifier.txt");
-        IFeatureExtraction fe = new FilterFeatureExtraction();
-        classifier.setFeatureExtraction(fe);
+        if (isOk) {
+            IERPClassifier classifier = new MLPClassifier();
+            classifier.load("data/classifier.txt");
+            IFeatureExtraction fe = new FilterFeatureExtraction();
+            classifier.setFeatureExtraction(fe);
 
-        MainFrame gui = new MainFrame();
-        OnlineDetection detection = new OnlineDetection(classifier, gui);
+            MainFrame gui = new MainFrame();
+            OnlineDetection detection = new OnlineDetection(classifier, gui);
 
-        OnLineDataProvider odp = new OnLineDataProvider(recorderIPAddress, port, detection);
-
+            OnLineDataProvider odp = new OnLineDataProvider(recorderIPAddress, port, detection);
+        }
     }
 }

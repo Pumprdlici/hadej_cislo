@@ -6,8 +6,10 @@ import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
 import icp.gui.SetupDialogContent;
+import icp.online.app.IDataProvider;
 import icp.online.app.OnLineDataProvider;
 import icp.online.gui.MainFrame;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -53,9 +55,9 @@ public class Main {
             classifier.setFeatureExtraction(fe);
 
             MainFrame gui = new MainFrame();
-            OnlineDetection detection = new OnlineDetection(classifier, gui);
-
-            OnLineDataProvider odp = new OnLineDataProvider(recorderIPAddress, port, detection);
+            OnlineDetection observerDetection = new OnlineDetection(classifier, gui);
+            IDataProvider dp = new OnLineDataProvider(recorderIPAddress, port);
+            dp.readEpochData(observerDetection);
         }
     }
 }

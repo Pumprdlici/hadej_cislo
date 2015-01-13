@@ -21,6 +21,6 @@ public class Main {
             }
         }
         MainFrame gui = new MainFrame();
-            IDataProvider dp = new OnLineDataProvider(recorderIPAddress, port);
+       //     IDataProvider dp = new OnLineDataProvider(recorderIPAddress, port);
     }
 }

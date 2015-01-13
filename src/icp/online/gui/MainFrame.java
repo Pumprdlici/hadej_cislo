@@ -59,7 +59,7 @@ public class MainFrame extends JFrame implements Observer {
 
     private JFileChooser chooser;
 
-    private OnlineDetection detection;
+    private Observer detection;
 
     private IDataProvider dp;
 

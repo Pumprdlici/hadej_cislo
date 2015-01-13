@@ -3,9 +3,12 @@ package icp.online.app;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+
+import cz.zcu.kiv.signal.ChannelInfo;
 import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.signal.EEGMarker;
@@ -14,9 +17,9 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 	
 	private String vhdrFile;
 	private String vmrkFile;
-	private final int FZ_INDEX = 17;
-	private final int CZ_INDEX = 18;
-	private final int PZ_INDEX = 19;
+	private final int FZ_INDEX = 1;
+	private final int CZ_INDEX = 2;
+	private final int PZ_INDEX = 3;
 	
 	private static final int POCETHODNOTPREDEPOCHOU = 100;
 	private static final int POCETHODNOTZAEPOCHOU = 512;
@@ -55,9 +58,11 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 		DataTransformer dt = new EEGDataTransformer();
 		
 		try {
+			
 			double[] fzChannel = dt.readBinaryData(vhdrFile, FZ_INDEX);
 			double[] czChannel = dt.readBinaryData(vhdrFile, CZ_INDEX);
 			double[] pzChannel = dt.readBinaryData(vhdrFile, PZ_INDEX);
+			List<ChannelInfo> channels = dt.getChannelInfo();
 			Map<String, EEGMarker> markers = dt.readMarkers(vmrkFile);
 						
 
@@ -67,7 +72,7 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 				EpochMessenger em = new EpochMessenger();
 
 
-				int stimulusIndex = Integer.parseInt(marker.getName().replaceAll("[\\D]", "")) - 1;
+				int stimulusIndex = Integer.parseInt(marker.getStimulus().replaceAll("[\\D]", "")) - 1;
                 em.setStimulusIndex(stimulusIndex);
                 
                 em.setFZ(toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));

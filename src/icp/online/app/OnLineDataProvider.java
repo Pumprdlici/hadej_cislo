@@ -6,6 +6,7 @@ import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 import icp.online.tcpip.objects.RDA_MessageStart;
 
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -52,7 +53,9 @@ public class OnLineDataProvider extends Observable implements IDataProvider {
     }
 
     @Override
-    public void readEpochData(Observer obs) {
+
+
+	public void readEpochData(Observer obs) {
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
         this.buffer = new Buffer(DELKABUFFERU, POCETHODNOTPREDEPOCHOU, POCETHODNOTZAEPOCHOU);

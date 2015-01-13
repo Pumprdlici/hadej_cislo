@@ -7,7 +7,9 @@ import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
 import icp.gui.SetupDialogContent;
 import icp.online.app.IDataProvider;
+import icp.online.app.OffLineDataProvider;
 import icp.online.app.OnLineDataProvider;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -18,10 +20,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
+
 import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -58,7 +60,7 @@ public class MainFrame extends JFrame implements Observer {
 
     private JFileChooser chooser;
 
-    private OnlineDetection detection;
+    private OnlineDetection detectionObserver;
 
     private IDataProvider odp;
 
@@ -67,6 +69,8 @@ public class MainFrame extends JFrame implements Observer {
     public File eegFile;
 
     private final Logger log;
+    
+    private IERPClassifier classifier;
 
     public MainFrame() {
         super(APP_NAME);
@@ -174,6 +178,14 @@ public class MainFrame extends JFrame implements Observer {
             if (i == 0) {
                 eegFile = chooser.getSelectedFile();
             }
+            
+            
+            
+
+            detectionObserver = new OnlineDetection(classifier, mainFrame);
+
+            dp = new OffLineDataProvider(eegFile);
+            dp.readEpochData(detectionObserver);
         }
 
         public LoadOfflineData() {
@@ -217,7 +229,7 @@ public class MainFrame extends JFrame implements Observer {
             }
 
             if (isOk) {
-                detection = new OnlineDetection(classifier, mainFrame);
+                detectionObserver = new OnlineDetection(classifier, mainFrame);
                 try {
                     odp = new OnLineDataProvider(recorderIPAddress, port);
                 } catch (Exception ex) {

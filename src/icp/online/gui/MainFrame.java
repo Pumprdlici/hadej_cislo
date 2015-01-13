@@ -174,15 +174,16 @@ public class MainFrame extends JFrame implements Observer {
             int i = chooser.showDialog(mainFrame, "Open");
             if (i == 0) {
                 eegFile = chooser.getSelectedFile();
+                detection = new OnlineDetection(classifier, mainFrame);
+
+                dp = new OffLineDataProvider(eegFile);
+                dp.readEpochData(detection);
             }
             
             
             
 
-            detection = new OnlineDetection(classifier, mainFrame);
 
-            dp = new OffLineDataProvider(eegFile);
-            dp.readEpochData(detection);
         }
 
         public LoadOfflineData() {

@@ -175,6 +175,20 @@ public class MainFrame extends JFrame implements Observer {
             throw new IllegalArgumentException("Expencted array of doubles, but received something else.");
         }
     }
+    
+    private void stopRunningThread() {
+    	  try {
+              if(dataProvider != null){
+                  if(dp != null){
+                      dp.stop();
+                  }else{
+                      dataProvider.interrupt();
+                  }
+              }
+          } catch (Exception ex) {
+              
+          }
+    }
 
     public class LoadOfflineData extends AbstractAction {
 
@@ -190,7 +204,16 @@ public class MainFrame extends JFrame implements Observer {
             if (i == 0) {
                 eegFile = chooser.getSelectedFile();
                 detection = new OnlineDetection(classifier, mainFrame);
-                dp = new OffLineDataProvider(eegFile, detection);
+                stopRunningThread();
+              
+                
+                try {
+                    dp = new OffLineDataProvider(eegFile, detection);
+                    dataProvider = new Thread((OnLineDataProvider) dp);
+                    dataProvider.start();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
 
@@ -235,17 +258,7 @@ public class MainFrame extends JFrame implements Observer {
             }
 
             if (isOk) {
-                try {
-                    if(dataProvider != null){
-                        if(dp != null){
-                            dp.stop();
-                        }else{
-                            dataProvider.interrupt();
-                        }
-                    }
-                } catch (Exception ex) {
-                    
-                }
+            	stopRunningThread();
 
                 detection = new OnlineDetection(classifier, mainFrame);
                 try {

@@ -65,9 +65,11 @@ public class MainFrame extends JFrame implements Observer {
 
     public File eegFile;
 
+    private Thread dataProvider;
+
     private final Logger log;
-    
-    private IERPClassifier classifier;
+
+    private final IERPClassifier classifier;
 
     public MainFrame() {
         super(APP_NAME);
@@ -175,15 +177,8 @@ public class MainFrame extends JFrame implements Observer {
             if (i == 0) {
                 eegFile = chooser.getSelectedFile();
                 detection = new OnlineDetection(classifier, mainFrame);
-
-                dp = new OffLineDataProvider(eegFile);
-                dp.readEpochData(detection);
+                dp = new OffLineDataProvider(eegFile, detection);
             }
-            
-            
-            
-
-
         }
 
         public LoadOfflineData() {
@@ -227,14 +222,26 @@ public class MainFrame extends JFrame implements Observer {
             }
 
             if (isOk) {
+                try {
+                    if(dataProvider != null){
+                        if(dp != null){
+                            dp.stop();
+                        }else{
+                            dataProvider.interrupt();
+                        }
+                    }
+                } catch (Exception ex) {
+                    
+                }
+
                 detection = new OnlineDetection(classifier, mainFrame);
                 try {
-                    dp = new OnLineDataProvider(recorderIPAddress, port);
+                    dp = new OnLineDataProvider(recorderIPAddress, port, detection);
+                    dataProvider = new Thread((OnLineDataProvider) dp);
+                    dataProvider.start();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
-                dp.readEpochData(detection);
             }
         }
 

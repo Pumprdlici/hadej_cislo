@@ -78,7 +78,7 @@ public class SetupDialogContent extends javax.swing.JPanel {
         ipField = new javax.swing.JTextField();
         portBox = new javax.swing.JComboBox();
 
-        setPreferredSize(new java.awt.Dimension(300, 200));
+        setPreferredSize(new java.awt.Dimension(300, 100));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Connection Setings");

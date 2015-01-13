@@ -1,6 +1,5 @@
 package icp.online.tcpip;
 
-
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -9,125 +8,136 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 
 /**
- * Název úlohy: Jednoduché BCI
- * Tøída: SynchronizedLinkedListByte
- * @author Michal Patoèka
- * První verze vytvoøena: 3.3.2010
+ * Název úlohy: Jednoduché BCI Tøída: SynchronizedLinkedListByte
+ *
+ * @author Michal Patoèka První verze vytvoøena: 3.3.2010
  * @version 2.0
- * 
- * TCP/IP klient pro napojení na RDA server. Pøipojení je zajištìno pouitím tøídy
- * Socket a ošetøením patøiènıch vıjimek. Data jsou zpracovávána po jednotlivıch bajtech,
- * protoe je tak server (bohuel) zasílá. Vyuívá vyrovnávací pamì (linkedlist) do které
- * zapisuje získané bajty ze serveru. Nadstavbou této tøídy je bìnì tøída typu dataTokenizer,
- * která získané bajty pøevádí do podoby srozumitelnìjších objektù. Bajty lze získat pomocí
- * metody read().
+ *
+ * TCP/IP klient pro napojení na RDA server. Pøipojení je zajištìno pouitím
+ * tøídy Socket a ošetøením patøiènıch vıjimek. Data jsou zpracovávána po
+ * jednotlivıch bajtech, protoe je tak server (bohuel) zasílá. Vyuívá
+ * vyrovnávací pamì (linkedlist) do které zapisuje získané bajty ze serveru.
+ * Nadstavbou této tøídy je bìnì tøída typu dataTokenizer, která získané bajty
+ * pøevádí do podoby srozumitelnìjších objektù. Bajty lze získat pomocí metody
+ * read().
  */
+public class TCPIPClient extends Thread {
 
-public class TCPIPClient extends Thread{
-	/** Datovı stream pøíchozích bajtù. **/
-	private DataInputStream Sinput;	
-	/** Instance tøídy socket pro navázání spojení se serverem. **/
-	private Socket socket;
-	/** Linked list jako vyrovnávací pamì pro získávání bajtù. **/
-	private  SynchronizedLinkedListByte buffer = new SynchronizedLinkedListByte();
-	/** Reference na logger událostí. **/
-	private static Logger logger = Logger.getLogger(TCPIPClient.class);
-	/** IP adresa, na které bìí server. **/
-	private String ip;
-	/** Port na kterém server naslouchá. **/
-	private int port;
+    /**
+     * Datovı stream pøíchozích bajtù. *
+     */
+    private DataInputStream Sinput;
+    /**
+     * Instance tøídy socket pro navázání spojení se serverem. *
+     */
+    private Socket socket;
+    /**
+     * Linked list jako vyrovnávací pamì pro získávání bajtù. *
+     */
+    private SynchronizedLinkedListByte buffer = new SynchronizedLinkedListByte();
+    /**
+     * Reference na logger událostí. *
+     */
+    private static Logger logger = Logger.getLogger(TCPIPClient.class);
+    /**
+     * IP adresa, na které bìí server. *
+     */
+    private String ip;
+    /**
+     * Port na kterém server naslouchá. *
+     */
+    private int port;
 
-	/**
-	 * Konstruktor TCP/IP clienta. V parametrech má na jakou IP a na jakı port se napojuje.
-	 * Je pouit defaultní logger.
-	 * @param ip na jakou ip se má pøipojit
-	 * @param port na jakém portu má naslouchat
-	 */
-	public TCPIPClient(String ip,int port){
-		this.ip= ip;
-		this.port = port;
-	}
+    /**
+     * Konstruktor TCP/IP clienta. V parametrech má na jakou IP a na jakı port
+     * se napojuje. Je pouit defaultní logger.
+     *
+     * @param ip na jakou ip se má pøipojit
+     * @param port na jakém portu má naslouchat
+     * @throws java.lang.Exception
+     */
+    public TCPIPClient(String ip, int port) throws Exception {
+        this.ip = ip;
+        this.port = port;
 
-	/**
-	 * Metoda pro spuštìní vlákna pro ètení bajtù ze serveru. Jeliko tento proces musí proíhat
-	 * paraelnì s pøevádìním jednotlivıch bajtù na datové bloky, muselo bıt pouito vláknového 
-	 * pøístupu.
-	 */
-	public void run() {
+        //vytvoøení instance tøídy socket - napojení na server
+        try {
+            socket = new Socket(ip, port);
+        } catch (Exception e) {
+            logger.error("Error pøi pøipojování na server:" + e);
+            throw new Exception();
+        }
+        logger.debug("Pøipojení navázáno: "
+                + socket.getInetAddress() + ":"
+                + socket.getPort());
 
-		//vytvoøení instance tøídy socket - napojení na server
+        //vytváøím datastream pro ètení ze serveru
+        try {
+            Sinput = new DataInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            logger.error("Vıjimka pøi vytváøení nového input streamu: " + e);
+            throw new Exception();
+        }
+    }
 
-		try {
-			socket = new Socket(ip, port);
-		} catch(Exception e) {
-			logger.error("Error pøi pøipojování na server:" + e);
-			return;
-		}
-		logger.debug("Pøipojení navázáno: " +
-				socket.getInetAddress() + ":" +
-				socket.getPort());
+    /**
+     * Metoda pro spuštìní vlákna pro ètení bajtù ze serveru. Jeliko tento
+     * proces musí proíhat paraelnì s pøevádìním jednotlivıch bajtù na datové
+     * bloky, muselo bıt pouito vláknového pøístupu.
+     */
+    @Override
+    public void run() {
+        // ètu data ze serveru a ukládám je do bufferu
+        Byte response;
+        try {
+            while (true) {
+                try {
+                    response = Sinput.readByte();
+                    buffer.addLast(response);
+                } catch (Exception e) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Problém pøi ètení ze serveru: " + e);
+        }
 
-		//vytváøím datastream pro ètení ze serveru
-		try{
-			Sinput  = new DataInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			logger.error("Vıjimka pøi vytváøení nového input streamu: " + e);
-			return;
-		}
+        try {
+            Sinput.close();
+        } catch (Exception e) {
+        }
+    }
 
-		// ètu data ze serveru a ukládám je do bufferu
-		Byte response;
-		try {
-			while(true){
-				try{
-					response = Sinput.readByte();
-					buffer.addLast(response);
-				} catch(Exception e){
-					break;
-				}
-			}
-		} catch(Exception e) {
-			logger.error("Problém pøi ètení ze serveru: " + e);
-		}
+    /**
+     * Vrátí pole bajtù o zadané velikosti. Jednotlivé bajty získává z bufferu.
+     *
+     * @param value pole jaké velikost potøebuji
+     * @return pole bajtù o zadané velikosti
+     */
+    public byte[] read(int value) {
+        byte[] response = new byte[value];
+        for (int i = 0; i < value; i++) {
+            while (true) {
+                if (!buffer.isEmpty()) {
+                    try {
+                        response[i] = buffer.removeFirst();
+                        break;
+                    } catch (NoSuchElementException e) {
+                        logger.error("Vıjimka pøi vytváøení nového input streamu: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        return response;
+    }
 
-		try{
-			Sinput.close();
-		} catch(Exception e) {}
-	}  
-
-	/**
-	 * Vrátí pole bajtù o zadané velikosti. Jednotlivé bajty získává z bufferu.
-	 * @param value pole jaké velikost potøebuji
-	 * @return pole bajtù o zadané velikosti
-	 */
-	public byte[] read(int value){
-		byte[] response = new byte[value];
-		for(int i =0; i < value; i++){
-			while(true){
-				if(!buffer.isEmpty()){
-					try{
-					response[i] = buffer.removeFirst();
-					break;
-					} catch (NoSuchElementException e){
-						//OVERFLOW
-						e.printStackTrace();
-					}
-				} else {
-					continue;
-				}
-			}
-		}
-		return response;
-	}
-
-	/**
-	 * Tato metoda zjišuje, jestli je zásobník prázdnı. 
-	 * @return zda-li je zásobník prázdnı
-	 */
-	public boolean hasNext(){
-		return buffer.isEmpty();
-	}
-
-
+    /**
+     * Tato metoda zjišuje, jestli je zásobník prázdnı.
+     *
+     * @return zda-li je zásobník prázdnı
+     */
+    public boolean hasNext() {
+        return buffer.isEmpty();
+    }
 
 }

@@ -21,7 +21,6 @@ import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
 
-import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -60,11 +59,9 @@ public class MainFrame extends JFrame implements Observer {
 
     private JFileChooser chooser;
 
-    private OnlineDetection detectionObserver;
+    private OnlineDetection detection;
 
-    private IDataProvider odp;
-
-    IERPClassifier classifier;
+    private IDataProvider dp;
 
     public File eegFile;
 
@@ -182,10 +179,10 @@ public class MainFrame extends JFrame implements Observer {
             
             
 
-            detectionObserver = new OnlineDetection(classifier, mainFrame);
+            detection = new OnlineDetection(classifier, mainFrame);
 
             dp = new OffLineDataProvider(eegFile);
-            dp.readEpochData(detectionObserver);
+            dp.readEpochData(detection);
         }
 
         public LoadOfflineData() {
@@ -229,14 +226,14 @@ public class MainFrame extends JFrame implements Observer {
             }
 
             if (isOk) {
-                detectionObserver = new OnlineDetection(classifier, mainFrame);
+                detection = new OnlineDetection(classifier, mainFrame);
                 try {
-                    odp = new OnLineDataProvider(recorderIPAddress, port);
+                    dp = new OnLineDataProvider(recorderIPAddress, port);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                odp.readEpochData(detection);
+                dp.readEpochData(detection);
             }
         }
 

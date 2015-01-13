@@ -6,14 +6,12 @@ import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 import icp.online.tcpip.objects.RDA_MessageStart;
 
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
 
-public class OnLineDataProvider extends Observable implements IDataProvider {
+public class OnLineDataProvider extends Observable implements IDataProvider, Runnable {
 
     private static final int DELKABUFFERU = 10000;
     private static final int POCETHODNOTPREDEPOCHOU = 100;
@@ -33,35 +31,38 @@ public class OnLineDataProvider extends Observable implements IDataProvider {
     private final String ipAddress;
     private final int port;
     private final TCPIPClient client;
-    private DataTokenizer dtk;
+    private final DataTokenizer dtk;
+    private final Observer obs;
+    private boolean isRunning;
 
     /**
      * Konstruktor, který vytvoøí instanci této øídící tøídy.
      *
      * @param ip_adr - IP adresa serveru, na který se napojí client
      * @param port - port, který se použije pro komunikaci se serverem
+     * @param obs
      * @throws java.lang.Exception
      */
-    public OnLineDataProvider(String ip_adr, int port) throws Exception {
+    public OnLineDataProvider(String ip_adr, int port, Observer obs) throws Exception {
         super();
         this.ipAddress = ip_adr;
         this.port = port;
+        this.obs = obs;
         client = new TCPIPClient(this.ipAddress, this.port);
         client.start();
         dtk = new DataTokenizer(client);
         dtk.start();
+        isRunning = true;
     }
 
     @Override
-
-
-	public void readEpochData(Observer obs) {
+    public void run() {
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
         this.buffer = new Buffer(DELKABUFFERU, POCETHODNOTPREDEPOCHOU, POCETHODNOTZAEPOCHOU);
 
         int cisloStimulu = 0;
-        while (cisloStimulu < POCETSTIMULU + 1) {
+        while (isRunning && cisloStimulu < POCETSTIMULU + 1) {
             Object o = dtk.retrieveDataBlock();
             if (o instanceof RDA_Marker) {
                 /* takto získám pøíchozí èíslo z markeru */
@@ -101,6 +102,11 @@ public class OnLineDataProvider extends Observable implements IDataProvider {
             }
         }
         logger.info("EXPERIMENT SKONÈIL, mùžete ukonèit mìøení");
+    }
+
+    @Override
+    public synchronized void stop() {
+        isRunning = false;
     }
 
 }

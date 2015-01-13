@@ -6,7 +6,10 @@ import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
 import icp.gui.SetupDialogContent;
+import icp.online.app.IDataProvider;
+import icp.online.app.OffLineDataProvider;
 import icp.online.app.OnLineDataProvider;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -17,9 +20,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Observable;
 import java.util.Observer;
+
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -56,13 +59,15 @@ public class MainFrame extends JFrame implements Observer {
 
     private JFileChooser chooser;
     
-    private OnlineDetection detection;
+    private OnlineDetection detectionObserver;
     
-    private OnLineDataProvider odp;
+    private IDataProvider dp;
 
     public File eegFile;
 
     private Logger log;
+    
+    private IERPClassifier classifier;
 
     public MainFrame() {
         super(APP_NAME);
@@ -76,6 +81,11 @@ public class MainFrame extends JFrame implements Observer {
         this.setVisible(true);
         this.pack();
         this.setSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
+        
+        classifier = new MLPClassifier();
+        classifier.load("data/classifier.txt");
+        IFeatureExtraction fe = new FilterFeatureExtraction();
+        classifier.setFeatureExtraction(fe);
     }
 
     private JMenuBar createMenu() {
@@ -164,6 +174,14 @@ public class MainFrame extends JFrame implements Observer {
             if (i == 0) {
                 eegFile = chooser.getSelectedFile();
             }
+            
+            
+            
+
+            detectionObserver = new OnlineDetection(classifier, mainFrame);
+
+            dp = new OffLineDataProvider(eegFile);
+            dp.readEpochData(detectionObserver);
         }
 
         public LoadOfflineData() {
@@ -207,14 +225,11 @@ public class MainFrame extends JFrame implements Observer {
             }
 
             if (isOk) {
-                IERPClassifier classifier = new MLPClassifier();
-                classifier.load("data/classifier.txt");
-                IFeatureExtraction fe = new FilterFeatureExtraction();
-                classifier.setFeatureExtraction(fe);
+                
+                detectionObserver = new OnlineDetection(classifier, mainFrame);
 
-                detection = new OnlineDetection(classifier, mainFrame);
-
-                odp = new OnLineDataProvider(recorderIPAddress, port, detection);
+                dp = new OnLineDataProvider(recorderIPAddress, port);
+                dp.readEpochData(detectionObserver);
             }
         }
 

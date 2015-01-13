@@ -6,6 +6,7 @@ import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 import icp.online.tcpip.objects.RDA_MessageStart;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
@@ -48,8 +49,10 @@ public class OnLineDataProvider extends Observable implements IDataProvider {
         this.port = port;
     }
     
-    
-    public void readEpochData(Observer obs) {
+     
+
+
+	public void readEpochData(Observer obs) {
     	addObserver(obs);
         TCPIPClient client = new TCPIPClient(this.ipAddress, this.port);
         client.start();

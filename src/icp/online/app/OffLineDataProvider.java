@@ -73,12 +73,22 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
 					break;
 				EEGMarker marker = entry.getValue();
 				EpochMessenger em = new EpochMessenger();
+				
 				int stimulusIndex = Integer.parseInt(marker.getStimulus().replaceAll("[\\D]", "")) - 1;
                 em.setStimulusIndex(stimulusIndex);
-                em.setFZ(toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));
-                em.setCZ(toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));
-                em.setPZ(toFloatArray(Arrays.copyOfRange(pzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));
+                float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  ));
+                float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  ));
+                float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  ));
 				
+                
+                Baseline.correct(ffzChannel, POCETHODNOTPREDEPOCHOU);
+        		Baseline.correct(fczChannel, POCETHODNOTPREDEPOCHOU);
+        		Baseline.correct(fpzChannel, POCETHODNOTPREDEPOCHOU);
+        		
+        		em.setFZ(ffzChannel);
+        		em.setCZ(fczChannel);
+        		em.setPZ(fpzChannel);
+                
                 this.setChanged();
                 this.notifyObservers(em);
 			}

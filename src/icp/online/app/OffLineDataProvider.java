@@ -49,7 +49,7 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 	
 	@Override
 	public void readEpochData(Observer obs) {
-		
+		addObserver(obs);
 		
 		
 		DataTransformer dt = new EEGDataTransformer();
@@ -67,7 +67,7 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 				EpochMessenger em = new EpochMessenger();
 
 
-				int stimulusIndex = Integer.parseInt(marker.getName().replaceAll("[\\D]", ""));
+				int stimulusIndex = Integer.parseInt(marker.getName().replaceAll("[\\D]", "")) - 1;
                 em.setStimulusIndex(stimulusIndex);
                 
                 em.setFZ(toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));

@@ -64,8 +64,8 @@ public class TCPIPClient extends Thread {
         try {
             socket = new Socket(ip, port);
         } catch (Exception e) {
-            logger.error("Error pøi pøipojování na server:" + e);
-            throw new Exception();
+            logger.error("Chyba pøi pøipojování na server:" + e);
+            throw new Exception("Chyba pøi pøipojování na server: " + e.getMessage());
         }
         logger.debug("Pøipojení navázáno: "
                 + socket.getInetAddress() + ":"
@@ -75,8 +75,8 @@ public class TCPIPClient extends Thread {
         try {
             Sinput = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
-            logger.error("Výjimka pøi vytváøení nového input streamu: " + e);
-            throw new Exception();
+            logger.error("Chyba pøi vytváøení nového input streamu: " + e);
+            throw new Exception("Chyba pøi vytváøení nového input streamu: " + e.getMessage());
         }
     }
 

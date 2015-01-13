@@ -209,7 +209,7 @@ public class MainFrame extends JFrame implements Observer {
                 
                 try {
                     dp = new OffLineDataProvider(eegFile, detection);
-                    dataProvider = new Thread((OnLineDataProvider) dp);
+                    dataProvider = new Thread((OffLineDataProvider) dp);
                     dataProvider.start();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

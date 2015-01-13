@@ -13,7 +13,7 @@ import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.signal.EEGMarker;
 
-public class OffLineDataProvider extends Observable  implements IDataProvider{
+public class OffLineDataProvider extends Observable  implements Runnable, IDataProvider{
 	
 	private String vhdrFile;
 	private String vmrkFile;
@@ -24,12 +24,16 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 	private static final int POCETHODNOTPREDEPOCHOU = 100;
 	private static final int POCETHODNOTZAEPOCHOU = 512;
 	
+	private boolean running;
+	
 	public OffLineDataProvider(String vhdrFile, String markerFile) {
 		this.vhdrFile = vhdrFile;
 		this.vmrkFile = markerFile;
+		this.running = true;
 	}
 
-	public OffLineDataProvider(File eegFile) {
+	public OffLineDataProvider(File eegFile, Observer obs) {
+		this.addObserver(obs);
 		int index = eegFile.getAbsolutePath().lastIndexOf(".");
 		
 		String ext = eegFile.getAbsolutePath().substring(index);
@@ -37,6 +41,7 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 		
 		this.vhdrFile = baseName + ".vhdr";
 		this.vmrkFile = baseName + ".vmrk";
+		this.running = true;
 	}
 	
 	private float[] toFloatArray(double[] arr) {
@@ -50,11 +55,10 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 	}
 
 	
+	
+
 	@Override
-	public void readEpochData(Observer obs) {
-		addObserver(obs);
-		
-		
+	public void run() {
 		DataTransformer dt = new EEGDataTransformer();
 		
 		try {
@@ -64,17 +68,13 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 			double[] pzChannel = dt.readBinaryData(vhdrFile, PZ_INDEX);
 			List<ChannelInfo> channels = dt.getChannelInfo();
 			Map<String, EEGMarker> markers = dt.readMarkers(vmrkFile);
-						
-
-
 			for (Map.Entry<String, EEGMarker> entry : markers.entrySet()) {
+				if (!running)
+					break;
 				EEGMarker marker = entry.getValue();
 				EpochMessenger em = new EpochMessenger();
-
-
 				int stimulusIndex = Integer.parseInt(marker.getStimulus().replaceAll("[\\D]", "")) - 1;
                 em.setStimulusIndex(stimulusIndex);
-                
                 em.setFZ(toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));
                 em.setCZ(toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));
                 em.setPZ(toFloatArray(Arrays.copyOfRange(pzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  )));
@@ -88,8 +88,11 @@ public class OffLineDataProvider extends Observable  implements IDataProvider{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void stop() {
+		this.running = false;
 		
 	}
 

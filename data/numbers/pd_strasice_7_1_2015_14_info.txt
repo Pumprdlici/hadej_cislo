@@ -1,0 +1,4 @@
+holka 15 let,
+hádame 8, je to 8
+jediná nevýrazná odezva s latencí kolem 350 ms
+reakèní doba cca. 500 ms

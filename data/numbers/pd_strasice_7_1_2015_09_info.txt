@@ -1,0 +1,4 @@
+holka 14 let,
+hádame 3, je to 3 
+jediná znatelná reakce, malá amplituda, latence cca. 400 ms
+reakèní doba 600 ms

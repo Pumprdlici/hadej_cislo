@@ -1,0 +1,4 @@
+holka 14 let,
+hádame 2, je to 2 
+uhádnuto okamžitì, výrazná vlna s latencí cca. 450 ms
+reakèní doba 531 ms

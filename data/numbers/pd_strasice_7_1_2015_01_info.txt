@@ -1,0 +1,4 @@
+holka 13 let,
+hádame 3, je to 3
+klasifikátor hádá 1
+uvažujeme i o 9, 3 se vyprofiluje postupnì

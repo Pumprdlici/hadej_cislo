@@ -1,0 +1,5 @@
+kluk 15 let,
+hádame 8, je to 8
+hodnì mrká
+s latencí kolem 400 ms
+reakèní doba 430 ms

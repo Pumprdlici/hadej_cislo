@@ -1,0 +1,3 @@
+kluk 14 let,
+hádame postupnì 4, 7, je to 7 
+výrazná vlna s latencí cca. 350 ms, velmi podobná odezva pro 4 i pro 7

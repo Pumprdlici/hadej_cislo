@@ -1,0 +1,4 @@
+holka 14 let,
+hádame 8, je to 8 
+moc výrazná není, ale liší se od slabé odezvy na 4, 5
+reakèní doba 740 ms

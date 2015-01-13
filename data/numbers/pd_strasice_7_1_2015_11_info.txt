@@ -1,0 +1,4 @@
+kluk 14 let,
+hádame 4, je to 4
+latence cca. 500 ms
+reakèní doba 604 ms

@@ -1,0 +1,4 @@
+holka 14 let,
+hádame 3, je to 3 
+vlna s latencí cca. 450 ms
+reakèní doba 673 ms

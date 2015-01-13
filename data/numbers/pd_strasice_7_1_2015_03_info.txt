@@ -1,0 +1,5 @@
+holka 14 let,
+hádame 5, je to 5
+klasifikátor hádá 9 
+táhlá výrazná vlna okolo 500 ms, na Fz není nic
+reakèní doba 683 ms

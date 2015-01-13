@@ -1,0 +1,4 @@
+kluk 14 let,
+hádame 1, je to 1 
+výrazná vlna s latencí cca. 350 ms
+reakèní doba 583 ms

@@ -1,6 +1,5 @@
 package icp;
 
-import icp.online.app.IDataProvider;
 import icp.online.gui.MainFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -16,11 +15,11 @@ public class Main {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |UnsupportedLookAndFeelException ex) {
                 java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
         MainFrame gui = new MainFrame();
-            IDataProvider dp = new OnLineDataProvider(recorderIPAddress, port);
+
     }
 }

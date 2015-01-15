@@ -5,6 +5,7 @@ import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 import icp.online.tcpip.objects.RDA_MessageStart;
+import icp.online.tcpip.objects.RDA_MessageStop;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -60,7 +61,7 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
         this.buffer = new Buffer(DELKABUFFERU, POCETHODNOTPREDEPOCHOU, POCETHODNOTZAEPOCHOU);
-
+        boolean stopped = false;
         int cisloStimulu = 0;
         while (isRunning && cisloStimulu < POCETSTIMULU + 1) {
             Object o = dtk.retrieveDataBlock();
@@ -84,6 +85,11 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                         Buffer.indexFz = i;
                     }
                 }
+            } else if (o instanceof RDA_MessageStop) {
+                client.requestStop();
+                dtk.requestStop();
+                isRunning = false;
+                stopped = true;
             }
             if (buffer.jePlny() || (cisloStimulu > POCETSTIMULU)) {
                 for (HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()) {
@@ -101,6 +107,12 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                 buffer.vymaz();
             }
         }
+
+        if (!stopped) {
+            client.requestStop();
+            dtk.requestStop();
+        }
+
         logger.info("EXPERIMENT SKONÈIL, mùžete ukonèit mìøení");
     }
 

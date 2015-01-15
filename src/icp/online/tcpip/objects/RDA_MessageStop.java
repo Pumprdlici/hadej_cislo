@@ -16,6 +16,7 @@ public class RDA_MessageStop extends RDA_MessageHeader {
 		super(nSize, nType);
 	}
 
+        @Override
 	public String toString() {
 		return "RDA_MessageStop []";
 	}

@@ -47,7 +47,7 @@ public class DataTokenizer extends Thread {
     /**
      * Buffer jako vyrovnávací pamì pro doèasné uloení objektù *
      */
-    private SynchronizedLinkedListObject buffer = new SynchronizedLinkedListObject();
+    private final SynchronizedLinkedListObject buffer = new SynchronizedLinkedListObject();
     /**
      * Unikátní posloupnost 12 bajtù, která oznaèuje hlavièku datového
      * objektu. *
@@ -57,14 +57,16 @@ public class DataTokenizer extends Thread {
      * Reference na TCP/IP klienta, ze kterého získávám bajty ke
      * zpracování. *
      */
-    private TCPIPClient client;
+    private final TCPIPClient client;
 
     private RDA_MessageStart start;
+    
+    private boolean isRunning;
 
     /**
      * Reference na logger událostí. *
      */
-    private static Logger logger = Logger.getLogger(DataTokenizer.class);
+    private static final Logger logger = Logger.getLogger(DataTokenizer.class);
 
     /**
      * Zjišuje jestli jsou dvì pole bajtù shodná.
@@ -171,9 +173,9 @@ public class DataTokenizer extends Thread {
      */
     @Override
     public void run() {
-
+        isRunning = true;
         byte[] value = client.read(16);
-        while (true) {
+        while (isRunning) {
 
             if (comparator(value, UID)) {
 
@@ -272,7 +274,10 @@ public class DataTokenizer extends Thread {
             byte[] ap = client.read(1);
             value = appendByte(value, ap[0]);
         }
-
+    }
+    
+    public void requestStop(){
+        isRunning = false;
     }
 
     /**

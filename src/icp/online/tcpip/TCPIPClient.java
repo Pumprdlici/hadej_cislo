@@ -47,6 +47,8 @@ public class TCPIPClient extends Thread {
      * Port na kterém server naslouchá. *
      */
     private int port;
+    
+    private boolean isRunning;
 
     /**
      * Konstruktor TCP/IP clienta. V parametrech má na jakou IP a na jaký port
@@ -65,7 +67,7 @@ public class TCPIPClient extends Thread {
             socket = new Socket(ip, port);
         } catch (Exception e) {
             logger.error("Chyba pøi pøipojování na server:" + e);
-            throw new Exception("Chyba pøi pøipojování na server: " + e.getMessage());
+            throw new Exception(e.getMessage());
         }
         logger.debug("Pøipojení navázáno: "
                 + socket.getInetAddress() + ":"
@@ -76,7 +78,7 @@ public class TCPIPClient extends Thread {
             Sinput = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
             logger.error("Chyba pøi vytváøení nového input streamu: " + e);
-            throw new Exception("Chyba pøi vytváøení nového input streamu: " + e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -90,7 +92,8 @@ public class TCPIPClient extends Thread {
         // ètu data ze serveru a ukládám je do bufferu
         Byte response;
         try {
-            while (true) {
+            isRunning = true;
+            while (isRunning) {
                 try {
                     response = Sinput.readByte();
                     buffer.addLast(response);
@@ -106,6 +109,10 @@ public class TCPIPClient extends Thread {
             Sinput.close();
         } catch (Exception e) {
         }
+    }
+    
+    public void requestStop(){
+        isRunning = false;
     }
 
     /**

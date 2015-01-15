@@ -85,7 +85,7 @@ public class MainFrame extends JFrame implements Observer {
         this.pack();
         this.setSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
+        
         classifier = new MLPClassifier();
         classifier.load("data/classifier.txt");
         IFeatureExtraction fe = new FilterFeatureExtraction();
@@ -176,6 +176,13 @@ public class MainFrame extends JFrame implements Observer {
         }
     }
     
+    private void initGui(){
+        double[] zeros = new double[data.getRowCount()];
+        Arrays.fill(zeros, 0);
+        update(null, zeros);
+        winnerJTA.setText(UNKNOWN_RESULT);
+    }
+    
     private void stopRunningThread() {
     	  try {
               if(dataProvider != null){
@@ -196,6 +203,7 @@ public class MainFrame extends JFrame implements Observer {
 
         @Override
         public void actionPerformed(ActionEvent actionevent) {
+            initGui();
             chooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("EEG files .eeg", "EEG", "eeg");
             chooser.addChoosableFileFilter(filter);
@@ -205,8 +213,7 @@ public class MainFrame extends JFrame implements Observer {
                 eegFile = chooser.getSelectedFile();
                 detection = new OnlineDetection(classifier, mainFrame);
                 stopRunningThread();
-              
-                
+
                 try {
                     dp = new OffLineDataProvider(eegFile, detection);
                     dataProvider = new Thread((OffLineDataProvider) dp);
@@ -214,7 +221,7 @@ public class MainFrame extends JFrame implements Observer {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }
+            } 
         }
 
         public LoadOfflineData() {
@@ -231,8 +238,9 @@ public class MainFrame extends JFrame implements Observer {
 
         @Override
         public void actionPerformed(ActionEvent actionevent) {
+            initGui();
+            
             SetupDialogContent content = new SetupDialogContent();
-
             int result;
             boolean isOk = false;
             String recorderIPAddress = null;
@@ -240,7 +248,7 @@ public class MainFrame extends JFrame implements Observer {
             while (!isOk) {
                 result = JOptionPane.showConfirmDialog(null, content, "Guess the Number: Setup", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (result == JOptionPane.CANCEL_OPTION) {
-                    System.exit(result);
+                    return;
                 }
 
                 recorderIPAddress = content.getIP();
@@ -266,7 +274,7 @@ public class MainFrame extends JFrame implements Observer {
                     dataProvider = new Thread((OnLineDataProvider) dp);
                     dataProvider.start();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

@@ -2,6 +2,7 @@ package icp.application;
 
 import icp.application.classification.IERPClassifier;
 import icp.online.app.EpochMessenger;
+import icp.online.app.IDataProvider;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -15,6 +16,9 @@ public class OnlineDetection extends Observable implements Observer   {
 	private static final int NUMBERS = 9;
 	private Logger log;
 	
+	private double[][] pzSum;
+	private double[][] pzAvg;
+	
 
 	public OnlineDetection(IERPClassifier classifier, Observer observer) {
 		super();
@@ -22,12 +26,17 @@ public class OnlineDetection extends Observable implements Observer   {
 		this.classifier = classifier;
 		this.classificationCounters = new int[NUMBERS];
 		this.classificationResults  = new double[NUMBERS];
-	//	this.log = Logger.getLogger(this.getClass());
+		this.pzSum = new double[NUMBERS][IDataProvider.POCETHODNOTZAEPOCHOU];
+		this.pzAvg = new double[NUMBERS][IDataProvider.POCETHODNOTZAEPOCHOU];
 		
 		
 		for (int i = 0; i < NUMBERS; i++) {
 			classificationResults[i] = 0;
 			classificationCounters[i] = 0;
+			for (int j = 0; j < IDataProvider.POCETHODNOTZAEPOCHOU; j++) {
+				this.pzSum[i][j] = 0;
+				this.pzAvg[i][j] = 0;
+			}
 		}
 	}
 
@@ -42,6 +51,12 @@ public class OnlineDetection extends Observable implements Observer   {
 		
 		classificationCounters[stimulusID]++;
 		classificationResults[stimulusID] += classificationResult;
+		
+		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++) {
+			pzSum[stimulusID][i] += epochMsg.getEpoch()[2][i]; // Pz
+			pzAvg[stimulusID][i] = pzSum[stimulusID][i] /  classificationCounters[stimulusID];
+		}
+		
 		double[] weightedResults = this.calcClassificationResults();
 		//System.out.println(Arrays.toString(classificationCounters));
 		setChanged();
@@ -60,5 +75,11 @@ public class OnlineDetection extends Observable implements Observer   {
 		return weightedResults;
 		
 	}
+	
+	public double[][] getPzAvg() {
+		return this.pzAvg;
+	}
+	
 
+		
 }

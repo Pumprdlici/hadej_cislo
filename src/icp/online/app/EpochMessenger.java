@@ -22,7 +22,7 @@ public class EpochMessenger {
 	private int stimulusIndex;
 	
 	public EpochMessenger() {
-		this.epoch = new double[3][512];
+		this.epoch = new double[3][IDataProvider.POCETHODNOTZAEPOCHOU];
 		this.stimulusIndex = -1;
 	}
 	
@@ -44,31 +44,22 @@ public class EpochMessenger {
 		this.stimulusIndex = stimulusIndex;
 	}
 	
-	public void setFZ(float[] fz) {
-		double[] fzD =	new double[fz.length];
+	public void setFZ(float[] fz, int offset) {
+		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++)
+			epoch[0][i] = (double) fz[i + offset];
 		
-		for (int i = 0; i < fzD.length; i++)
-			fzD[i] = (double) fz[i];
-		
-		epoch[0] = fzD;
 	}
 	
-	public void setCZ(float[] cz) {
-        double[] czD =	new double[cz.length];
+	public void setCZ(float[] cz, int offset) {
+		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++)
+			epoch[1][i] = (double) cz[i + offset];
 		
-		for (int i = 0; i < czD.length; i++)
-			czD[i] = (double) cz[i];
-		
-		epoch[1] = czD;
 	}
 	
-	public void setPZ(float[] pz) {
-		 double[] pzD =	new double[pz.length];
-			
-		for (int i = 0; i < pzD.length; i++)
-			pzD[i] = (double) pz[i];
+	public void setPZ(float[] pz, int offset) {
+		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++)
+			epoch[2][i] = (double) pz[i + offset];
 		
-		epoch[2] = pzD;
 	}
 	@Override
 	public String toString()

@@ -15,8 +15,7 @@ import org.apache.log4j.Logger;
 public class OnLineDataProvider extends Observable implements IDataProvider, Runnable {
 
     private static final int DELKABUFFERU = 10000;
-    private static final int POCETHODNOTPREDEPOCHOU = 100;
-    private static final int POCETHODNOTZAEPOCHOU = 512;
+    
 
     /**
      * Poèet stimulù, po jakém se zastaví hlavní test.
@@ -95,9 +94,9 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                 for (HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()) {
                     EpochMessenger em = new EpochMessenger();
                     em.setStimulusIndex(data.getTypStimulu());
-                    em.setFZ(data.getHodnotyFZ());
-                    em.setCZ(data.getHodnotyCZ());
-                    em.setPZ(data.getHodnotyPZ());
+                    em.setFZ(data.getHodnotyFZ(), 0);
+                    em.setCZ(data.getHodnotyCZ(), 0);
+                    em.setPZ(data.getHodnotyPZ(), 0);
 
                     this.setChanged();
                     this.notifyObservers(em);

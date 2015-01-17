@@ -21,8 +21,7 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
 	private final int CZ_INDEX = 2;
 	private final int PZ_INDEX = 3;
 	
-	private static final int POCETHODNOTPREDEPOCHOU = 100;
-	private static final int POCETHODNOTZAEPOCHOU = 512;
+	
 	
 	private boolean running;
 	
@@ -85,9 +84,9 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
         		Baseline.correct(fczChannel, POCETHODNOTPREDEPOCHOU);
         		Baseline.correct(fpzChannel, POCETHODNOTPREDEPOCHOU);
         		
-        		em.setFZ(ffzChannel);
-        		em.setCZ(fczChannel);
-        		em.setPZ(fpzChannel);
+        		em.setFZ(ffzChannel, 100);
+        		em.setCZ(fczChannel, 100);
+        		em.setPZ(fpzChannel, 100);
                 
                 this.setChanged();
                 this.notifyObservers(em);

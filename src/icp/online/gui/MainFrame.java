@@ -71,11 +71,14 @@ public class MainFrame extends JFrame implements Observer {
     private final Logger log;
 
     private final IERPClassifier classifier;
+    
+    private final ShowChart epochCharts;
 
     public MainFrame() {
         super(APP_NAME);
         BasicConfigurator.configure();
         log = Logger.getLogger(MainFrame.class);
+        epochCharts = new ShowChart(this);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().add(createContentJP());
@@ -90,6 +93,9 @@ public class MainFrame extends JFrame implements Observer {
         classifier.load("data/classifier.txt");
         IFeatureExtraction fe = new FilterFeatureExtraction();
         classifier.setFeatureExtraction(fe);
+        
+        
+        
     }
 
     private JMenuBar createMenu() {
@@ -99,6 +105,8 @@ public class MainFrame extends JFrame implements Observer {
         offlineMenuItem.setAction((new LoadOfflineData()));
         JMenuItem onlineMenuItem = new JMenuItem();
         onlineMenuItem.setAction(new LoadOnlineData());
+        JMenuItem chartMenuItem = new JMenuItem();
+        chartMenuItem.setAction(this.epochCharts);
         JMenuItem endMenuItem = new JMenuItem("Close");
         endMenuItem.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
@@ -113,6 +121,7 @@ public class MainFrame extends JFrame implements Observer {
         menuBar.add(fileMenu);
         fileMenu.add(onlineMenuItem);
         fileMenu.add(offlineMenuItem);
+        fileMenu.add(chartMenuItem);
         fileMenu.addSeparator();
         fileMenu.add(endMenuItem);
 
@@ -150,36 +159,42 @@ public class MainFrame extends JFrame implements Observer {
 
         return jsp;
     }
+    
+    private void initProbabilities(double[] probabilities) {
+    	 Integer[] ranks = new Integer[probabilities.length];
+         for (int i = 0; i < ranks.length; ++i) {
+             ranks[i] = i;
+         }
+         Comparator<Integer> gc = new ProbabilityComparator(probabilities);
+         Arrays.sort(ranks, gc);
+
+         winnerJTA.setText(String.valueOf(ranks[0] + 1));
+         for (int i = 0; i < probabilities.length; i++) {
+             data.setValueAt(probabilities[ranks[i]], ranks[i], 1);
+         }
+
+         this.validate();
+         this.repaint();
+    }
 
     @Override
     public void update(Observable sender, Object message) throws IllegalArgumentException {
-        if (message instanceof double[]) {
-            double[] probabilities = (double[]) message;
+        if (message instanceof OnlineDetection) {
+            double[] probabilities = ((OnlineDetection) message).getWeightedResults();
 
-            Integer[] ranks = new Integer[probabilities.length];
-            for (int i = 0; i < ranks.length; ++i) {
-                ranks[i] = i;
-            }
-            Comparator<Integer> gc = new ProbabilityComparator(probabilities);
-            Arrays.sort(ranks, gc);
-
-            winnerJTA.setText(String.valueOf(ranks[0] + 1));
-            for (int i = 0; i < probabilities.length; i++) {
-                data.setValueAt(probabilities[ranks[i]], ranks[i], 1);
-            }
-
-            this.validate();
-            this.repaint();
+            initProbabilities(probabilities);
+            
+            this.epochCharts.update(((OnlineDetection) message).getPzAvg());
         } else {
-            log.error(MainFrame.class.toString() + ": Expencted array of doubles, but received something else.");
-            throw new IllegalArgumentException("Expencted array of doubles, but received something else.");
+            log.error(MainFrame.class.toString() + ": Expencted online detection, but received something else.");
+            throw new IllegalArgumentException("Expencted online detection, but received something else.");
         }
     }
     
     private void initGui(){
         double[] zeros = new double[data.getRowCount()];
         Arrays.fill(zeros, 0);
-        update(null, zeros);
+        initProbabilities(zeros);
         winnerJTA.setText(UNKNOWN_RESULT);
     }
     
@@ -287,3 +302,4 @@ public class MainFrame extends JFrame implements Observer {
         }
     }
 }
+

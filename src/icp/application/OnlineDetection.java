@@ -19,6 +19,8 @@ public class OnlineDetection extends Observable implements Observer   {
 	private double[][] pzSum;
 	private double[][] pzAvg;
 	
+	double[] weightedResults;
+	
 
 	public OnlineDetection(IERPClassifier classifier, Observer observer) {
 		super();
@@ -57,14 +59,14 @@ public class OnlineDetection extends Observable implements Observer   {
 			pzAvg[stimulusID][i] = pzSum[stimulusID][i] /  classificationCounters[stimulusID];
 		}
 		
-		double[] weightedResults = this.calcClassificationResults();
+		this.weightedResults = this.calcClassificationResults();
+		
 		//System.out.println(Arrays.toString(classificationCounters));
 		setChanged();
-		notifyObservers(weightedResults);
+		notifyObservers(this);
 	}
 	
-	
-	public synchronized double[] calcClassificationResults() {
+	private synchronized double[] calcClassificationResults() {
 		double[] weightedResults = new double[NUMBERS];
 		for (int i = 0; i < weightedResults.length; i++) {
 			if (classificationCounters[i] == 0)
@@ -79,6 +81,12 @@ public class OnlineDetection extends Observable implements Observer   {
 	public double[][] getPzAvg() {
 		return this.pzAvg;
 	}
+
+	public double[] getWeightedResults() {
+		return weightedResults;
+	}
+	
+	
 	
 
 		

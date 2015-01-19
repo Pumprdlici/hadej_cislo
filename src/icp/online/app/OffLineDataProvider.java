@@ -73,7 +73,11 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
 				EEGMarker marker = entry.getValue();
 				EpochMessenger em = new EpochMessenger();
 				
-				int stimulusIndex = Integer.parseInt(marker.getStimulus().replaceAll("[\\D]", "")) - 1;
+				
+				String stimulusNumber = marker.getStimulus().replaceAll("[\\D]", "");
+				int stimulusIndex = -1;
+				if (stimulusNumber.length() > 0)
+					stimulusIndex = Integer.parseInt(stimulusNumber) - 1;
                 em.setStimulusIndex(stimulusIndex);
                 float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  ));
                 float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() -  POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU  ));
@@ -91,6 +95,8 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
                 this.setChanged();
                 this.notifyObservers(em);
 			}
+			this.setChanged();
+			this.notifyObservers(null);
 
 			
 		} catch (IOException e) {

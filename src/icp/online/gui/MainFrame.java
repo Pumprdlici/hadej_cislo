@@ -69,7 +69,7 @@ public class MainFrame extends JFrame implements Observer {
     private final Logger log;
 
     private final IERPClassifier classifier;
-    
+
     private final ShowChart epochCharts;
 
     public MainFrame() {
@@ -85,10 +85,10 @@ public class MainFrame extends JFrame implements Observer {
         this.setVisible(true);
         this.pack();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         this.setSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+
         classifier = new MLPClassifier();
         classifier.load("data/classifier.txt");
         IFeatureExtraction fe = new FilterFeatureExtraction();
@@ -106,7 +106,7 @@ public class MainFrame extends JFrame implements Observer {
         chartMenuItem.setAction(this.epochCharts);
         JMenuItem endMenuItem = new JMenuItem("Close");
         endMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-        KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+                KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
         endMenuItem.addActionListener(new ActionListener() {
 
             @Override
@@ -156,22 +156,23 @@ public class MainFrame extends JFrame implements Observer {
 
         return jsp;
     }
-    
+
     private void initProbabilities(double[] probabilities) {
-    	 Integer[] ranks = new Integer[probabilities.length];
-         for (int i = 0; i < ranks.length; ++i) {
-             ranks[i] = i;
-         }
-         Comparator<Integer> gc = new ProbabilityComparator(probabilities);
-         Arrays.sort(ranks, gc);
+        Integer[] ranks = new Integer[probabilities.length];
+        for (int i = 0; i < ranks.length; ++i) {
+            ranks[i] = i;
+        }
+        Comparator<Integer> gc = new ProbabilityComparator(probabilities);
+        Arrays.sort(ranks, gc);
 
-         winnerJTA.setText(String.valueOf(ranks[0] + 1));
-         for (int i = 0; i < probabilities.length; i++) {
-             data.setValueAt(probabilities[ranks[i]], ranks[i], 1);
-         }
+        winnerJTA.setText(String.valueOf(ranks[0] + 1));
+        for (int i = 0; i < probabilities.length; i++) {
+            data.setValueAt(probabilities[ranks[i]], i, 1);
+            data.setValueAt(ranks[i] + 1, i, 0);
+        }
 
-         this.validate();
-         this.repaint();
+        this.validate();
+        this.repaint();
     }
 
     @Override
@@ -180,33 +181,33 @@ public class MainFrame extends JFrame implements Observer {
             double[] probabilities = ((OnlineDetection) message).getWeightedResults();
 
             initProbabilities(probabilities);
-            
+
             this.epochCharts.update(((OnlineDetection) message).getPzAvg());
         } else {
             log.error(MainFrame.class.toString() + ": Expencted online detection, but received something else.");
             throw new IllegalArgumentException("Expencted online detection, but received something else.");
         }
     }
-    
-    private void initGui(){
+
+    private void initGui() {
         double[] zeros = new double[data.getRowCount()];
         Arrays.fill(zeros, 0);
         initProbabilities(zeros);
         winnerJTA.setText(UNKNOWN_RESULT);
     }
-    
+
     private void stopRunningThread() {
-    	  try {
-              if(dataProvider != null){
-                  if(dp != null){
-                      dp.stop();
-                  }else{
-                      dataProvider.interrupt();
-                  }
-              }
-          } catch (Exception ex) {
-              
-          }
+        try {
+            if (dataProvider != null) {
+                if (dp != null) {
+                    dp.stop();
+                } else {
+                    dataProvider.interrupt();
+                }
+            }
+        } catch (Exception ex) {
+
+        }
     }
 
     public class LoadOfflineData extends AbstractAction {
@@ -234,7 +235,7 @@ public class MainFrame extends JFrame implements Observer {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } 
+            }
         }
 
         public LoadOfflineData() {
@@ -252,7 +253,7 @@ public class MainFrame extends JFrame implements Observer {
         @Override
         public void actionPerformed(ActionEvent actionevent) {
             initGui();
-            
+
             SetupDialogContent content = new SetupDialogContent();
             int result;
             boolean isOk = false;
@@ -279,7 +280,7 @@ public class MainFrame extends JFrame implements Observer {
             }
 
             if (isOk) {
-            	stopRunningThread();
+                stopRunningThread();
 
                 detection = new OnlineDetection(classifier, mainFrame);
                 try {
@@ -300,4 +301,3 @@ public class MainFrame extends JFrame implements Observer {
         }
     }
 }
-

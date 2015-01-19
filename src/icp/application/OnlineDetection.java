@@ -4,6 +4,7 @@ import icp.application.classification.IERPClassifier;
 import icp.application.classification.test.ObserverMessage;
 import icp.online.app.EpochMessenger;
 import icp.online.app.IDataProvider;
+import java.util.Arrays;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -12,16 +13,16 @@ import org.apache.log4j.Logger;
 
 public class OnlineDetection extends Observable implements Observer {
 
-    private IERPClassifier classifier;
-    private double[] classificationResults;
-    private int[] classificationCounters;
+    private final IERPClassifier classifier;
+    private final double[] classificationResults;
+    private final int[] classificationCounters;
+    private final double[][] pzSum;
+    private final double[][] pzAvg;
+
     private static final int NUMBERS = 9;
     private Logger log;
 
-    private double[][] pzSum;
-    private double[][] pzAvg;
-
-    double[] weightedResults;
+    private double[] weightedResults;
 
     public OnlineDetection(IERPClassifier classifier, Observer observer) {
         super();
@@ -32,13 +33,11 @@ public class OnlineDetection extends Observable implements Observer {
         this.pzSum = new double[NUMBERS][IDataProvider.POCETHODNOTZAEPOCHOU];
         this.pzAvg = new double[NUMBERS][IDataProvider.POCETHODNOTZAEPOCHOU];
 
-        for (int i = 0; i < NUMBERS; i++) {
-            classificationResults[i] = 0;
-            classificationCounters[i] = 0;
-            for (int j = 0; j < IDataProvider.POCETHODNOTZAEPOCHOU; j++) {
-                this.pzSum[i][j] = 0;
-                this.pzAvg[i][j] = 0;
-            }
+        Arrays.fill(classificationCounters, 0);
+        Arrays.fill(classificationResults, 0);
+        for (int i = 0; i < pzSum.length; i++) {
+            Arrays.fill(pzSum[i], 0);
+            Arrays.fill(pzAvg[i], 0);
         }
     }
 
@@ -59,8 +58,6 @@ public class OnlineDetection extends Observable implements Observer {
             }
 
             this.weightedResults = this.calcClassificationResults();
-
-            //System.out.println(Arrays.toString(classificationCounters));
             setChanged();
             notifyObservers(this);
         } else if (arg instanceof ObserverMessage) {
@@ -70,17 +67,17 @@ public class OnlineDetection extends Observable implements Observer {
         }
     }
 
-    private synchronized double[] calcClassificationResults() {
-        double[] weightedResults = new double[NUMBERS];
-        for (int i = 0; i < weightedResults.length; i++) {
+    private double[] calcClassificationResults() {
+        double[] wResults = new double[NUMBERS];
+        for (int i = 0; i < wResults.length; i++) {
             if (classificationCounters[i] == 0) {
-                weightedResults[i] = 0;
+                wResults[i] = 0;
             } else {
-                weightedResults[i] = classificationResults[i] / classificationCounters[i];
+                wResults[i] = classificationResults[i] / classificationCounters[i];
             }
         }
-        return weightedResults;
 
+        return wResults;
     }
 
     public double[][] getPzAvg() {

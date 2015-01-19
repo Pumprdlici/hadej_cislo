@@ -87,7 +87,7 @@ public class MainFrame extends JFrame implements Observer {
         this.setVisible(true);
         this.pack();
         this.setSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         classifier = new MLPClassifier();
         classifier.load("data/classifier.txt");

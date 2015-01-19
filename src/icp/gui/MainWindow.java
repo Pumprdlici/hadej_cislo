@@ -24,6 +24,8 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 
+import org.jfree.ui.RefineryUtilities;
+
 
 /**
  * Hlavní okno.
@@ -87,6 +89,7 @@ public class MainWindow extends JFrame {
         this.pack();
         this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
         this.onlineDialog = new OnlineDialog(mainWindow, mainWindowProvider);
+        
         this.addWindowListener(new WindowAdapter() {
 
             @Override

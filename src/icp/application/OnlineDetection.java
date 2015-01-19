@@ -50,19 +50,21 @@ public class OnlineDetection extends Observable implements Observer {
             double classificationResult = this.classifier.classify(epochMsg.getEpoch());
             int stimulusID = epochMsg.getStimulusIndex();
 
-            classificationCounters[stimulusID]++;
-            classificationResults[stimulusID] += classificationResult;
+            if (stimulusID < NUMBERS) {
+            	classificationCounters[stimulusID]++;
+            	classificationResults[stimulusID] += classificationResult;
 
-            for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++) {
-                pzSum[stimulusID][i] += epochMsg.getEpoch()[2][i]; // Pz
-                pzAvg[stimulusID][i] = pzSum[stimulusID][i] / classificationCounters[stimulusID];
+            	for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++) {
+            		pzSum[stimulusID][i] += epochMsg.getEpoch()[2][i]; // Pz
+            		pzAvg[stimulusID][i] = pzSum[stimulusID][i] / classificationCounters[stimulusID];
+            	}
+
+            	this.weightedResults = this.calcClassificationResults();
+
+            	//System.out.println(Arrays.toString(classificationCounters));
+            	setChanged();
+            	notifyObservers(this);
             }
-
-            this.weightedResults = this.calcClassificationResults();
-
-            //System.out.println(Arrays.toString(classificationCounters));
-            setChanged();
-            notifyObservers(this);
         } else if (arg instanceof ObserverMessage) {
             //TODO some action when data loading ends
         } else {

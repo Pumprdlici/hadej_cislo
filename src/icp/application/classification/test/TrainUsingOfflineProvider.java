@@ -18,14 +18,20 @@ public class TrainUsingOfflineProvider implements Observer {
 
     private List<double[][]> epochs;
     private List<Double> targets;
+    private int numberOfTargets;
+    private int numberOfNonTargets;
 
     public TrainUsingOfflineProvider() {
         String trainingFileName = "data/train/set2.eeg";
         epochs = new ArrayList<double[][]>();
         targets = new ArrayList<Double>();
+        numberOfTargets = 0;
+        numberOfNonTargets = 0;
+        
         OffLineDataProvider offLineData = new OffLineDataProvider(new File(trainingFileName), this);
         Thread t = new Thread(offLineData);
         t.start();
+        
     }
 
     public static void main(String[] args) {
@@ -45,11 +51,15 @@ public class TrainUsingOfflineProvider implements Observer {
             int stimulus = ((EpochMessenger) message).getStimulusIndex();
 
             // 1 = target, 3 = non-target
-            epochs.add(epoch);
-            if (stimulus == 1) {
+            
+            if (stimulus == 1 && numberOfTargets <= numberOfNonTargets) {
+            	epochs.add(epoch);
                 targets.add(1.0);
-            } else {
+                numberOfTargets++;
+            } else if (stimulus == 3 && numberOfTargets >= numberOfNonTargets) {
+            	epochs.add(epoch);
                 targets.add(0.0);
+                numberOfNonTargets++;
             }
 
         }

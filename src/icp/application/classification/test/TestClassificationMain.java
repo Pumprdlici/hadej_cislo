@@ -83,7 +83,7 @@ public class TestClassificationMain {
 			// create classifiers
 			IFeatureExtraction fe = new FilterFeatureExtraction();
 			int numberOfInputNeurons = fe.getFeatureDimension();
-			int middleNeurons        = 25;
+			int middleNeurons        = 10;
 			int outputNeurons 	     = 1;
 			Vector<Integer> nnStructure = new Vector<Integer>();
 			nnStructure.add(numberOfInputNeurons); nnStructure.add(middleNeurons); nnStructure.add(outputNeurons);
@@ -92,7 +92,7 @@ public class TestClassificationMain {
 			
 			// training
 			System.out.println("Training started.");
-			classifier.train(trainingEpochs, trainingTargets, 2000, fe);
+			classifier.train(trainingEpochs, trainingTargets, 500, fe);
 			
 			//classifier.load("data/classifier.txt");
 			classifier.setFeatureExtraction(fe);

@@ -17,9 +17,9 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
 	
 	private String vhdrFile;
 	private String vmrkFile;
-	private final int FZ_INDEX = 1;
-	private final int CZ_INDEX = 2;
-	private final int PZ_INDEX = 3;
+	private final int FZ_INDEX = 16;
+	private final int CZ_INDEX = 17;
+	private final int PZ_INDEX = 18;
 	
 	
 	
@@ -94,7 +94,6 @@ public class OffLineDataProvider extends Observable  implements Runnable, IDataP
 
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

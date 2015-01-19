@@ -60,7 +60,6 @@ public class FilterFeatureExtraction implements IFeatureExtraction {
 		features = SignalProcessing.decimate(features, DOWN_SMPL_FACTOR);
 		features = SignalProcessing.normalize(features);
 		return features;
-	
 	}
 
 

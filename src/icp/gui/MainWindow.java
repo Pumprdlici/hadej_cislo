@@ -24,7 +24,6 @@ import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 
-import org.jfree.ui.RefineryUtilities;
 
 
 /**

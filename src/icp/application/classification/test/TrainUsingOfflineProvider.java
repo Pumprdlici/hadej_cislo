@@ -10,14 +10,15 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class TrainUsingOfflineProvider implements Observer {
-	private static List<double[][]> epochs;
-	private static List<Double> targets;
+	private List<double[][]> epochs;
+	private List<Double> targets;
 	
 	
 	
 	public TrainUsingOfflineProvider() {
 		String trainingFileName = "data/train/set2.eeg";
 		epochs = new ArrayList<double[][]>();
+        targets = new ArrayList<Double>();
 		OffLineDataProvider offLineData = new OffLineDataProvider(new File(trainingFileName), this);
 		Thread t = new Thread(offLineData);
 		t.start();

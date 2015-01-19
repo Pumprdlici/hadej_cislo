@@ -220,6 +220,7 @@ public class MainFrame extends JFrame implements Observer {
             FileNameExtensionFilter filter = new FileNameExtensionFilter("EEG files .eeg", "EEG", "eeg");
             chooser.addChoosableFileFilter(filter);
             chooser.setFileFilter(filter);
+            chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
             int i = chooser.showDialog(mainFrame, "Open");
             if (i == 0) {
                 eegFile = chooser.getSelectedFile();

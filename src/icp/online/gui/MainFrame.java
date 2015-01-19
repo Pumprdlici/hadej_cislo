@@ -93,9 +93,6 @@ public class MainFrame extends JFrame implements Observer {
         classifier.load("data/classifier.txt");
         IFeatureExtraction fe = new FilterFeatureExtraction();
         classifier.setFeatureExtraction(fe);
-        
-        
-        
     }
 
     private JMenuBar createMenu() {

@@ -19,9 +19,9 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 
     private String vhdrFile;
     private String vmrkFile;
-    private final int FZ_INDEX = 1;
-    private final int CZ_INDEX = 2;
-    private final int PZ_INDEX = 3;
+    private int FZIndex;
+    private int CZIndex;
+    private int PZIndex;
 
     private boolean running;
 
@@ -60,11 +60,20 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         DataTransformer dt = new EEGDataTransformer();
 
         try {
-
-            double[] fzChannel = dt.readBinaryData(vhdrFile, FZ_INDEX);
-            double[] czChannel = dt.readBinaryData(vhdrFile, CZ_INDEX);
-            double[] pzChannel = dt.readBinaryData(vhdrFile, PZ_INDEX);
-            List<ChannelInfo> channels = dt.getChannelInfo();
+			List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
+            for (ChannelInfo channel: channels) {
+                if (channel.getName().toLowerCase().equals("fz")) {
+                    FZIndex = channel.getNumber();
+                } else if (channel.getName().toLowerCase().equals("cz")) {
+                    CZIndex = channel.getNumber();
+                } else if (channel.getName().toLowerCase().equals("pz")) {
+                    PZIndex = channel.getNumber();
+                }
+            }
+            System.out.println(FZIndex + " " + CZIndex + " " + PZIndex);
+			double[] fzChannel = dt.readBinaryData(vhdrFile, FZIndex);
+			double[] czChannel = dt.readBinaryData(vhdrFile, CZIndex);
+			double[] pzChannel = dt.readBinaryData(vhdrFile, PZIndex);
             Map<String, EEGMarker> markers = dt.readMarkers(vmrkFile);
             for (Map.Entry<String, EEGMarker> entry : markers.entrySet()) {
                 if (!running) {

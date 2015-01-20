@@ -1,10 +1,13 @@
 package icp.application.classification.test;
 
+import icp.Const;
 import icp.online.app.OnlineDetection;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
+import icp.online.app.DataObjects.MessageType;
+import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.OffLineDataProvider;
 import icp.online.gui.*;
 
@@ -26,7 +29,7 @@ public class TestClassificationAccuracy implements Observer {
 
 
     public static void main(String[] args) throws InterruptedException {
-        new TestClassificationAccuracy();
+        TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
 
     }
 
@@ -45,7 +48,7 @@ public class TestClassificationAccuracy implements Observer {
                 end = false;
                 filename = file.getName();
                 IERPClassifier classifier = new MLPClassifier();
-                classifier.load("data/classifier.txt");
+                classifier.load(Const.TRAINING_FILE_NAME);
                 IFeatureExtraction fe = new FilterFeatureExtraction();
                 classifier.setFeatureExtraction(fe);
                 OnlineDetection detection = new OnlineDetection(classifier, this);

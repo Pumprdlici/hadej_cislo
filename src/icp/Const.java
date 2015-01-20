@@ -51,7 +51,7 @@ public class Const {
 
     //----------------------Epoch------------------------
     public static final int PREEPOCH_VALUES = 100;
-    public static final int POSTEPOCH_VALUES = 512;
+    public static final int POSTEPOCH_VALUES = 700;
 
     //----------------------Buffer-----------------------
     public static final int BUFFER_SIZE = 10000;
@@ -78,7 +78,4 @@ public class Const {
     //----------------------Experiment---------------------
     public static final int USED_CHANNELS = 3;
     public static final int GUESSED_NUMBERS = 9;
-    
-    //----------------------Data Tokenizer-----------------
-
 }

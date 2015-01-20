@@ -53,7 +53,7 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
     public void run() {
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
-        this.buffer = new Buffer(Const.BUFFER_SIZE, Const.PREEPOCH_VALUES, Const.POSTEPOCH_VALUES);
+        this.buffer = new Buffer(Const.BUFFER_SIZE, Const.PREESTIMULUS_VALUES, Const.POSTSTIMULUS_VALUES);
         boolean stopped = false;
         int cisloStimulu = 0;
         while (isRunning && cisloStimulu < Const.NUMBER_OF_STIMULUS + 1) {

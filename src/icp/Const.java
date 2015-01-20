@@ -50,8 +50,8 @@ public class Const {
     public static final String TRAINING_FILE_NAME = "data/classifier.txt";
 
     //----------------------Epoch------------------------
-    public static final int PREEPOCH_VALUES = 100;
-    public static final int POSTEPOCH_VALUES = 700;
+    public static final int PREESTIMULUS_VALUES = 100;
+    public static final int POSTSTIMULUS_VALUES = 750;
 
     //----------------------Buffer-----------------------
     public static final int BUFFER_SIZE = 10000;

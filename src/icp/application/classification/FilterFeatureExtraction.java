@@ -1,5 +1,6 @@
 package icp.application.classification;
 
+import icp.Const;
 import icp.algorithm.math.FirFilter;
 import icp.algorithm.math.IFilter;
 import icp.algorithm.math.SignalProcessing;
@@ -14,9 +15,10 @@ import icp.algorithm.math.SignalProcessing;
  */
 public class FilterFeatureExtraction implements IFeatureExtraction {
 	private final int[] CHANNELS       = {1, 2, 3}; /* EEG channels to be transformed to feature vectors */
-	private final int EPOCH_SIZE       = 512; /* number of samples to be used - Fs = 1000 Hz expected */
+	//private final int EPOCH_SIZE       = 512; /* number of samples to be used - Fs = 1000 Hz expected */
 	private final int DOWN_SMPL_FACTOR = 32;  /* subsampling factor */
-	private final int SKIP_SAMPLES     = 0; /* skip initial samples in each epoch */
+	private final int F_SIZE           = 512;
+	private final int SKIP_SAMPLES     = Const.SAMPLES_AFTER_STIMULUS - F_SIZE; /* skip initial samples in each epoch */
 	
 	private final double[] lowPassCoeffs = {0.000308, // low pass 0 - 8 Hz, M = 19 
 			                                0.001094, 
@@ -43,15 +45,15 @@ public class FilterFeatureExtraction implements IFeatureExtraction {
 	public double[] extractFeatures(double[][] epoch) {
 		// use 3 EEG channels
 		int numberOfChannels = CHANNELS.length;
-		double[] features = new double[EPOCH_SIZE * numberOfChannels];
+		double[] features = new double[F_SIZE * numberOfChannels];
 		int i = 0;
 		
 		// filter the data
 		IFilter lowPassFilter = new FirFilter(lowPassCoeffs);
 		for (int channel: CHANNELS) {
 			double[] currChannelData = epoch[channel - 1];
-			for (int j = 0; j < EPOCH_SIZE; j++) {
-				features[i * EPOCH_SIZE + j] = lowPassFilter.getOutputSample(currChannelData[j + SKIP_SAMPLES]);
+			for (int j = 0; j < F_SIZE; j++) {
+				features[i * F_SIZE + j] = lowPassFilter.getOutputSample(currChannelData[j + SKIP_SAMPLES]);
 			}
 			i++;	
 		}
@@ -65,7 +67,7 @@ public class FilterFeatureExtraction implements IFeatureExtraction {
 
 	@Override
 	public int getFeatureDimension() {
-		return CHANNELS.length  * EPOCH_SIZE  / DOWN_SMPL_FACTOR /* subsampling */;
+		return CHANNELS.length  * F_SIZE / DOWN_SMPL_FACTOR /* subsampling */;
 	}
 
 }

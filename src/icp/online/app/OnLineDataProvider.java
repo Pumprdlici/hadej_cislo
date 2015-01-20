@@ -1,5 +1,6 @@
 package icp.online.app;
 
+import icp.Const;
 import icp.online.tcpip.DataTokenizer;
 import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
@@ -59,7 +60,7 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
     public void run() {
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
-        this.buffer = new Buffer(DELKABUFFERU, POCETHODNOTPREDEPOCHOU, POCETHODNOTZAEPOCHOU);
+        this.buffer = new Buffer(DELKABUFFERU, Const.SAMPLES_BEFORE_STIMULUS, Const.SAMPLES_AFTER_STIMULUS);
         boolean stopped = false;
         int cisloStimulu = 0;
         while (isRunning && cisloStimulu < POCETSTIMULU + 1) {

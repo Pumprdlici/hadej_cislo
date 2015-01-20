@@ -33,8 +33,8 @@ public class OnlineDetection extends Observable implements Observer {
         this.classifier = classifier;
         this.classificationCounters = new int[Const.GUESSED_NUMBERS];
         this.classificationResults = new double[Const.GUESSED_NUMBERS];
-        this.sumEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][IDataProvider.POCETHODNOTZAEPOCHOU];
-        this.avgEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][IDataProvider.POCETHODNOTZAEPOCHOU];
+        this.sumEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][Const.SAMPLES_AFTER_STIMULUS];
+        this.avgEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][Const.SAMPLES_AFTER_STIMULUS];
      
 
         Arrays.fill(classificationCounters, 0);
@@ -55,12 +55,14 @@ public class OnlineDetection extends Observable implements Observer {
             if (stimulusID < Const.GUESSED_NUMBERS) {
             	classificationCounters[stimulusID]++;
             	for (int i = 0; i < Const.USED_CHANNELS; i++) {
-            		for (int j = 0; j < IDataProvider.POCETHODNOTZAEPOCHOU; j++) {
+            		for (int j = 0; j < Const.SAMPLES_AFTER_STIMULUS; j++) {
             			sumEpoch[i][stimulusID][j] += epochMsg.getEpoch()[i][j]; // Pz
             			avgEpoch[i][stimulusID][j] = sumEpoch[i][stimulusID][j] / classificationCounters[stimulusID];
             		}
             	}
-            	double classificationResult = this.classifier.classify( getAvgEpochWithStimulus(stimulusID, avgEpoch));
+            //	double classificationResult = this.classifier.classify( getAvgEpochWithStimulus(stimulusID, avgEpoch));
+            	double classificationResult = this.classifier.classify( epochMsg.getEpoch());
+            	//double classificationResult = Math.random();
             	classificationResults[stimulusID] += classificationResult;
             	this.weightedResults = this.calcClassificationResults();
             	//System.out.println(Arrays.toString(classificationCounters));
@@ -77,9 +79,9 @@ public class OnlineDetection extends Observable implements Observer {
     
     
     private double[][] getAvgEpochWithStimulus(int stimulusIndex, double[][][] epoch) {
-    	double[][] epochStimulus = new double[Const.USED_CHANNELS][IDataProvider.POCETHODNOTZAEPOCHOU];
+    	double[][] epochStimulus = new double[Const.USED_CHANNELS][Const.SAMPLES_AFTER_STIMULUS];
     	for (int i = 0; i < Const.USED_CHANNELS; i++) {
-    		for (int j = 0; j < IDataProvider.POCETHODNOTZAEPOCHOU; j++) {
+    		for (int j = 0; j < Const.SAMPLES_AFTER_STIMULUS; j++) {
     			epochStimulus[i][j] = epoch[i][stimulusIndex][j]; 
     		}
     	}

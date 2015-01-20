@@ -12,6 +12,7 @@ import cz.zcu.kiv.signal.ChannelInfo;
 import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.signal.EEGMarker;
+import icp.Const;
 import icp.application.classification.test.MessageType;
 import icp.application.classification.test.ObserverMessage;
 
@@ -88,13 +89,13 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     stimulusIndex = Integer.parseInt(stimulusNumber) - 1;
                 }
                 em.setStimulusIndex(stimulusIndex);
-                float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() - POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU));
-                float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() - POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU));
-                float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel, marker.getPosition() - POCETHODNOTPREDEPOCHOU, marker.getPosition() + POCETHODNOTZAEPOCHOU));
+                float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() - Const.SAMPLES_BEFORE_STIMULUS, marker.getPosition() + Const.SAMPLES_AFTER_STIMULUS));
+                float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() - Const.SAMPLES_BEFORE_STIMULUS, marker.getPosition() + Const.SAMPLES_AFTER_STIMULUS));
+                float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel, marker.getPosition() - Const.SAMPLES_BEFORE_STIMULUS, marker.getPosition() + Const.SAMPLES_AFTER_STIMULUS));
 
-                Baseline.correct(ffzChannel, POCETHODNOTPREDEPOCHOU);
-                Baseline.correct(fczChannel, POCETHODNOTPREDEPOCHOU);
-                Baseline.correct(fpzChannel, POCETHODNOTPREDEPOCHOU);
+                Baseline.correct(ffzChannel, Const.SAMPLES_BEFORE_STIMULUS);
+                Baseline.correct(fczChannel, Const.SAMPLES_BEFORE_STIMULUS);
+                Baseline.correct(fpzChannel, Const.SAMPLES_BEFORE_STIMULUS);
 
                 em.setFZ(ffzChannel, 100);
                 em.setCZ(fczChannel, 100);

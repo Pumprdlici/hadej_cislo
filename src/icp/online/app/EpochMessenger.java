@@ -1,5 +1,7 @@
 package icp.online.app;
 
+import icp.Const;
+
 import java.util.Arrays;
 
 
@@ -22,7 +24,7 @@ public class EpochMessenger {
 	private int stimulusIndex;
 	
 	public EpochMessenger() {
-		this.epoch = new double[3][IDataProvider.POCETHODNOTZAEPOCHOU];
+		this.epoch = new double[Const.USED_CHANNELS][Const.SAMPLES_AFTER_STIMULUS];
 		this.stimulusIndex = -1;
 	}
 	
@@ -45,19 +47,19 @@ public class EpochMessenger {
 	}
 	
 	public void setFZ(float[] fz, int offset) {
-		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++)
+		for (int i = 0; i < Const.SAMPLES_AFTER_STIMULUS; i++)
 			epoch[0][i] = (double) fz[i + offset];
 		
 	}
 	
 	public void setCZ(float[] cz, int offset) {
-		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++)
+		for (int i = 0; i < Const.SAMPLES_AFTER_STIMULUS; i++)
 			epoch[1][i] = (double) cz[i + offset];
 		
 	}
 	
 	public void setPZ(float[] pz, int offset) {
-		for (int i = 0; i < IDataProvider.POCETHODNOTZAEPOCHOU; i++)
+		for (int i = 0; i < Const.SAMPLES_AFTER_STIMULUS; i++)
 			epoch[2][i] = (double) pz[i + offset];
 		
 	}

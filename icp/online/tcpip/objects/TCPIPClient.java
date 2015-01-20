@@ -1,5 +1,7 @@
 package icp.online.tcpip.objects;
 
+import icp.online.tcpip.SynchronizedLinkedListByte;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;

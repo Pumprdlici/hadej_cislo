@@ -19,4 +19,7 @@ public class Const {
     
     public static final int USED_CHANNELS = 3;
     public static final int GUESSED_NUMBERS = 9;
+    
+	public static final int SAMPLES_BEFORE_STIMULUS = 100;
+    public static final int SAMPLES_AFTER_STIMULUS = 700;
 }

@@ -80,7 +80,7 @@ public class TrainUsingOfflineProvider implements Observer {
 
         // training
         System.out.println("Training started.");
-        classifier.train(this.epochs, this.targets, 200, fe);
+        classifier.train(this.epochs, this.targets, 2000, fe);
         classifier.save("data/classifier.txt");
 
     }

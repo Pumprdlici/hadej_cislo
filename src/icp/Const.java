@@ -21,5 +21,5 @@ public class Const {
     public static final int GUESSED_NUMBERS = 9;
     
 	public static final int SAMPLES_BEFORE_STIMULUS = 100;
-    public static final int SAMPLES_AFTER_STIMULUS = 700;
+    public static final int SAMPLES_AFTER_STIMULUS = 750;
 }

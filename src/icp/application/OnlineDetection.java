@@ -60,8 +60,8 @@ public class OnlineDetection extends Observable implements Observer {
             			avgEpoch[i][stimulusID][j] = sumEpoch[i][stimulusID][j] / classificationCounters[stimulusID];
             		}
             	}
-            //	double classificationResult = this.classifier.classify( getAvgEpochWithStimulus(stimulusID, avgEpoch));
-            	double classificationResult = this.classifier.classify( epochMsg.getEpoch());
+            	double classificationResult = this.classifier.classify( getAvgEpochWithStimulus(stimulusID, avgEpoch));
+            	//double classificationResult = this.classifier.classify( epochMsg.getEpoch());
             	//double classificationResult = Math.random();
             	classificationResults[stimulusID] += classificationResult;
             	this.weightedResults = this.calcClassificationResults();

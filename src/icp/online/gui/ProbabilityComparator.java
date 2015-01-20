@@ -2,7 +2,7 @@ package icp.online.gui;
 
 import java.util.Comparator;
 
-class ProbabilityComparator implements Comparator<Integer> {
+public class ProbabilityComparator implements Comparator<Integer> {
 	    private double[] grades;
 	    public ProbabilityComparator(double[] arr) {
 	        grades = arr;

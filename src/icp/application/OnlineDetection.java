@@ -68,7 +68,8 @@ public class OnlineDetection extends Observable implements Observer {
             	notifyObservers(this);
             }
         } else if (arg instanceof ObserverMessage) {
-            //TODO some action when data loading ends
+            setChanged();
+            notifyObservers(arg);
         } else {
             throw new IllegalArgumentException("Unexpected reference received.");
         }

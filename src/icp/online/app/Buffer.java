@@ -181,7 +181,7 @@ public class Buffer {
 	 * @return - pole floatù o délce (this.pred + this.po), obsahující hodnoty z bufferu
 	 * kolem posledního markeru plus èíslo Stimulu (0 - 9)
 	 */
-	public HodnotyVlny vyber(){
+	public EpochDataCarrier vyber(){
 		if(this.frontaIndexu.isEmpty()){
 			return null;
 		}
@@ -214,7 +214,7 @@ public class Buffer {
 		float[]	baselineCZ = Arrays.copyOfRange(vybraneHodnotyCZ, this.predMarkerem, vybraneHodnotyCZ.length);
 		float[]	baselinePZ = Arrays.copyOfRange(vybraneHodnotyPZ, this.predMarkerem, vybraneHodnotyPZ.length);
 		
-		return new HodnotyVlny(baselineFZ, baselineCZ, baselinePZ, typVlny);
+		return new EpochDataCarrier(baselineFZ, baselineCZ, baselinePZ, typVlny);
 	}
 	
 	/**

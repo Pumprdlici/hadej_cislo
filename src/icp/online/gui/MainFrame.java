@@ -5,7 +5,6 @@ import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
-import icp.gui.SetupDialogContent;
 import icp.online.app.IDataProvider;
 import icp.online.app.OffLineDataProvider;
 import icp.online.app.OnLineDataProvider;

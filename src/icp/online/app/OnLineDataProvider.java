@@ -91,12 +91,12 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                 stopped = true;
             }
             if (buffer.jePlny() || (cisloStimulu > POCETSTIMULU)) {
-                for (HodnotyVlny data = buffer.vyber(); data != null; data = buffer.vyber()) {
+                for (EpochDataCarrier data = buffer.vyber(); data != null; data = buffer.vyber()) {
                     EpochMessenger em = new EpochMessenger();
-                    em.setStimulusIndex(data.getTypStimulu());
-                    em.setFZ(data.getHodnotyFZ(), 0);
-                    em.setCZ(data.getHodnotyCZ(), 0);
-                    em.setPZ(data.getHodnotyPZ(), 0);
+                    em.setStimulusIndex(data.getStimulusType());
+                    em.setFZ(data.getFzValues(), 0);
+                    em.setCZ(data.getCzValues(), 0);
+                    em.setPZ(data.getPzValues(), 0);
 
                     this.setChanged();
                     this.notifyObservers(em);

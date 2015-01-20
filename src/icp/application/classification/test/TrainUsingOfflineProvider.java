@@ -12,19 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 
 public class TrainUsingOfflineProvider implements Observer {
 
-    private List<double[][]> epochs;
-    private List<Double> targets;
+    private final List<double[][]> epochs;
+    private final List<Double> targets;
     private int numberOfTargets;
     private int numberOfNonTargets;
 
     public TrainUsingOfflineProvider() {
         String trainingFileName = "data/train/set2.eeg";
-        epochs = new ArrayList<double[][]>();
-        targets = new ArrayList<Double>();
+        epochs = new ArrayList<>();
+        targets = new ArrayList<>();
         numberOfTargets = 0;
         numberOfNonTargets = 0;
         
@@ -72,7 +71,7 @@ public class TrainUsingOfflineProvider implements Observer {
         int numberOfInputNeurons = fe.getFeatureDimension();
         int middleNeurons = 25;
         int outputNeurons = 1;
-        Vector<Integer> nnStructure = new Vector<Integer>();
+        ArrayList<Integer> nnStructure = new ArrayList<>();
         nnStructure.add(numberOfInputNeurons);
         nnStructure.add(middleNeurons);
         nnStructure.add(outputNeurons);

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icp.gui;
+package icp.online.gui;
 
 import icp.Const;
 import javax.swing.DefaultComboBoxModel;

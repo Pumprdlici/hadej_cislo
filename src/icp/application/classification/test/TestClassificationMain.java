@@ -11,10 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * 
@@ -85,7 +85,7 @@ public class TestClassificationMain {
 			int numberOfInputNeurons = fe.getFeatureDimension();
 			int middleNeurons        = 10;
 			int outputNeurons 	     = 1;
-			Vector<Integer> nnStructure = new Vector<Integer>();
+			ArrayList<Integer> nnStructure = new ArrayList<>();
 			nnStructure.add(numberOfInputNeurons); nnStructure.add(middleNeurons); nnStructure.add(outputNeurons);
 			IERPClassifier classifier = new MLPClassifier(nnStructure);
 			

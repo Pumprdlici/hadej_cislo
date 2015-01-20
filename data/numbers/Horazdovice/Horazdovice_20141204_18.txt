@@ -1,0 +1,4 @@
+holka 11 let
+hodnì mrká
+hádáme 1, je to 1
+velmi výrazná komponenta kolem 450 - 500 ms, dala se uhádnout po 3 trialech

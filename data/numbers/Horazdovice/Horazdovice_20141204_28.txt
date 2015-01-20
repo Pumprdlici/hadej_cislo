@@ -1,0 +1,3 @@
+kluk 8 let
+hádáme 2, je to 2
+komponenta s latencí 300 ms - nevýrazná

@@ -1,0 +1,3 @@
+holka 10 let
+hádáme 1, je to 1
+komponenta se vytvarovala až po 22 trialech, není výrazný peak na Fz

@@ -1,0 +1,4 @@
+holka 12 let
+hádáme 5, je to 5
+pøemýšleli jsme o 6
+pomìrnì výrazný vrchol kolem 550 ms

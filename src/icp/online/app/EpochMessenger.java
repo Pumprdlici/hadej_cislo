@@ -22,7 +22,7 @@ public class EpochMessenger {
     private int stimulusIndex;
 
     public EpochMessenger() {
-        this.epoch = new double[Const.USED_CHANNELS][Const.POSTEPOCH_VALUES];
+        this.epoch = new double[Const.USED_CHANNELS][Const.POSTSTIMULUS_VALUES];
         this.stimulusIndex = -1;
     }
 
@@ -44,19 +44,19 @@ public class EpochMessenger {
     }
 
     public void setFZ(float[] fz, int offset) {
-        for (int i = 0; i < Const.POSTEPOCH_VALUES; i++) {
+        for (int i = 0; i < Const.POSTSTIMULUS_VALUES; i++) {
             epoch[0][i] = (double) fz[i + offset];
         }
     }
 
     public void setCZ(float[] cz, int offset) {
-        for (int i = 0; i < Const.POSTEPOCH_VALUES; i++) {
+        for (int i = 0; i < Const.POSTSTIMULUS_VALUES; i++) {
             epoch[1][i] = (double) cz[i + offset];
         }
     }
 
     public void setPZ(float[] pz, int offset) {
-        for (int i = 0; i < Const.POSTEPOCH_VALUES; i++) {
+        for (int i = 0; i < Const.POSTSTIMULUS_VALUES; i++) {
             epoch[2][i] = (double) pz[i + offset];
         }
     }

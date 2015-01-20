@@ -94,15 +94,15 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                 }
                 em.setStimulusIndex(stimulusIndex);
                 float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel,
-                        marker.getPosition() - Const.PREEPOCH_VALUES, marker.getPosition() + Const.POSTEPOCH_VALUES));
+                        marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
                 float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel,
-                        marker.getPosition() - Const.PREEPOCH_VALUES, marker.getPosition() + Const.POSTEPOCH_VALUES));
+                        marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
                 float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel,
-                        marker.getPosition() - Const.PREEPOCH_VALUES, marker.getPosition() + Const.POSTEPOCH_VALUES));
+                        marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
 
-                Baseline.correct(ffzChannel, Const.PREEPOCH_VALUES);
-                Baseline.correct(fczChannel, Const.PREEPOCH_VALUES);
-                Baseline.correct(fpzChannel, Const.PREEPOCH_VALUES);
+                Baseline.correct(ffzChannel, Const.PREESTIMULUS_VALUES);
+                Baseline.correct(fczChannel, Const.PREESTIMULUS_VALUES);
+                Baseline.correct(fpzChannel, Const.PREESTIMULUS_VALUES);
 
                 em.setFZ(ffzChannel, 100);
                 em.setCZ(fczChannel, 100);

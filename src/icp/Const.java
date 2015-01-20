@@ -50,8 +50,8 @@ public class Const {
     public static final String TRAINING_FILE_NAME = "data/classifier.txt";
 
     //----------------------Epoch------------------------
-    public static final int PREEPOCH_VALUES = 100;
-    public static final int POSTEPOCH_VALUES = 700;
+    public static final int PREESTIMULUS_VALUES = 100;
+    public static final int POSTSTIMULUS_VALUES = 750;
 
     //----------------------Buffer-----------------------
     public static final int BUFFER_SIZE = 10000;
@@ -79,6 +79,8 @@ public class Const {
     public static final int USED_CHANNELS = 3;
     public static final int GUESSED_NUMBERS = 9;
     
-	public static final int SAMPLES_BEFORE_STIMULUS = 100;
-    public static final int SAMPLES_AFTER_STIMULUS = 750;
+    //---------------------Buffer-------------------
+    public static final int RESERVE = 20;
+
+    public static final int ELECTROD_VALS = 20;
 }

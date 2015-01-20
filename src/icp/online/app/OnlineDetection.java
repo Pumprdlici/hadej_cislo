@@ -24,8 +24,8 @@ public class OnlineDetection extends Observable implements Observer {
         this.classifier = classifier;
         this.classificationCounters = new int[Const.GUESSED_NUMBERS];
         this.classificationResults = new double[Const.GUESSED_NUMBERS];
-        this.sumEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][Const.POSTEPOCH_VALUES];
-        this.avgEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][Const.POSTEPOCH_VALUES];
+        this.sumEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][Const.POSTSTIMULUS_VALUES];
+        this.avgEpoch = new double[Const.USED_CHANNELS][Const.GUESSED_NUMBERS][Const.POSTSTIMULUS_VALUES];
 
         Arrays.fill(classificationCounters, 0);
         Arrays.fill(classificationResults, 0);
@@ -45,7 +45,7 @@ public class OnlineDetection extends Observable implements Observer {
             if (stimulusID < Const.GUESSED_NUMBERS) {
                 classificationCounters[stimulusID]++;
                 for (int i = 0; i < Const.USED_CHANNELS; i++) {
-                    for (int j = 0; j < Const.POSTEPOCH_VALUES; j++) {
+                    for (int j = 0; j < Const.POSTSTIMULUS_VALUES; j++) {
                         sumEpoch[i][stimulusID][j] += epochMsg.getEpoch()[i][j]; // Pz
                         avgEpoch[i][stimulusID][j] = sumEpoch[i][stimulusID][j] / classificationCounters[stimulusID];
                     }
@@ -69,9 +69,9 @@ public class OnlineDetection extends Observable implements Observer {
     }
 
     private double[][] getAvgEpochWithStimulus(int stimulusIndex, double[][][] epoch) {
-        double[][] epochStimulus = new double[Const.USED_CHANNELS][Const.POSTEPOCH_VALUES];
+        double[][] epochStimulus = new double[Const.USED_CHANNELS][Const.POSTSTIMULUS_VALUES];
         for (int i = 0; i < Const.USED_CHANNELS; i++) {
-            System.arraycopy(epoch[i][stimulusIndex], 0, epochStimulus[i], 0, Const.POSTEPOCH_VALUES);
+            System.arraycopy(epoch[i][stimulusIndex], 0, epochStimulus[i], 0, Const.POSTSTIMULUS_VALUES);
         }
         return epochStimulus;
 

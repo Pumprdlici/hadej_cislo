@@ -53,7 +53,7 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
     public void run() {
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
-        this.buffer = new Buffer(Const.BUFFER_SIZE, Const.PREEPOCH_VALUES, Const.POSTEPOCH_VALUES);
+        this.buffer = new Buffer(Const.BUFFER_SIZE, Const.PREESTIMULUS_VALUES, Const.POSTSTIMULUS_VALUES);
         boolean stopped = false;
         int cisloStimulu = 0;
         while (isRunning && cisloStimulu < Const.NUMBER_OF_STIMULUS + 1) {
@@ -64,18 +64,18 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                 logger.debug("" + cislo);
                 cisloStimulu++;
             } else if (o instanceof RDA_MessageData) {
-                buffer.zapis((RDA_MessageData) o);
+                buffer.write((RDA_MessageData) o);
             } else if (o instanceof RDA_MessageStart) {
                 RDA_MessageStart msg = (RDA_MessageStart) o;
                 String[] chNames = msg.getsChannelNames();
-                Buffer.numChannels = (int) msg.getnChannels();
+                buffer.setNumChannels((int) msg.getnChannels());
                 for (int i = 0; i < chNames.length; i++) {
                     if (chNames[i].equalsIgnoreCase("cz")) {
-                        Buffer.indexCz = i;
+                        buffer.setIndexCz(i);
                     } else if (chNames[i].equalsIgnoreCase("pz")) {
-                        Buffer.indexPz = i;
+                        buffer.setIndexPz(i);
                     } else if (chNames[i].equalsIgnoreCase("fz")) {
-                        Buffer.indexFz = i;
+                        buffer.setIndexFz(i);
                     }
                 }
             } else if (o instanceof RDA_MessageStop) {
@@ -84,8 +84,8 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                 isRunning = false;
                 stopped = true;
             }
-            if (buffer.jePlny() || (cisloStimulu > Const.NUMBER_OF_STIMULUS)) {
-                for (EpochDataCarrier data = buffer.vyber(); data != null; data = buffer.vyber()) {
+            if (buffer.isFull() || (cisloStimulu > Const.NUMBER_OF_STIMULUS)) {
+                for (EpochDataCarrier data = buffer.get(); data != null; data = buffer.get()) {
                     EpochMessenger em = new EpochMessenger();
                     em.setStimulusIndex(data.getStimulusType());
                     em.setFZ(data.getFzValues(), 0);
@@ -95,9 +95,8 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                     this.setChanged();
                     this.notifyObservers(em);
                     System.out.println(em);
-
                 }
-                buffer.vymaz();
+                buffer.clear();
             }
         }
 

@@ -1,0 +1,3 @@
+kluk, 14 let 
+hádame postupnì 8, 5, je to 5
+8 vypadá jako podstatnì výraznìjší, na 5 jen až kolem 550 ms a slabá

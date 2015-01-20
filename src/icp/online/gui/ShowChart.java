@@ -10,23 +10,18 @@ import org.jfree.ui.RefineryUtilities;
 
 public class ShowChart extends AbstractAction {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private MainFrame mainFrame;
-	private EpochCharts chart;
+    private static final long serialVersionUID = 1L;
+    private final MainFrame mainFrame;
+    private final EpochCharts chart;
 
     @Override
     public void actionPerformed(ActionEvent actionevent) {
-    	  
-          this.chart.pack();
-          RefineryUtilities.centerFrameOnScreen(this.chart);
-          this.chart.setVisible(true);
-
+        this.chart.pack();
+        RefineryUtilities.centerFrameOnScreen(this.chart);
+        this.chart.setVisible(true);
     }
 
-    public ShowChart (MainFrame mainFrame) {
+    public ShowChart(MainFrame mainFrame) {
         super();
         this.chart = new EpochCharts("Epoch averages");
         this.mainFrame = mainFrame;
@@ -34,8 +29,7 @@ public class ShowChart extends AbstractAction {
         putValue("Name", "Show charts");
     }
 
-	public void update(double[][] pzAvg) {
-		this.chart.update(pzAvg);
-		
-	}
+    public void update(double[][] pzAvg) {
+        this.chart.update(pzAvg);
+    }
 }

@@ -1,5 +1,6 @@
 package icp.application.classification;
 
+import icp.Const;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,13 +24,9 @@ public class MLPClassifier extends ERPClassifierAdapter {
 
     private IFeatureExtraction fe; /* feature extraction used to decompose each epoch */
 
-    private final int DEFAULT_OUTPUT_NEURONS = 1; /* number of output neurons */
-
-    private final double LEARNING_RATE = 0.1;     /* learning step */
-
 
     public MLPClassifier() {
-        neuralNetwork = new MultiLayerPerceptron(DEFAULT_OUTPUT_NEURONS);
+        neuralNetwork = new MultiLayerPerceptron(Const.DEFAULT_OUTPUT_NEURONS);
     }
 
     /**
@@ -63,7 +60,9 @@ public class MLPClassifier extends ERPClassifierAdapter {
 
         // feature vector dimension must correspond to the number of input neurons
         if (featureVector.length != neuralNetwork.getInputsCount()) {
-            throw new ArrayIndexOutOfBoundsException("Feature vector dimension " + featureVector.length + " must be the same as the number of input neurons: " + neuralNetwork.getInputsCount() + ".");
+            throw new ArrayIndexOutOfBoundsException("Feature vector dimension "
+                    + featureVector.length + " must be the same as the number of input neurons: "
+                    + neuralNetwork.getInputsCount() + ".");
         }
         System.out.println(Arrays.toString(featureVector));
         neuralNetwork.setInput(featureVector);
@@ -106,20 +105,17 @@ public class MLPClassifier extends ERPClassifierAdapter {
         dataset.shuffle();
 
         // train the NN
-        this.train(dataset, numberOfIter, LEARNING_RATE);
+        this.train(dataset, numberOfIter, Const.LEARNING_RATE);
     }
 
     @Override
     public void load(InputStream is) {
         this.neuralNetwork = NeuralNetwork.load(is);
-
     }
 
     @Override
     public void save(String file) {
         this.neuralNetwork.save(file);
-		//mlp.save();
-
     }
 
     @Override

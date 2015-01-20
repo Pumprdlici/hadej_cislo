@@ -18,49 +18,49 @@ import org.apache.log4j.Logger;
  * @author Michal Patoèka První verze vytvoøena: 3.3.2010
  * @version 2.0
  *
- * Tato tøída formuje z toku bajtù získané od klienta TCPIP datové
- * objekty. Celı proces detekce zaèíná hledáním unikátní posloupnosti 12
- * bajtù, které oznaèují hlavièku datového objektu. Toto je
- * naimplementováno tak, e v nekoneèném cyklu pøidávám poslední a
- * ubírám první z pole 12 bajtù a hledám shodu mezi tímto polem a polem
- * oznaèujicím hlavièku. Je - li tato posloupnost nalezena, znamená to, e
- * pøišel jeden z pìti typù datovıch objektù. Jakı typ pøišel a jaká
- * je jeho délka zjistím pøeètením následujících 8 bajtù, které
- * následují po hlavièce. Obecnì platí, e na zaèátku kadého pøenosu
- * pøijde objekt typu RDA_MessageStart, ve kterém jsou deklarovány pouité
- * parametry pro následující datovı pøenos. Poté chodí znaèné
- * mnoství objektù typu RDA_MessageData, pøièem kadı z nich mùe
- * obsahovat nìkolik objektù typu RDA_Marker (nejèastìji však pouze jeden).
- * Kdy zjistím typ objektu, jakı pøichází, není problém do nìj
- * naèíst data konverzí pole urèitého mnoství bajtù, do poadovaného
- * datového typu. Pokud je objekt neznámého typu, tak ho nezpracovávám
- * (pøi testech chodily objekty typu nType = 10000 jako vıplò mezi
+ * Tato tøída formuje z toku bajtù získané od klienta TCPIP datové objekty. Celı
+ * proces detekce zaèíná hledáním unikátní posloupnosti 12 bajtù, které oznaèují
+ * hlavièku datového objektu. Toto je naimplementováno tak, e v nekoneèném
+ * cyklu pøidávám poslední a ubírám první z pole 12 bajtù a hledám shodu mezi
+ * tímto polem a polem oznaèujicím hlavièku. Je - li tato posloupnost nalezena,
+ * znamená to, e pøišel jeden z pìti typù datovıch objektù. Jakı typ pøišel a
+ * jaká je jeho délka zjistím pøeètením následujících 8 bajtù, které následují
+ * po hlavièce. Obecnì platí, e na zaèátku kadého pøenosu pøijde objekt typu
+ * RDA_MessageStart, ve kterém jsou deklarovány pouité parametry pro
+ * následující datovı pøenos. Poté chodí znaèné mnoství objektù typu
+ * RDA_MessageData, pøièem kadı z nich mùe obsahovat nìkolik objektù typu
+ * RDA_Marker (nejèastìji však pouze jeden). Kdy zjistím typ objektu, jakı
+ * pøichází, není problém do nìj naèíst data konverzí pole urèitého mnoství
+ * bajtù, do poadovaného datového typu. Pokud je objekt neznámého typu, tak ho
+ * nezpracovávám (pøi testech chodily objekty typu nType = 10000 jako vıplò mezi
  * jednotlivımi objekty). Všechny objekty naèítám do bufferu, kde jsou
  * pøipraveny k vyzvednutí pomocí metody retriveDataBlock().
  */
 public class DataTokenizer extends Thread {
 
     /**
-     * Poèet kanálù EEG *
+     * Poèet kanálù EEG
      */
     private int noOfChannels;
+    
     /**
      * Buffer jako vyrovnávací pamì pro doèasné uloení objektù *
      */
     private final SynchronizedLinkedListObject buffer = new SynchronizedLinkedListObject();
+    
     /**
-     * Unikátní posloupnost 12 bajtù, která oznaèuje hlavièku datového
-     * objektu. *
+     * Unikátní posloupnost 12 bajtù, která oznaèuje hlavièku datového objektu.
+     * *
      */
-    private static final byte[] UID = {-114, 69, 88, 67, -106, -55, -122, 76, -81, 74, -104, -69, -10, -55, 20, 80};
+    private final byte[] UID = {-114, 69, 88, 67, -106, -55, -122, 76, -81, 74, -104, -69, -10, -55, 20, 80};
+    
     /**
-     * Reference na TCP/IP klienta, ze kterého získávám bajty ke
-     * zpracování. *
+     * Reference na TCP/IP klienta, ze kterého získávám bajty ke zpracování. *
      */
     private final TCPIPClient client;
 
     private RDA_MessageStart start;
-    
+
     private boolean isRunning;
 
     /**
@@ -85,8 +85,8 @@ public class DataTokenizer extends Thread {
     }
 
     /**
-     * Poli bajtù pøidá na konec novı bajt a posune index celého pole o 1,
-     * èím vymae odkaz na první bajt.
+     * Poli bajtù pøidá na konec novı bajt a posune index celého pole o 1, èím
+     * vymae odkaz na první bajt.
      *
      * @param field pole bajtù
      * @param ap pøidávanı bajt
@@ -101,8 +101,8 @@ public class DataTokenizer extends Thread {
     }
 
     /**
-     * Tato metoda zapisuje objekty typu RDA_Marker a pøedává na nì
-     * reference pøíslušnému datovému objektu.
+     * Tato metoda zapisuje objekty typu RDA_Marker a pøedává na nì reference
+     * pøíslušnému datovému objektu.
      *
      * @param markerCount poèet markerù, které se zpracovávají.
      * @return pole markerù
@@ -167,9 +167,9 @@ public class DataTokenizer extends Thread {
     }
 
     /**
-     * Metoda pro spuštìní vlákna DataTokenizeru. Jeliko proces
-     * získávání dat a jejich pøevádìní na datové objekty musí bıt
-     * paraelizován, musí bıt pouito vláknového zpracování.
+     * Metoda pro spuštìní vlákna DataTokenizeru. Jeliko proces získávání dat a
+     * jejich pøevádìní na datové objekty musí bıt paraelizován, musí bıt
+     * pouito vláknového zpracování.
      */
     @Override
     public void run() {
@@ -247,7 +247,7 @@ public class DataTokenizer extends Thread {
                     int ch = 0;
                     for (int j = 0; j < data.length; j++) {
                         byte[] fData = client.read(4);
-                        data[j] = getFloat(fData) * (float)start.getdResolutions()[0];
+                        data[j] = getFloat(fData) * (float) start.getdResolutions()[0];
                     }
 
                     //RDA_Marker
@@ -275,8 +275,8 @@ public class DataTokenizer extends Thread {
             value = appendByte(value, ap[0]);
         }
     }
-    
-    public void requestStop(){
+
+    public void requestStop() {
         isRunning = false;
     }
 

@@ -15,12 +15,12 @@ import java.util.List;
  *
  */
 public class TrainingSetParser {
-	private List<double[][]> epochs;
+	private final List<double[][]> epochs;
 	private final int NUMBER_OF_CHANNELS = 19;
 	
 	
 	public TrainingSetParser() {
-		this.epochs = new ArrayList<double[][]>();
+		this.epochs = new ArrayList<>();
 	}
 
 	/** Read a line of data from the underlying input stream

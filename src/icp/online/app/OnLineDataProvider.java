@@ -13,15 +13,7 @@ import java.util.Observer;
 
 import org.apache.log4j.Logger;
 
-public class OnLineDataProvider extends Observable implements IDataProvider, Runnable {
-
-    private static final int DELKABUFFERU = 10000;
-    
-
-    /**
-     * Poèet stimulù, po jakém se zastaví hlavní test.
-     */
-    private static final int POCETSTIMULU = 400;
+public class OnLineDataProvider extends Observable implements IDataProvider, Runnable { 
 
     /**
      * Bufer, který se bude používat pro ukládání hodnot z datových objektù
@@ -44,6 +36,7 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
      * @param obs
      * @throws java.lang.Exception
      */
+    @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public OnLineDataProvider(String ip_adr, int port, Observer obs) throws Exception {
         super();
         this.ipAddress = ip_adr;
@@ -60,10 +53,10 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
     public void run() {
         addObserver(obs);
         /* delku bufferu je nutno zvolit libovolne vhodne */
-        this.buffer = new Buffer(DELKABUFFERU, Const.SAMPLES_BEFORE_STIMULUS, Const.SAMPLES_AFTER_STIMULUS);
+        this.buffer = new Buffer(Const.BUFFER_SIZE, Const.PREEPOCH_VALUES, Const.POSTEPOCH_VALUES);
         boolean stopped = false;
         int cisloStimulu = 0;
-        while (isRunning && cisloStimulu < POCETSTIMULU + 1) {
+        while (isRunning && cisloStimulu < Const.NUMBER_OF_STIMULUS + 1) {
             Object o = dtk.retrieveDataBlock();
             if (o instanceof RDA_Marker) {
                 /* takto získám pøíchozí èíslo z markeru */
@@ -91,7 +84,7 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                 isRunning = false;
                 stopped = true;
             }
-            if (buffer.jePlny() || (cisloStimulu > POCETSTIMULU)) {
+            if (buffer.jePlny() || (cisloStimulu > Const.NUMBER_OF_STIMULUS)) {
                 for (EpochDataCarrier data = buffer.vyber(); data != null; data = buffer.vyber()) {
                     EpochMessenger em = new EpochMessenger();
                     em.setStimulusIndex(data.getStimulusType());

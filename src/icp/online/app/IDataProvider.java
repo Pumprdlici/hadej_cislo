@@ -1,10 +1,5 @@
 package icp.online.app;
 
-import java.util.Observer;
-
 public interface IDataProvider {
-
-	
-	public void stop();
-
+    public void stop();
 }

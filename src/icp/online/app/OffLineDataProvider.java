@@ -1,5 +1,6 @@
 package icp.online.app;
 
+import icp.algorithm.math.Baseline;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -13,13 +14,13 @@ import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.signal.EEGMarker;
 import icp.Const;
-import icp.application.classification.test.MessageType;
-import icp.application.classification.test.ObserverMessage;
+import icp.online.app.DataObjects.MessageType;
+import icp.online.app.DataObjects.ObserverMessage;
 
 public class OffLineDataProvider extends Observable implements Runnable, IDataProvider {
 
-    private String vhdrFile;
-    private String vmrkFile;
+    private final String vhdrFile;
+    private final String vmrkFile;
     private int FZIndex;
     private int CZIndex;
     private int PZIndex;
@@ -35,12 +36,10 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     public OffLineDataProvider(File eegFile, Observer obs) {
         this.addObserver(obs);
         int index = eegFile.getAbsolutePath().lastIndexOf(".");
-
-        String ext = eegFile.getAbsolutePath().substring(index);
         String baseName = eegFile.getAbsolutePath().substring(0, index);
 
-        this.vhdrFile = baseName + ".vhdr";
-        this.vmrkFile = baseName + ".vmrk";
+        this.vhdrFile = baseName + Const.VHDR_EXTENSION;
+        this.vmrkFile = baseName + Const.VMKR_EXTENSION;
         this.running = true;
     }
 
@@ -61,20 +60,25 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         DataTransformer dt = new EEGDataTransformer();
 
         try {
-			List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
-            for (ChannelInfo channel: channels) {
-                if (channel.getName().toLowerCase().equals("fz")) {
-                    FZIndex = channel.getNumber();
-                } else if (channel.getName().toLowerCase().equals("cz")) {
-                    CZIndex = channel.getNumber();
-                } else if (channel.getName().toLowerCase().equals("pz")) {
-                    PZIndex = channel.getNumber();
+            List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
+            for (ChannelInfo channel : channels) {
+                switch (channel.getName().toLowerCase()) {
+                    case "fz":
+                        FZIndex = channel.getNumber();
+                        break;
+                    case "cz":
+                        CZIndex = channel.getNumber();
+                        break;
+                    case "pz":
+                        PZIndex = channel.getNumber();
+                        break;
                 }
             }
+            
             System.out.println(FZIndex + " " + CZIndex + " " + PZIndex);
-			double[] fzChannel = dt.readBinaryData(vhdrFile, FZIndex);
-			double[] czChannel = dt.readBinaryData(vhdrFile, CZIndex);
-			double[] pzChannel = dt.readBinaryData(vhdrFile, PZIndex);
+            double[] fzChannel = dt.readBinaryData(vhdrFile, FZIndex);
+            double[] czChannel = dt.readBinaryData(vhdrFile, CZIndex);
+            double[] pzChannel = dt.readBinaryData(vhdrFile, PZIndex);
             Map<String, EEGMarker> markers = dt.readMarkers(vmrkFile);
             for (Map.Entry<String, EEGMarker> entry : markers.entrySet()) {
                 if (!running) {
@@ -89,13 +93,16 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     stimulusIndex = Integer.parseInt(stimulusNumber) - 1;
                 }
                 em.setStimulusIndex(stimulusIndex);
-                float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel, marker.getPosition() - Const.SAMPLES_BEFORE_STIMULUS, marker.getPosition() + Const.SAMPLES_AFTER_STIMULUS));
-                float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel, marker.getPosition() - Const.SAMPLES_BEFORE_STIMULUS, marker.getPosition() + Const.SAMPLES_AFTER_STIMULUS));
-                float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel, marker.getPosition() - Const.SAMPLES_BEFORE_STIMULUS, marker.getPosition() + Const.SAMPLES_AFTER_STIMULUS));
+                float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel,
+                        marker.getPosition() - Const.PREEPOCH_VALUES, marker.getPosition() + Const.POSTEPOCH_VALUES));
+                float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel,
+                        marker.getPosition() - Const.PREEPOCH_VALUES, marker.getPosition() + Const.POSTEPOCH_VALUES));
+                float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel,
+                        marker.getPosition() - Const.PREEPOCH_VALUES, marker.getPosition() + Const.POSTEPOCH_VALUES));
 
-                Baseline.correct(ffzChannel, Const.SAMPLES_BEFORE_STIMULUS);
-                Baseline.correct(fczChannel, Const.SAMPLES_BEFORE_STIMULUS);
-                Baseline.correct(fpzChannel, Const.SAMPLES_BEFORE_STIMULUS);
+                Baseline.correct(ffzChannel, Const.PREEPOCH_VALUES);
+                Baseline.correct(fczChannel, Const.PREEPOCH_VALUES);
+                Baseline.correct(fpzChannel, Const.PREEPOCH_VALUES);
 
                 em.setFZ(ffzChannel, 100);
                 em.setCZ(fczChannel, 100);
@@ -115,7 +122,5 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     @Override
     public void stop() {
         this.running = false;
-
     }
-
 }

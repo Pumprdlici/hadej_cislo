@@ -1,0 +1,3 @@
+holka, 14 let 
+hádame 9, 5, je to 5
+reakce na 9 výraznìjší (chodí do 9. tøídy), na 5 slabší kolem 400 ms

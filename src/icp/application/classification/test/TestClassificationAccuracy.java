@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class TestClassificationAccuracy implements Observer {
 
-    private String dir = "data/numbers";
+    private String dir = "data/numbers/Strasice";
     private Map<String, Integer> results;
     private Integer[] result;
     private String filename;

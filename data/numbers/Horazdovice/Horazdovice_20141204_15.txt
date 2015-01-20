@@ -1,0 +1,3 @@
+holka, 15 let	
+hádáme 1, je to 1
+P300 komponenta je výrazná, latence kolem 400 ms

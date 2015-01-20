@@ -78,4 +78,9 @@ public class Const {
     //----------------------Experiment---------------------
     public static final int USED_CHANNELS = 3;
     public static final int GUESSED_NUMBERS = 9;
+    
+    //---------------------Buffer-------------------
+    public static final int RESERVE = 20;
+
+    public static final int ELECTROD_VALS = 20;
 }

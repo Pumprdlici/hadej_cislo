@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icp.application.classification.test;
+package icp.online.app.DataObjects;
 
 /**
  *

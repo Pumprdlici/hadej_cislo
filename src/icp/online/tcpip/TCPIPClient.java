@@ -38,15 +38,7 @@ public class TCPIPClient extends Thread {
     /**
      * Reference na logger událostí. *
      */
-    private static Logger logger = Logger.getLogger(TCPIPClient.class);
-    /**
-     * IP adresa, na které bìží server. *
-     */
-    private String ip;
-    /**
-     * Port na kterém server naslouchá. *
-     */
-    private int port;
+    private static final Logger logger = Logger.getLogger(TCPIPClient.class);
     
     private boolean isRunning;
 
@@ -59,8 +51,6 @@ public class TCPIPClient extends Thread {
      * @throws java.lang.Exception
      */
     public TCPIPClient(String ip, int port) throws Exception {
-        this.ip = ip;
-        this.port = port;
 
         //vytvoøení instance tøídy socket - napojení na server
         try {

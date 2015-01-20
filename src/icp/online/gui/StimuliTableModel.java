@@ -1,11 +1,10 @@
 package icp.online.gui;
 
+import icp.Const;
 import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
 class StimuliTableModel extends AbstractTableModel {
-
-    private static final String[] stimuliJTHeader = {"Number", "Score"};
 
     private final Object[][] data;
 
@@ -19,12 +18,12 @@ class StimuliTableModel extends AbstractTableModel {
 
     @Override
     public String getColumnName(int column) {
-        return stimuliJTHeader[column];
+        return Const.TABLE_COLUMN_NAMES[column];
     }
 
     @Override
     public int getColumnCount() {
-        return stimuliJTHeader.length;
+        return Const.TABLE_COLUMN_NAMES.length;
     }
 
     @Override

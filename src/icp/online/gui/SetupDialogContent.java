@@ -14,12 +14,6 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class SetupDialogContent extends javax.swing.JPanel {
 
-    private static final String IPADDRESS_PATTERN
-            = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
-
     /**
      * Creates new form SetupDialogContent
      */
@@ -37,7 +31,7 @@ public class SetupDialogContent extends javax.swing.JPanel {
      */
     public String getIP() {
         String ip = ipField.getText();
-        if (ip.matches(IPADDRESS_PATTERN)) {
+        if (ip.matches(Const.IPADDRESS_PATTERN)) {
             return ip;
         }
         return null;
@@ -58,7 +52,7 @@ public class SetupDialogContent extends javax.swing.JPanel {
         }
         return port;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

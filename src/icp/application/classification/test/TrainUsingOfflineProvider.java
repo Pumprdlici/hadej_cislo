@@ -1,5 +1,8 @@
 package icp.application.classification.test;
 
+import icp.Const;
+import icp.online.app.DataObjects.MessageType;
+import icp.online.app.DataObjects.ObserverMessage;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -21,16 +24,15 @@ public class TrainUsingOfflineProvider implements Observer {
     private int numberOfNonTargets;
 
     public TrainUsingOfflineProvider() {
-        String trainingFileName = "data/train/set2.eeg";
+        
         epochs = new ArrayList<>();
         targets = new ArrayList<>();
         numberOfTargets = 0;
         numberOfNonTargets = 0;
-        
-        OffLineDataProvider offLineData = new OffLineDataProvider(new File(trainingFileName), this);
+
+        OffLineDataProvider offLineData = new OffLineDataProvider(new File(Const.TRAINING_RAW_DATA_FILE_NAME), this);
         Thread t = new Thread(offLineData);
         t.start();
-        
     }
 
     public static void main(String[] args) {
@@ -50,19 +52,16 @@ public class TrainUsingOfflineProvider implements Observer {
             int stimulus = ((EpochMessenger) message).getStimulusIndex();
 
             // 1 = target, 3 = non-target
-            
             if (stimulus == 1 && numberOfTargets <= numberOfNonTargets) {
-            	epochs.add(epoch);
+                epochs.add(epoch);
                 targets.add(1.0);
                 numberOfTargets++;
             } else if (stimulus == 3 && numberOfTargets >= numberOfNonTargets) {
-            	epochs.add(epoch);
+                epochs.add(epoch);
                 targets.add(0.0);
                 numberOfNonTargets++;
             }
-
         }
-
     }
 
     private void train() {
@@ -80,9 +79,9 @@ public class TrainUsingOfflineProvider implements Observer {
 
         // training
         System.out.println("Training started.");
-        classifier.train(this.epochs, this.targets, 2000, fe);
-        classifier.save("data/classifier.txt");
-
+        classifier.train(this.epochs, this.targets, Const.NUMBER_OF_ITERATIONS, fe);
+        classifier.save(Const.TRAINING_FILE_NAME);
+        System.out.println("Training finished.");
     }
 
 }

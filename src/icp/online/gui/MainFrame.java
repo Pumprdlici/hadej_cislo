@@ -1,6 +1,7 @@
 package icp.online.gui;
 
-import icp.application.OnlineDetection;
+import icp.Const;
+import icp.online.app.OnlineDetection;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -43,14 +44,6 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Observer {
 
-    private static final String APP_NAME = "Guess the number";
-
-    private static final int MAIN_WINDOW_WIDTH = 640;
-
-    private static final int MAIN_WINDOW_HEIGHT = 320;
-
-    private static final String UNKNOWN_RESULT = "?";
-
     private AbstractTableModel data;
 
     private JTextPane winnerJTA;
@@ -72,7 +65,7 @@ public class MainFrame extends JFrame implements Observer {
     private final ShowChart epochCharts;
 
     public MainFrame() {
-        super(APP_NAME);
+        super(Const.APP_NAME);
         BasicConfigurator.configure();
         log = Logger.getLogger(MainFrame.class);
         epochCharts = new ShowChart(this);
@@ -85,11 +78,11 @@ public class MainFrame extends JFrame implements Observer {
         this.pack();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        this.setSize(MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
+        this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         classifier = new MLPClassifier();
-        classifier.load("data/classifier.txt");
+        classifier.load(Const.TRAINING_FILE_NAME);
         IFeatureExtraction fe = new FilterFeatureExtraction();
         classifier.setFeatureExtraction(fe);
     }
@@ -135,7 +128,7 @@ public class MainFrame extends JFrame implements Observer {
 
     private JTextPane createWinnerJTA() {
         winnerJTA = new JTextPane();
-        Font font = new Font("Arial", Font.BOLD, 250);
+        Font font = new Font(Const.RESULT_FONT_NAME, Const.RESULT_FONT_STYLE, Const.RESULT_FONT_SIZE);
         winnerJTA.setFont(font);
         winnerJTA.setBackground(Color.BLACK);
         winnerJTA.setForeground(Color.WHITE);
@@ -143,7 +136,7 @@ public class MainFrame extends JFrame implements Observer {
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
-        winnerJTA.setText(UNKNOWN_RESULT);
+        winnerJTA.setText(Const.UNKNOWN_RESULT);
         return winnerJTA;
     }
 
@@ -192,7 +185,7 @@ public class MainFrame extends JFrame implements Observer {
         double[] zeros = new double[data.getRowCount()];
         Arrays.fill(zeros, 0);
         initProbabilities(zeros);
-        winnerJTA.setText(UNKNOWN_RESULT);
+        winnerJTA.setText(Const.UNKNOWN_RESULT);
     }
 
     private void stopRunningThread() {

@@ -1,8 +1,8 @@
 package icp.application.classification.test;
 
-import cz.zcu.kiv.signal.DataTransformer;
-import cz.zcu.kiv.signal.EEGDataTransformer;
-import icp.application.OnlineDetection;
+import icp.online.app.DataObjects.MessageType;
+import icp.online.app.DataObjects.ObserverMessage;
+import icp.online.app.OnlineDetection;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;

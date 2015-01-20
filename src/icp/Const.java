@@ -11,7 +11,7 @@ public class Const {
      * Koncovka souboru ve formátu VDEF.
      */
     public static final String VHDR_EXTENSION = ".vhdr";
-    public static final String VMKR_EXTENSION = ".vmkr";
+    public static final String VMRK_EXTENSION = ".vmrk";
 
     //----------------------Settings constants---------------------------
     public static final String DEF_IP_ADDRESS = "147.228.127.95";

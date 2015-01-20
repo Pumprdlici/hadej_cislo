@@ -39,7 +39,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         String baseName = eegFile.getAbsolutePath().substring(0, index);
 
         this.vhdrFile = baseName + Const.VHDR_EXTENSION;
-        this.vmrkFile = baseName + Const.VMKR_EXTENSION;
+        this.vmrkFile = baseName + Const.VMRK_EXTENSION;
         this.running = true;
     }
 

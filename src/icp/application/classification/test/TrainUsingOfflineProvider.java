@@ -68,7 +68,7 @@ public class TrainUsingOfflineProvider implements Observer {
         // create classifiers
         IFeatureExtraction fe = new FilterFeatureExtraction();
         int numberOfInputNeurons = fe.getFeatureDimension();
-        int middleNeurons = 25;
+        int middleNeurons = 10;
         int outputNeurons = 1;
         ArrayList<Integer> nnStructure = new ArrayList<>();
         nnStructure.add(numberOfInputNeurons);

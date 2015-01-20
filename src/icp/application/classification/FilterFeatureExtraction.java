@@ -14,6 +14,7 @@ import icp.algorithm.math.SignalProcessing;
  *
  */
 public class FilterFeatureExtraction implements IFeatureExtraction {
+	private final int SKIP_SAMPLES     = Const.SAMPLES_AFTER_STIMULUS - F_SIZE; /* skip initial samples in each epoch */
 
     @Override
     public double[] extractFeatures(double[][] epoch) {

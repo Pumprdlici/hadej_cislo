@@ -1,7 +1,5 @@
 package icp.application.classification.test;
 
-import icp.online.app.DataObjects.MessageType;
-import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.OnlineDetection;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
@@ -23,8 +21,7 @@ public class TestClassificationAccuracy implements Observer {
     private Integer[] result;
     private String filename;
     private boolean end;
-    private int[] passOrFail = {0, 0};
-    private List<String> okFiles = new ArrayList<String>();
+    private Map<String, Statistics> stats;
 
 
 
@@ -34,6 +31,7 @@ public class TestClassificationAccuracy implements Observer {
     }
 
     public TestClassificationAccuracy() throws InterruptedException {
+        stats = new HashMap<>();
 
         try {
             results = loadExpectedResults("info.txt");
@@ -60,21 +58,41 @@ public class TestClassificationAccuracy implements Observer {
 
             }
         }
-        System.out.println(getPercentageResult(passOrFail));
-        for (String name: okFiles) {
-            System.out.println(name);
+
+        printStats();
+
+
+
+    }
+    private void printStats() {
+        System.out.println("----------------------------------------------");
+        System.out.println("Statistics: ");
+        System.out.println();
+        int okNumber = 0;
+        for (Map.Entry<String, Statistics> entry : stats.entrySet()){
+            if (entry.getValue().getRank() == 1) {
+                okNumber++;
+            }
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
+            System.out.println();
         }
+        System.out.println("Total points: " + Statistics.getTotalPts() + " of " + Statistics.MAX_POINT * stats.size());
+        System.out.println("Perfect guess: " + okNumber);
+        double percent = ((double)okNumber/stats.size())*100;
+        System.out.println("Accuracy: " + percent + " %");
+
     }
 
     private Map<String, Integer> loadExpectedResults(String filename) throws IOException {
-        Map<String, Integer> results = new HashMap<String, Integer>();
+        Map<String, Integer> results = new HashMap<>();
         File file = new File(dir + File.separator + filename);
         FileInputStream fis = new FileInputStream(file);
 
         //Construct BufferedReader from InputStreamReader
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 
-        String line = null;
+        String line;
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(" ");
             results.put(parts[0], Integer.parseInt(parts[1]));
@@ -96,14 +114,7 @@ public class TestClassificationAccuracy implements Observer {
     }
 
     private int getExpectedResult(String filename) {
-        String fileWithoutExtension = (filename.split("[.]"))[0];
-        int index = fileWithoutExtension.lastIndexOf("_");
-        String fileNumber = fileWithoutExtension.substring(index + 1);
-        return results.get(fileNumber);
-    }
-
-    private float getPercentageResult(int[] passOrFail) {
-        return passOrFail[0];
+        return results.get(filename);
     }
 
     @Override
@@ -115,17 +126,21 @@ public class TestClassificationAccuracy implements Observer {
 
         }
         if (message instanceof ObserverMessage) {
-            System.out.println("Observer message");
             ObserverMessage msg = (ObserverMessage) message;
             if (msg.getMsgType() == MessageType.END) {
                 System.out.println(filename);
-                System.out.println("I think: " + (result[0] + 1) + " ,I should think: " +getExpectedResult(filename));
-                if ((result[0] + 1) == getExpectedResult(filename)) {
-                    okFiles.add(filename);
-                    passOrFail[0]++;
-                } else {
-                    passOrFail[1]++;
+                int winner = (result[0] + 1);
+                Statistics st = new Statistics();
+                st.setExpectedResult(getExpectedResult(filename));
+                st.setThoughtResult(winner);
+
+                for (int i = 0; i < result.length; i++) {
+                    if ((result[i] + 1) == getExpectedResult(filename)) {
+                        st.setRank(i+1);
+                        break;
+                    }
                 }
+                stats.put(filename, st);
                 end = true;
 
             }

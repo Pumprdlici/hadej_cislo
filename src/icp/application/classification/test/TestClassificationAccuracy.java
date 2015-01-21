@@ -13,20 +13,19 @@ import icp.online.gui.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Created by stebjan on 20.1.2015.
  */
 public class TestClassificationAccuracy implements Observer {
 
-    private String dir = "data/numbers/Strasice";
+    private String dir = "data/numbers/Horazdovice";
     private Map<String, Integer> results;
     private Integer[] result;
     private String filename;
     private boolean end;
     private Map<String, Statistics> stats;
-
-
 
     public static void main(String[] args) throws InterruptedException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
@@ -42,37 +41,35 @@ public class TestClassificationAccuracy implements Observer {
             e.printStackTrace();
         }
         File directory = new File(dir);
-        for (File file : directory.listFiles()) {
-            if (file.getName().endsWith("eeg")) {
-
+        File f;
+        for (Entry<String, Integer> entry : results.entrySet()) {
+            f = new File(directory, entry.getKey());
+            if (f.exists() && f.isFile()) {
                 end = false;
-                filename = file.getName();
+                filename = f.getName();
                 IERPClassifier classifier = new MLPClassifier();
                 classifier.load(Const.TRAINING_FILE_NAME);
                 IFeatureExtraction fe = new FilterFeatureExtraction();
                 classifier.setFeatureExtraction(fe);
                 OnlineDetection detection = new OnlineDetection(classifier, this);
-                OffLineDataProvider offLineData = new OffLineDataProvider(file, detection);
+                OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
                 Thread t = new Thread(offLineData);
                 t.start();
-                while(!end) {
+                while (!end) {
                     Thread.sleep(500);
                 }
-
             }
         }
 
         printStats();
-
-
-
     }
+
     private void printStats() {
         System.out.println("----------------------------------------------");
         System.out.println("Statistics: ");
         System.out.println();
         int okNumber = 0;
-        for (Map.Entry<String, Statistics> entry : stats.entrySet()){
+        for (Map.Entry<String, Statistics> entry : stats.entrySet()) {
             if (entry.getValue().getRank() == 1) {
                 okNumber++;
             }
@@ -82,7 +79,7 @@ public class TestClassificationAccuracy implements Observer {
         }
         System.out.println("Total points: " + Statistics.getTotalPts() + " of " + Statistics.MAX_POINT * stats.size());
         System.out.println("Perfect guess: " + okNumber);
-        double percent = ((double)okNumber/stats.size())*100;
+        double percent = ((double) okNumber / stats.size()) * 100;
         System.out.println("Accuracy: " + percent + " %");
 
     }
@@ -139,7 +136,7 @@ public class TestClassificationAccuracy implements Observer {
 
                 for (int i = 0; i < result.length; i++) {
                     if ((result[i] + 1) == getExpectedResult(filename)) {
-                        st.setRank(i+1);
+                        st.setRank(i + 1);
                         break;
                     }
                 }

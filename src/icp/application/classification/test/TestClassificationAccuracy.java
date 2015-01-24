@@ -2,10 +2,13 @@ package icp.application.classification.test;
 
 import icp.Const;
 import icp.online.app.OnlineDetection;
+import icp.application.classification.ERPClassifierAdapter;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
+import icp.application.classification.JavaMLClassifier;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.NoFilterFeatureExtraction;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.OffLineDataProvider;

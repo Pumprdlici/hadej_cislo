@@ -83,4 +83,8 @@ public class Const {
     public static final int RESERVE = 20;
 
     public static final int ELECTROD_VALS = 20;
+    
+    //---------------------TEST---------------------
+    public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
+        "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo"};
 }

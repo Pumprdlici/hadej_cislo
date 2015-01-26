@@ -71,7 +71,7 @@ public class JavaMLClassifier implements IERPClassifier {
 		Object predictedClassValue = classifier.classify(instance);
 		
 		// TODO Auto-generated method stub
-		return (double)predictedClassValue;
+		return (Double)predictedClassValue;
 	}
 
 	@Override

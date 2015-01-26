@@ -62,17 +62,15 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         try {
             List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
             for (ChannelInfo channel : channels) {
-                switch (channel.getName().toLowerCase()) {
-                    case "fz":
-                        FZIndex = channel.getNumber();
-                        break;
-                    case "cz":
-                        CZIndex = channel.getNumber();
-                        break;
-                    case "pz":
-                        PZIndex = channel.getNumber();
-                        break;
+                if ("fz".equals(channel.getName().toLowerCase())) {
+                    FZIndex = channel.getNumber();
+                } else if ("cz".equals(channel.getName().toLowerCase())) {
+                    CZIndex = channel.getNumber();
+                } if ("pz".equals(channel.getName().toLowerCase())) {
+                    PZIndex = channel.getNumber();
                 }
+                
+                
             }
             
             System.out.println(FZIndex + " " + CZIndex + " " + PZIndex);

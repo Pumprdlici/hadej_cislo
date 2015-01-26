@@ -23,7 +23,7 @@ import java.util.Map.Entry;
  */
 public class TestClassificationAccuracy implements Observer {
 
-    private String dir = "data/numbers/Horazdovice";
+    private String dir = "data/numbers/Strasice";
     private Map<String, Integer> results;
     private Integer[] result;
     private String filename;
@@ -36,7 +36,7 @@ public class TestClassificationAccuracy implements Observer {
     }
 
     public TestClassificationAccuracy() throws InterruptedException {
-        stats = new HashMap<>();
+        stats = new HashMap<String, Statistics>();
 
         try {
             results = loadExpectedResults("info.txt");
@@ -88,7 +88,7 @@ public class TestClassificationAccuracy implements Observer {
     }
 
     private Map<String, Integer> loadExpectedResults(String filename) throws IOException {
-        Map<String, Integer> results = new HashMap<>();
+        Map<String, Integer> results = new HashMap<String, Integer>();
         File file = new File(dir + File.separator + filename);
         FileInputStream fis = new FileInputStream(file);
 

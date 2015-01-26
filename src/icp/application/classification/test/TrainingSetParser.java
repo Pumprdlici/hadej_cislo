@@ -20,7 +20,7 @@ public class TrainingSetParser {
 	
 	
 	public TrainingSetParser() {
-		this.epochs = new ArrayList<>();
+		this.epochs = new ArrayList<double[][]>();
 	}
 
 	/** Read a line of data from the underlying input stream

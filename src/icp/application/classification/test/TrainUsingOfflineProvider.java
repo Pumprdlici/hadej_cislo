@@ -27,8 +27,8 @@ public class TrainUsingOfflineProvider implements Observer {
 
     public TrainUsingOfflineProvider() {
         
-        epochs = new ArrayList<>();
-        targets = new ArrayList<>();
+        epochs = new ArrayList<double[][]>();
+        targets = new ArrayList<Double>();
         numberOfTargets = 0;
         numberOfNonTargets = 0;
 

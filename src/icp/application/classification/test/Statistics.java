@@ -18,7 +18,7 @@ public class Statistics {
     private Map<Integer, Integer> pointsForRank;
 
     public Statistics() {
-        pointsForRank = new HashMap<>();
+        pointsForRank = new HashMap<Integer, Integer>();
         pointsForRank.put(1, MAX_POINT);
         pointsForRank.put(2, 5);
         pointsForRank.put(3, 1);

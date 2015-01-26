@@ -85,7 +85,7 @@ public class TestClassificationMain {
 			int numberOfInputNeurons = fe.getFeatureDimension();
 			int middleNeurons        = 10;
 			int outputNeurons 	     = 1;
-			ArrayList<Integer> nnStructure = new ArrayList<>();
+			ArrayList<Integer> nnStructure = new ArrayList<Integer>();
 			nnStructure.add(numberOfInputNeurons); nnStructure.add(middleNeurons); nnStructure.add(outputNeurons);
 			IERPClassifier classifier = new MLPClassifier(nnStructure);
 			

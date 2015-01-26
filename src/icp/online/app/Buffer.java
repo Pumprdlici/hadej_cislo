@@ -2,6 +2,7 @@ package icp.online.app;
 
 import icp.Const;
 import icp.algorithm.math.Baseline;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -76,8 +77,8 @@ public class Buffer {
         this.endIndex = preMarker;
         this.preMarker = preMarker;
         this.postMarker = postMarker;
-        this.indexes = new LinkedList<>();
-        this.stimuli = new LinkedList<>();
+        this.indexes = new LinkedList<Integer>();
+        this.stimuli = new LinkedList<Integer>();
     }
 
     public int getIndexCz() {
@@ -297,7 +298,7 @@ public class Buffer {
         }
 
         /* pokud zustaly indexy markeru ve fronte indexu, musi se prepsat na nove hodnoty */
-        LinkedList<Integer> newIndexes = new LinkedList<>();
+        LinkedList<Integer> newIndexes = new LinkedList<Integer>();
         while (!this.indexes.isEmpty()) {
             /* všechny indexy markerù z fronty se musí pøepsat -> odeèíst od nich
              indexPredMarkerem; tím se všechny posunou na zaèátek  */

@@ -21,6 +21,8 @@ import java.util.Map.Entry;
 public class TestClassificationAccuracy implements Observer {
 
     private String dir = "data/numbers/Horazdovice";
+    private final String infoFileName = "info.txt";
+
     private Map<String, Integer> results;
     private Integer[] result;
     private String filename;
@@ -29,34 +31,47 @@ public class TestClassificationAccuracy implements Observer {
 
     public static void main(String[] args) throws InterruptedException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
-
     }
 
     public TestClassificationAccuracy() throws InterruptedException {
         stats = new HashMap<>();
-
+        results = new HashMap<>();
+        
         try {
-            results = loadExpectedResults("info.txt");
+            File directory;
+            Map<String, Integer> map;
+            for (String dirName : Const.DIRECTORIES) {
+                directory = new File(dirName);
+                if (directory.exists() && directory.isDirectory()) {
+                    map = loadExpectedResults(infoFileName, dirName);
+                    results.putAll(map);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        File directory = new File(dir);
+        File directory;
         File f;
-        for (Entry<String, Integer> entry : results.entrySet()) {
-            f = new File(directory, entry.getKey());
-            if (f.exists() && f.isFile()) {
-                end = false;
-                filename = f.getName();
-                IERPClassifier classifier = new MLPClassifier();
-                classifier.load(Const.TRAINING_FILE_NAME);
-                IFeatureExtraction fe = new FilterFeatureExtraction();
-                classifier.setFeatureExtraction(fe);
-                OnlineDetection detection = new OnlineDetection(classifier, this);
-                OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
-                Thread t = new Thread(offLineData);
-                t.start();
-                while (!end) {
-                    Thread.sleep(500);
+        for (String dirName : Const.DIRECTORIES) {
+            directory = new File(dirName);
+            if (directory.exists() && directory.isDirectory()) {
+                for (Entry<String, Integer> entry : results.entrySet()) {
+                    f = new File(directory, entry.getKey());
+                    if (f.exists() && f.isFile()) {
+                        end = false;
+                        filename = f.getName();
+                        IERPClassifier classifier = new MLPClassifier();
+                        classifier.load(Const.TRAINING_FILE_NAME);
+                        IFeatureExtraction fe = new FilterFeatureExtraction();
+                        classifier.setFeatureExtraction(fe);
+                        OnlineDetection detection = new OnlineDetection(classifier, this);
+                        OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
+                        Thread t = new Thread(offLineData);
+                        t.start();
+                        while (!end) {
+                            Thread.sleep(500);
+                        }
+                    }
                 }
             }
         }
@@ -84,8 +99,8 @@ public class TestClassificationAccuracy implements Observer {
 
     }
 
-    private Map<String, Integer> loadExpectedResults(String filename) throws IOException {
-        Map<String, Integer> results = new HashMap<>();
+    private Map<String, Integer> loadExpectedResults(String filename, String dir) throws IOException {
+        Map<String, Integer> res = new HashMap<>();
         File file = new File(dir + File.separator + filename);
         FileInputStream fis = new FileInputStream(file);
 
@@ -93,13 +108,20 @@ public class TestClassificationAccuracy implements Observer {
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 
         String line;
+        int num;
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(" ");
-            results.put(parts[0], Integer.parseInt(parts[1]));
+            if (parts.length > 1) {
+                try {
+                    num = Integer.parseInt(parts[1]);
+                    res.put(parts[0], num);
+                } catch (NumberFormatException ex) {
+                }
+            }
         }
 
         br.close();
-        return results;
+        return res;
     }
 
     private Integer[] initProbabilities(double[] probabilities) {

@@ -6,7 +6,9 @@ import icp.online.app.DataObjects.ObserverMessage;
 import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
+import icp.application.classification.JavaMLClassifier;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.NoFilterFeatureExtraction;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
 
@@ -67,14 +69,7 @@ public class TrainUsingOfflineProvider implements Observer {
     private void train() {
         // create classifiers
         IFeatureExtraction fe = new FilterFeatureExtraction();
-        int numberOfInputNeurons = fe.getFeatureDimension();
-        int middleNeurons = 8;
-        int outputNeurons = 1;
-        ArrayList<Integer> nnStructure = new ArrayList<>();
-        nnStructure.add(numberOfInputNeurons);
-        nnStructure.add(middleNeurons);
-        nnStructure.add(outputNeurons);
-        IERPClassifier classifier = new MLPClassifier(nnStructure);
+        IERPClassifier classifier = new MLPClassifier();
         classifier.setFeatureExtraction(fe);
 
         // training

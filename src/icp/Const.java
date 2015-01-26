@@ -28,7 +28,7 @@ public class Const {
 
     public static final int EPOCH_SIZE = 512; /* number of samples to be used - Fs = 1000 Hz expected */
 
-    public static final int DOWN_SMPL_FACTOR = 32;  /* subsampling factor */
+    public static final int DOWN_SMPL_FACTOR = 16;  /* subsampling factor */
 
     public static final int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
 
@@ -41,9 +41,9 @@ public class Const {
     //-------------------------MLP classifier------------------------
     public static final int DEFAULT_OUTPUT_NEURONS = 1; /* number of output neurons */
 
-    public static final double LEARNING_RATE = 0.05;     /* learning step */
+    public static final double LEARNING_RATE = 0.1;     /* learning step */
 
-    public static final int NUMBER_OF_ITERATIONS = 500;
+    public static final int NUMBER_OF_ITERATIONS = 2000;
 
     //------------------------Classifier training-----------------------
     public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/set2.eeg";

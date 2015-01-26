@@ -55,7 +55,11 @@ public class OnlineDetection extends Observable implements Observer {
                 
                 
                 classificationResult += this.classifier.classify(epochMsg.getEpoch());
+                
+                double P300relativeEnergy = calcEnergy(epochStimulus, 250, 500) / calcEnergy(epochStimulus, 0, Const.POSTSTIMULUS_VALUES);
+                
                 classificationResults[stimulusID] += classificationResult;
+             //   classificationResults[stimulusID] += P300relativeEnergy;
                 this.weightedResults = this.calcClassificationResults();
                 setChanged();
                 notifyObservers(this);
@@ -68,6 +72,16 @@ public class OnlineDetection extends Observable implements Observer {
         }
     }
 
+    private double calcEnergy( double[][] epochStimulus, int start, int end) {
+    	double energy = 0;
+    	for (int i = 0; i < Const.USED_CHANNELS; i++) {
+    		for (int j = start; j < end; j++) {
+    			energy += Math.pow(epochStimulus[i][j], 2);
+    		}
+    	}
+    	return Math.sqrt(energy);
+    }
+    
     private double[][] getAvgEpochWithStimulus(int stimulusIndex, double[][][] epoch) {
         double[][] epochStimulus = new double[Const.USED_CHANNELS][Const.POSTSTIMULUS_VALUES];
         for (int i = 0; i < Const.USED_CHANNELS; i++) {

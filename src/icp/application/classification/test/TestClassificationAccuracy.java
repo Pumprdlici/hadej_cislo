@@ -71,15 +71,17 @@ public class TestClassificationAccuracy implements Observer {
                         OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
                         Thread t = new Thread(offLineData);
                         t.start();
+                       // t.join();
                         while (!end) {
                             Thread.sleep(500);
                         }
+                        
                     }
                 }
             }
         }
 
-        printStats();
+      //  printStats();
     }
 
     private void printStats() {
@@ -153,7 +155,7 @@ public class TestClassificationAccuracy implements Observer {
         if (message instanceof ObserverMessage) {
             ObserverMessage msg = (ObserverMessage) message;
             if (msg.getMsgType() == MessageType.END) {
-                System.out.println(filename);
+              //  System.out.println(filename);
                 int winner = (result[0] + 1);
                 Statistics st = new Statistics();
                 st.setExpectedResult(getExpectedResult(filename));
@@ -171,4 +173,10 @@ public class TestClassificationAccuracy implements Observer {
             }
         }
     }
+
+	public Map<String, Statistics> getStats() {
+		return stats;
+	}
+    
+    
 }

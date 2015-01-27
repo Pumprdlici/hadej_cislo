@@ -1,0 +1,4 @@
+kluk 13 let
+hádáme 1, je to 1,
+klasifikátor hádá postupnì 4, 7, 1
+na 1 výrazná odezva kolem 450 ms

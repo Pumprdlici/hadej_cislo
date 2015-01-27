@@ -1,0 +1,4 @@
+paní uèitelka
+hádáme 2, je to 2,
+èekala chvíli, než si uvìdomila hádané èíslo, proto latence P300 až kolem 900 ms
+klasifikátor hádá postupnì 7, 1, 9, 2, 5, 4, 8, 6, 3

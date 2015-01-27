@@ -1,0 +1,5 @@
+kluk 15 let
+hádáme 9, 6, 3, ale je to 5
+5 témìø bez viditelné odezvy
+klasifikátor hádá postupnì 1, 4, 9, 6, 8, 2, 7, 5, 3
+

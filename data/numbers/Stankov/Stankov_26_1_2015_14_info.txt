@@ -1,0 +1,6 @@
+holka 13 let
+hádáme 6, 7, je to 5
+5 - bychom neuhádli
+na 7 zpoždìná reakce (nesouvisí s P300)
+klasifikátor hádá postupnì 7, 8, 1, 6, 4, 9, 2, 5, 3
+

@@ -1,0 +1,5 @@
+holka 12 let
+hádáme 1, je to 1,
+hodnì mrká,
+klasifikátor hádá postupnì 1, 3, 6, 5, 2, 9, 7, 4, 8 
+

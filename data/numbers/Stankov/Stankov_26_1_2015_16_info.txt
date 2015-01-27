@@ -1,0 +1,5 @@
+žena
+hádáme 7, je to 7
+typická P3 odezva kolem 400 ms
+klasifikátor puštìn pozdìji, hádá 5, 8, 6, 7, 2, 3, 1, 9, 4
+

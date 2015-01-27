@@ -1,0 +1,5 @@
+kluk 13 let
+váháme mezi 3, 4, hádáme 4, je to 4
+
+klasifikátor hádá postupnì 4, 3, 2, 6, 7, 1, 9, 8, 5
+

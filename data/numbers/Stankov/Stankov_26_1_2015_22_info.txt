@@ -1,0 +1,4 @@
+holka 12 let
+hádáme 7, je to  7
+krásná odezva s latencí 420 ms, amplitudou 80 
+klasifikátor hádá 5, 6, 4, 7, 2, 8, 9, 3, 1

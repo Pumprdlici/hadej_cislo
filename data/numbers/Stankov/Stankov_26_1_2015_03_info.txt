@@ -1,0 +1,5 @@
+kluk 12 let
+hádáme postupnì 4, 5, je to 5,
+klasifikátor hádá postupnì 3, 2, 8, 5, 7
+pozor: offline 5, 2, 3, 8, 7
+na 5 výrazná odezva kolem 550 ms

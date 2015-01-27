@@ -1,0 +1,4 @@
+holka 10 let
+hádáme 3, je to  3
+latence 580 ms
+klasifikátor hádá 5, 6, 4, 7, 2, 8, 9, 3, 1

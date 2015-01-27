@@ -1,0 +1,4 @@
+kluk 9 let
+hádáme 5, 1, 8 je to 8
+reakce na všechna èísla podobná
+klasifikátor hádá 2, 5, 8, 9, 6, 1, 3, 7, 4

@@ -1,0 +1,4 @@
+kluk 12 let
+hádáme 2, je to  6
+
+klasifikátor hádá 6, 9, 5, 8, 7, 4, 2, 1, 3

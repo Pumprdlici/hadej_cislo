@@ -1,0 +1,6 @@
+kluk 15 let
+hádáme 6, je to 6,
+slabá odezva kolem 600 ms,
+hodnì mrká,
+klasifikátor hádá postupnì 3, 7, 6, 1, 2, 5, 8, 4, 9
+

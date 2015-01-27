@@ -1,0 +1,4 @@
+holka 9 let
+hádáme 5, je to  5
+výrazná odezva s velkou amplitudou
+klasifikátor hádá 5, 1, 4, 7, 6, 3, 2, 8, 9

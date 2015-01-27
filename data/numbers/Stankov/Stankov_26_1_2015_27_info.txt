@@ -1,0 +1,4 @@
+holka 12 let
+hádáme 4, je to  4
+
+klasifikátor hádá 4, 7, 2, 8, 9,, 1, 6, 3, 5

@@ -1,0 +1,6 @@
+holka 14 let
+hádáme 5, je to 5
+hodnì mrká, pohybuje se,
+5 - slabá odezva kolem 350 ms
+klasifikátor hádá postupnì 5, 7, 8, 3, 9, 2, 4, 6, 1
+

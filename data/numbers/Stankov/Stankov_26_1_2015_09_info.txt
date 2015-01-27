@@ -1,0 +1,5 @@
+kluk 15 let
+hádáme 3, je to 3,
+støednì výrazná odezva kolem 550 ms
+klasifikátor hádá postupnì 3, 8, 6, 5, 1, 7, 2, 9, 4
+

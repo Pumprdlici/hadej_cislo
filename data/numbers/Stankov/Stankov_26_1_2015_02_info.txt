@@ -1,0 +1,4 @@
+paní uèitelka
+hádáme 2, je to 2,
+klasifikátor hádá postupnì 8, 7, 5
+na 1 výrazná odezva kolem 450 ms

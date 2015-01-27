@@ -1,7 +1,7 @@
 package icp.application.classification.test;
 
 import icp.application.classification.ClassificationStatistics;
-import icp.application.classification.FilterFeatureExtraction;
+import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
@@ -81,7 +81,7 @@ public class TestClassificationMain {
 			List<double[][]> testingEpochs = testingParser.getEpochs();
 			
 			// create classifiers
-			IFeatureExtraction fe = new FilterFeatureExtraction();
+			IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
 			int numberOfInputNeurons = fe.getFeatureDimension();
 			int middleNeurons        = 10;
 			int outputNeurons 	     = 1;

@@ -3,7 +3,7 @@ package icp.application.classification.test;
 import icp.Const;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
-import icp.application.classification.FilterFeatureExtraction;
+import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.JavaMLClassifier;
@@ -68,7 +68,7 @@ public class TrainUsingOfflineProvider implements Observer {
 
     private void train() {
         // create classifiers
-        IFeatureExtraction fe = new FilterFeatureExtraction();
+        IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
         IERPClassifier classifier = new MLPClassifier();
         classifier.setFeatureExtraction(fe);
 

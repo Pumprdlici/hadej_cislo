@@ -2,7 +2,7 @@ package icp.online.gui;
 
 import icp.Const;
 import icp.online.app.OnlineDetection;
-import icp.application.classification.FilterFeatureExtraction;
+import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
@@ -84,7 +84,7 @@ public class MainFrame extends JFrame implements Observer {
 
         classifier = new MLPClassifier();
         classifier.load(Const.TRAINING_FILE_NAME);
-        IFeatureExtraction fe = new FilterFeatureExtraction();
+        IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
         classifier.setFeatureExtraction(fe);
     }
 

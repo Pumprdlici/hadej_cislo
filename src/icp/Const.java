@@ -23,20 +23,8 @@ public class Const {
             + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
             + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
-    //-------------------------Filter settings-----------------------
-    public static final int[] CHANNELS = {1, 2, 3}; /* EEG channels to be transformed to feature vectors */
-
-    public static final int EPOCH_SIZE = 512; /* number of samples to be used - Fs = 1000 Hz expected */
-
-    public static final int DOWN_SMPL_FACTOR = 16;  /* subsampling factor */
-
-    public static final int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
-
-    /* low pass 0 - 8 Hz, M = 19  */
-    public static final double[] lowPassCoeffs = {0.000308, 0.001094, 0.002410,
-        0.004271, 0.006582, 0.009132, 0.011624, 0.013726, 0.015131, 0.015625,
-        0.015131, 0.013726, 0.011624, 0.009132, 0.006582, 0.004271, 0.002410,
-        0.001094, 0.000308};
+    
+   
 
     //-------------------------MLP classifier------------------------
     public static final int DEFAULT_OUTPUT_NEURONS = 1; /* number of output neurons */
@@ -86,5 +74,5 @@ public class Const {
     
     //---------------------TEST---------------------
     public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
-        "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo"};
+        "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo", "data/numbers/Stankov"};
 }

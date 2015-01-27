@@ -3,7 +3,7 @@ package icp.application.classification.test;
 import icp.Const;
 import icp.online.app.OnlineDetection;
 import icp.application.classification.ERPClassifierAdapter;
-import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
+import icp.application.classification.FilterFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.JavaMLClassifier;
@@ -23,9 +23,13 @@ import java.util.Map.Entry;
  */
 public class TestClassificationAccuracy implements Observer {
 
+<<<<<<< HEAD
     private String dir = "data/numbers/Strasice";
+=======
+    private String dir = "data/numbers/Horazdovice";
     private final String infoFileName = "info.txt";
 
+>>>>>>> d85bf7c376d772d4eb1cfb6aeb381945a5ec8c79
     private Map<String, Integer> results;
     private Integer[] result;
     private String filename;
@@ -37,9 +41,14 @@ public class TestClassificationAccuracy implements Observer {
     }
 
     public TestClassificationAccuracy() throws InterruptedException {
+<<<<<<< HEAD
         stats = new HashMap<String, Statistics>();
-        results = new HashMap<String, Integer>();
+
+=======
+        stats = new HashMap<>();
+        results = new HashMap<>();
         
+>>>>>>> d85bf7c376d772d4eb1cfb6aeb381945a5ec8c79
         try {
             File directory;
             Map<String, Integer> map;
@@ -65,7 +74,7 @@ public class TestClassificationAccuracy implements Observer {
                         filename = f.getName();
                         IERPClassifier classifier = new MLPClassifier();
                         classifier.load(Const.TRAINING_FILE_NAME);
-                        IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
+                        IFeatureExtraction fe = new FilterFeatureExtraction();
                         classifier.setFeatureExtraction(fe);
                         OnlineDetection detection = new OnlineDetection(classifier, this);
                         OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
@@ -102,8 +111,13 @@ public class TestClassificationAccuracy implements Observer {
 
     }
 
+<<<<<<< HEAD
+    private Map<String, Integer> loadExpectedResults(String filename) throws IOException {
+        Map<String, Integer> results = new HashMap<String, Integer>();
+=======
     private Map<String, Integer> loadExpectedResults(String filename, String dir) throws IOException {
-        Map<String, Integer> res = new HashMap<String, Integer>();
+        Map<String, Integer> res = new HashMap<>();
+>>>>>>> d85bf7c376d772d4eb1cfb6aeb381945a5ec8c79
         File file = new File(dir + File.separator + filename);
         FileInputStream fis = new FileInputStream(file);
 

@@ -69,7 +69,14 @@ public class TrainUsingOfflineProvider implements Observer {
     private void train() {
         // create classifiers
         IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
-        IERPClassifier classifier = new MLPClassifier();
+        int numberOfInputNeurons = fe.getFeatureDimension();
+        int middleNeurons = 8;
+        int outputNeurons = 1;
+        ArrayList<Integer> nnStructure = new ArrayList<>();
+        nnStructure.add(numberOfInputNeurons);
+        nnStructure.add(middleNeurons);
+        nnStructure.add(outputNeurons);
+        IERPClassifier classifier = new MLPClassifier(nnStructure);
         classifier.setFeatureExtraction(fe);
 
         // training

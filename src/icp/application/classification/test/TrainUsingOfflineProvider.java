@@ -9,6 +9,7 @@ import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.JavaMLClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.NoFilterFeatureExtraction;
+import icp.application.classification.WindowedMeansFeatureExtraction;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
 
@@ -88,6 +89,7 @@ public class TrainUsingOfflineProvider implements Observer {
         nnStructure.add(middleNeurons);
         nnStructure.add(outputNeurons);
         classifier = new MLPClassifier(nnStructure);
+      //  classifier = new JavaMLClassifier();
         classifier.setFeatureExtraction(fe);
 
         // training

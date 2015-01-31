@@ -40,6 +40,7 @@ public class Const {
     //----------------------Epoch------------------------
     public static final int PREESTIMULUS_VALUES = 100;
     public static final int POSTSTIMULUS_VALUES = 750;
+    public static final int SAMPLING_FQ = 1000;
 
     //----------------------Buffer-----------------------
     public static final int BUFFER_SIZE = 10000;

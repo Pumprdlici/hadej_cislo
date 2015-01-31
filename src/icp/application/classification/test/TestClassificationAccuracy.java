@@ -9,6 +9,7 @@ import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.JavaMLClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.NoFilterFeatureExtraction;
+import icp.application.classification.WindowedMeansFeatureExtraction;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.OffLineDataProvider;
@@ -32,13 +33,21 @@ public class TestClassificationAccuracy implements Observer {
     private boolean end;
     private Map<String, Statistics> stats;
 
+    
+   
     public static void main(String[] args) throws InterruptedException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
     }
-
+    
     public TestClassificationAccuracy() throws InterruptedException {
+    	this(null);
+    }
+
+    public TestClassificationAccuracy(IERPClassifier classifier) throws InterruptedException {
+    	
         stats = new HashMap<String, Statistics>();
         results = new HashMap<String, Integer>();
+        
         
         try {
             File directory;
@@ -63,10 +72,13 @@ public class TestClassificationAccuracy implements Observer {
                     if (f.exists() && f.isFile()) {
                         end = false;
                         filename = f.getName();
-                        IERPClassifier classifier = new MLPClassifier();
-                        classifier.load(Const.TRAINING_FILE_NAME);
-                        IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
-                        classifier.setFeatureExtraction(fe);
+                        if (classifier == null) {
+                        	classifier = new MLPClassifier();
+                        	 classifier.load(Const.TRAINING_FILE_NAME);
+                             IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
+                             classifier.setFeatureExtraction(fe);
+                        }
+                       
                         OnlineDetection detection = new OnlineDetection(classifier, this);
                         OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
                         Thread t = new Thread(offLineData);
@@ -81,7 +93,7 @@ public class TestClassificationAccuracy implements Observer {
             }
         }
 
-      //  printStats();
+        printStats();
     }
 
     private void printStats() {
@@ -155,7 +167,7 @@ public class TestClassificationAccuracy implements Observer {
         if (message instanceof ObserverMessage) {
             ObserverMessage msg = (ObserverMessage) message;
             if (msg.getMsgType() == MessageType.END) {
-              //  System.out.println(filename);
+             //   System.out.println(filename);
                 int winner = (result[0] + 1);
                 Statistics st = new Statistics();
                 st.setExpectedResult(getExpectedResult(filename));

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean id="runClassCfgs" class="testing.classificators.RunClassificationCfgs">
+		<property name="resultsPath" value="data//results//"/>
+		<property name="templateFilename" value="configs//classification//htmlTemplate.stg"/>
+		<property name="cfgs">
+			<list>
+				<value>configs//classification//10_cz_baseline_CauchyCfg4_FreqAmpl3.xml</value>
+<!--				<value>configs//classification//10_cz_CauchyCfg4.xml</value>-->
+			</list>
+		</property>
+	</bean>
+                
+</beans>                

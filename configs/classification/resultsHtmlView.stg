@@ -1,0 +1,30 @@
+group html;
+
+table(values) ::= <<
+\<html\>
+\<head\>
+	\<style type="text/css"\>
+		td, th {padding: 7px; }
+		th {text-aling: center; white-space:normal; border: solid 1px black;}
+		td {text-align: right;}
+		td#left {text-align: left;}	\</style\>
+\</head\>
+\<body\>
+	\<p\>\<span\>Success:\</span\>\<span id="success"\><values.averageSuccess; format="00.0000%">\</span\>\</p\>
+	\<table rules="cols"\>
+		\<tr\> 
+			\<th\> success[%] \</th\>
+			\<th\> filename \</th\>
+		\</tr\>
+		<values.values:row(); separator="\n">
+	\</table\>
+\</body\>
+\</html\>
+>>
+
+row(value) ::= <<
+ \<tr\>
+ 	\<td\><value.value; format="00.0000%">\</td\>
+ 	\<td id="left"\>\<a href="<value.filename>"\><value.baseName>\</a\>\</td\>
+ \</tr\>
+>>

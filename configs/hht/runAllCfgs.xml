@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="runnerCfg">
+	<logpath>log//</logpath>
+	<configsPath>configs//emd</configsPath>
+	<dataPath>data//eeg//preproccessedForHHT_cz</dataPath>
+	<!--<dataPath>data//eeg//a</dataPath>-->
+	<samplingFrequency>1000</samplingFrequency>
+	<useNSamples>1024</useNSamples>
+	<resultPath>c://hhtResults//AddCrit//Bez</resultPath>
+	<timeout>10000</timeout>
+	<cfgsList>
+<!--		<name>configs//emd//Pokus1.xml</name>-->
+<!--		<name>configs//emd//Pokus2.xml</name>-->
+<!--		<name>configs//emd//Pokus3.xml</name>
+		<name>configs//emd//CauchyCfg2.xml</name>
+		<name>configs//emd//SDcfg1.xml</name>
+		<name>configs//emd//SDcfg2.xml</name>            -->	  
+		<name>configs//emd//CauchyCfg3.xml</name>
+		<name>configs//emd//CauchyCfg6.xml</name>
+                <name>configs//emd//CauchyCfg7.xml</name>
+		<name>configs//emd//SDcfg3.xml</name>
+		<name>configs//emd//SDcfg4.xml</name>
+		<name>configs//emd//SDcfg8.xml</name>
+	</cfgsList>
+	<fileNameList>
+<!--		<name>01_Cz_(baseline_)?ep\[(000|001|002|003)\]_(target|nonTarget){1}\.txt</name>-->
+<!--		<name>02_Cz_(baseline_)?ep\[(000|001|002|003)\]_(target|nonTarget){1}\.txt</name>-->
+<!--		<name>05_Cz_(baseline_)?ep\[\d{3}\]_(target|nonTarget){1}\.txt</name>-->
+		<!--<name>10_Cz_(baseline_)(target|nonTarget){1}\.txt</name>-->
+		<!--<name>20_Cz_(baseline_)(target|nonTarget){1}\.txt</name>-->
+		<name>30_Cz_(baseline_)(target|nonTarget){1}\.txt</name>
+	</fileNameList>
+</configuration>

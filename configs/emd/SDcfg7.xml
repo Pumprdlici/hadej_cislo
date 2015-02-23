@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean  id="emd" class="hht.emd.EmpiricalModeDecomposition" >
+		<constructor-arg  ref="sifter"/>
+		<constructor-arg ref="extremesLocator"/>
+	</bean>
+
+	<bean id="extremesLocator" class="hht.emd.sifting.extremes.locators.LocateLocalExtremaFacade" >
+		<constructor-arg ref="maxLocator" />
+		<constructor-arg ref="minLocator" />
+	</bean>	
+
+	<bean id="minLocator" class="hht.emd.sifting.extremes.locators.DeltaDifferenceExtrema">
+		<constructor-arg ref="minHelper"/>
+	</bean>
+
+	<bean id="maxLocator" class="hht.emd.sifting.extremes.locators.DeltaDifferenceExtrema">
+		<constructor-arg ref="maxHelper"/>
+	</bean>
+	
+	<bean id="minHelper" class="hht.emd.sifting.extremes.locators.MinimumLocatorHelper">
+		<property name="delta" value="0.5"/>
+	</bean>
+
+	<bean id="maxHelper" class="hht.emd.sifting.extremes.locators.MaximumLocatorHelper">
+		<property name="delta" value="0.5"/>
+	</bean>
+	
+	<bean id="sifter" class="hht.emd.sifting.Sifter">
+		<constructor-arg ref="Or1"/>
+		<constructor-arg ref="EndPointMirrorEstimator2"/>
+		<constructor-arg ref="extremesLocator" />
+	</bean>
+	
+	<bean id="MonotonicFunction" class="hht.emd.sifting.stoppingCriteria.MonotonicFunction">
+		<property name="diferenceThreshold" value="0.005" />
+	</bean>
+	
+	<bean id="EndPointMirrorEstimator2" class="hht.emd.sifting.extremes.estimators.EndPointMirror2"/>
+	
+	<bean id="Or1" class="hht.emd.sifting.stoppingCriteria.Or">
+		<property name="criteria">
+			<list>
+				<ref bean="StandardDeviation" />
+				<ref bean="MonotonicFunction" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="StandardDeviation" class="hht.emd.sifting.stoppingCriteria.StandardDeviation">
+		<property name="deviationThreshold" value="15.0" />
+	</bean>
+
+	<bean id="ResultsConfigs" class="data.ResultsConfigs">
+		<property name="genPdfFromImfs" value="false"/>
+		<property name="genPdfFromImfsMaps" value="false"/>
+		<property name="genImfsAllMapPdf" value="false"/>
+		<property name="genImfMapToSignalPdf" value="false"/>
+	</bean>
+</beans>
+
+

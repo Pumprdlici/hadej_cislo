@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+                
+	<bean id="trans_10_Cz" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter"/>
+				<ref bean="average10" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+	
+	<bean id="stimulFilter" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="10_Cz"/>
+		<property name="nonTargetFilenameDescr" value="10_Cz"/>
+	</bean>
+	
+	<bean id="average10" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="false"/>
+		<property name="epochsCount" value="10"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	
+	<bean id="storageFilter" class="data.vhdr.SaveToTxtFilter">
+		<property name="resultPath" value="data//eeg//newData//"/>
+		<property name="createPdf" value="true"/>
+	</bean>
+	
+	<bean id="trans_10_Cz_b" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_10cz_b"/>
+				<ref bean="average10_b" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average10_b" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="true"/>
+		<property name="averageLength" value="100" />
+		<property name="epochsCount" value="10"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_10cz_b" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="10_Cz_baseline"/>
+		<property name="nonTargetFilenameDescr" value="10_Cz_baseline"/>
+	</bean>	
+	
+	<bean id="trans_20_Cz_b" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_20cz_b"/>
+				<ref bean="average20_b" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average20_b" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="true"/>
+		<property name="epochsCount" value="20"/>
+		<property name="averageLength" value="100" />
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_20cz_b" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="20_Cz_baseline"/>
+		<property name="nonTargetFilenameDescr" value="20_Cz_baseline"/>
+	</bean>
+
+	<bean id="trans_20_Cz" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_20cz"/>
+				<ref bean="average20" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average20" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="false"/>
+		<property name="epochsCount" value="20"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_20cz" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="20_Cz"/>
+		<property name="nonTargetFilenameDescr" value="20_Cz"/>
+	</bean>	
+	
+	<bean id="trans_30_Cz" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_30cz"/>
+				<ref bean="average30" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average30" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="false"/>
+		<property name="epochsCount" value="30"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_30cz" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="30_Cz"/>
+		<property name="nonTargetFilenameDescr" value="30_Cz"/>
+	</bean>	
+
+	<bean id="trans_30_Cz_b" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_30cz_b"/>
+				<ref bean="average30_b" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average30_b" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="true"/>
+		<property name="epochsCount" value="30"/>
+		<property name="averageLength" value="100" />
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_30cz_b" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="30_Cz_baseline"/>
+		<property name="nonTargetFilenameDescr" value="30_Cz_baseline"/>
+	</bean>
+
+	<bean id="trans_5_Cz_b" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_5cz_b"/>
+				<ref bean="average5_b" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average5_b" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="true"/>
+		<property name="epochsCount" value="5"/>
+		<property name="averageLength" value="100" />
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_5cz_b" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="05_Cz_baseline"/>
+		<property name="nonTargetFilenameDescr" value="05_Cz_baseline"/>
+	</bean>
+
+
+	<bean id="trans_5_Cz" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_5cz"/>
+				<ref bean="average5" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average5" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="false"/>
+		<property name="epochsCount" value="5"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_5cz" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="05_Cz"/>
+		<property name="nonTargetFilenameDescr" value="05_Cz"/>
+	</bean>
+
+	<bean id="trans_2_Cz_b" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_2cz_b"/>
+				<ref bean="average2_b" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+	<bean id="average2_b" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="true"/>
+		<property name="epochsCount" value="2"/>
+		<property name="averageLength" value="100" />
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_2cz_b" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="02_Cz_baseline"/>
+		<property name="nonTargetFilenameDescr" value="02_Cz_baseline"/>
+	</bean>
+	
+	<bean id="trans_2_Cz" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_2cz"/>
+				<ref bean="average2" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+		<bean id="average2" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="false"/>
+		<property name="epochsCount" value="2"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_2cz" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="02_Cz"/>
+		<property name="nonTargetFilenameDescr" value="02_Cz"/>
+	</bean>
+	
+	<bean id="trans_1_Cz_b" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_1cz_b"/>
+				<ref bean="average1_b" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+	<bean id="average1_b" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="true"/>
+		<property name="epochsCount" value="1"/>
+		<property name="averageLength" value="100" />
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_1cz_b" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="01_Cz_baseline"/>
+		<property name="nonTargetFilenameDescr" value="01_Cz_baseline"/>
+	</bean>		
+
+	<bean id="trans_1_Cz" class="data.vhdr.VhdrTransformer">
+		<property name="channelName" value="Cz"/>
+		<property name="filters">
+			<list>
+				<ref bean="stimulFilter_1cz"/>
+				<ref bean="average1" />
+				<ref bean="storageFilter"/>
+			</list>
+		</property>
+		<property name="epochLength" value="1024"/>
+	</bean>
+	<bean id="average1" class="data.vhdr.AverageFilter">
+		<property name="correctBaseline" value="false"/>
+		<property name="epochsCount" value="1"/>
+		<property name="createMultipleAverages" value="true"/>
+	</bean>
+	<bean id="stimulFilter_1cz" class="data.vhdr.TargetsIdentifier">
+		<property name="targetTypeName" value="target"/>
+		<property name="nonTargetTypeName" value="nonTarget"/>
+		<property name="targetFilenameDescr" value="01_Cz"/>
+		<property name="nonTargetFilenameDescr" value="01_Cz"/>
+	</bean>			
+</beans>

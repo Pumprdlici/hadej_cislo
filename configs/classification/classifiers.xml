@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+<bean id="Prob1" class="testing.classificators.ProbabilityClassifier">
+	  	<property name="freqMean" value="2.0"/>
+	  	<property name="freqDeviation" value="1.7"/>
+	  
+	  	<property name="fromSample" value="150"/>
+	  	<property name="toSample" value="650"/>
+	  	
+	  	<property name="meanAmplMean" value="3.5"/>
+	  	<property name="meanAmplDeviation" value="1"/>	  	
+
+	  	<property name="latencyMean" value="400"/>
+	  	<property name="latencyDeviation" value="50"/>	  	
+	  	
+	  	<property name="amplMean" value="3"/>
+	  	<property name="amplDeviation" value="1"/>	  	
+	  	
+	  	<property name="threshold" value="0.6" />
+	  	<property name="extremesLocator">
+			<ref bean="extremesLocator"/>
+		</property>
+	  	<property name="id" value="Prob1"/>
+  	</bean> 
+  	
+  	<bean id="Prob2" class="testing.classificators.ProbabilityClassifier">
+	  	<property name="freqMean" value="3.0"/>
+	  	<property name="freqDeviation" value="2"/>
+	  
+	  	<property name="fromSample" value="150"/>
+	  	<property name="toSample" value="650"/>
+	  	
+	  	<property name="meanAmplMean" value="3.5"/>
+	  	<property name="meanAmplDeviation" value="1"/>	  	
+
+	  	<property name="latencyMean" value="400"/>
+	  	<property name="latencyDeviation" value="50"/>	  	
+	  	
+	  	<property name="amplMean" value="3"/>
+	  	<property name="amplDeviation" value="1"/>	  	
+	  	
+	  	<property name="threshold" value="0.6" />
+	  	<property name="extremesLocator">
+			<ref bean="extremesLocator"/>
+		</property>
+	  	<property name="id" value="Prob2"/>
+  	</bean> 
+    
+  <bean id="class1" class="testing.classificators.FreqAmplTreshold">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="4"/>
+  	<property name="id" value="FreqAmpl1"/>
+  </bean>
+
+  <bean id="class3" class="testing.classificators.FreqAmplTreshold">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.5"/>
+  	<property name="id" value="FreqAmpl3"/>
+  </bean>
+
+  <bean id="class4" class="testing.classificators.FreqAmplTreshold">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.25"/>
+  	<property name="id" value="FreqAmpl4"/>
+  </bean>  
+
+  <bean id="class5" class="testing.classificators.FreqAmplTreshold">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.0"/>
+  	<property name="id" value="FreqAmpl5"/>
+  </bean>
+  
+  <bean id="class6" class="testing.classificators.FreqAmplTreshold">
+  	<property name="freqMeanFrom" value="0.9"/>
+  	<property name="freqMeanTo" value="3"/>
+  	<property name="fromSample" value="250"/>
+  	<property name="toSample" value="550"/>
+<!--  	<property name="amplMeanThreshold" value="2.7"/>-->
+  	<property name="amplMeanThreshold" value="2.5"/>
+  	<property name="id" value="FreqAmpl6"/>
+  </bean>  
+    
+	<bean id="weight" class="testing.classificators.WeightClassificator">
+		<property name="freqMeanFrom" value="0.2"/>
+		<property name="freqMeanFromTol" value="0.1"/>
+		<property name="freqMeanTo" value="3.0"/>
+		<property name="freqMeanToTol" value="3.5"/>
+		<property name="fromSample" value="150"/>
+		<property name="toSample" value="650"/>
+		<property name="amplMeanThreshold" value="3.3"/>
+		<property name="amplMeanThresholdTol" value="2.7"/>
+		<property name="classificationTreshold" value="80"/>
+		<property name="id" value="WeightClassificator"/>
+		<property name="amplSubinterval" value="true"/>
+		<property name="leftSubinterval" value="true"/>
+		<property name="rightSubinterval" value="true"/>
+		<property name="amplExpLike" value="true"/>
+		<property name="leftExpLike" value="true"/>
+		<property name="rightExpLike" value="true"/>
+		<!--<property name="amplZet" value="true"/>
+		<property name="leftZet" value="true"/>
+		<property name="rightZet" value="true"/>-->
+	  </bean>
+
+<!-- *************************************Linear********************************** -->	  
+	  
+	 <bean id="weight1l" class="testing.classificators.WeightClassificator">
+		<property name="freqMeanFrom" value="0.2"/>
+		<property name="freqMeanFromTol" value="0.1"/>
+		<property name="freqMeanTo" value="3"/>
+		<property name="freqMeanToTol" value="3.5"/>
+		<property name="fromSample" value="150"/>
+		<property name="toSample" value="650"/>
+		<property name="amplMeanThreshold" value="3.0"/>
+		<property name="amplMeanThresholdTol" value="2.5"/>
+		<property name="classificationTreshold" value="75"/>
+		<property name="id" value="WeightClassificator1l"/>
+	  </bean>
+	  
+	 <bean id="weight2l" class="testing.classificators.WeightClassificator">
+		<property name="freqMeanFrom" value="0.2"/>
+		<property name="freqMeanFromTol" value="0.1"/>
+		<property name="freqMeanTo" value="3"/>
+		<property name="freqMeanToTol" value="3.5"/>
+		<property name="fromSample" value="150"/>
+		<property name="toSample" value="650"/>
+		<property name="amplMeanThreshold" value="3.2"/>
+		<property name="amplMeanThresholdTol" value="2.9"/>
+		<property name="classificationTreshold" value="75"/>
+		<property name="id" value="WeightClassificator2l"/>
+	  </bean>
+	  
+	<bean id="weight3l" class="testing.classificators.WeightClassificator">
+		<property name="freqMeanFrom" value="0.2"/>
+		<property name="freqMeanFromTol" value="0.1"/>
+		<property name="freqMeanTo" value="3"/>
+		<property name="freqMeanToTol" value="3.5"/>
+		<property name="fromSample" value="150"/>
+		<property name="toSample" value="650"/>
+		<property name="amplMeanThreshold" value="3.3"/>
+		<property name="amplMeanThresholdTol" value="2.7"/>
+		<property name="classificationTreshold" value="80"/>
+		<property name="id" value="WeightClassificator3l"/>
+	  </bean>
+
+<!-- ********************************************************************************* -->	  	
+ 
+<!-- ***************************************window****************************************** -->	  	
+	 
+<bean id="window" class="testing.classificators.WindowClassificator">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3.0"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.15"/>
+	<property name="windowLen" value="150"/>
+	<property name="shift" value="10"/>
+  	<property name="id" value="WindowClassificator"/>
+  </bean>
+  
+  <bean id="window1" class="testing.classificators.WindowClassificator">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3.0"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.15"/>
+	<property name="windowLen" value="200"/>
+	<property name="shift" value="10"/>
+  	<property name="id" value="WindowClassificator1"/>
+  </bean>
+  
+  <bean id="window2" class="testing.classificators.WindowClassificator">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3.0"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.25"/>
+	<property name="windowLen" value="200"/>
+	<property name="shift" value="10"/>
+  	<property name="id" value="WindowClassificator2"/>
+  </bean>
+  
+  <bean id="window3" class="testing.classificators.WindowClassificator">
+  	<property name="freqMeanFrom" value="0.2"/>
+  	<property name="freqMeanTo" value="3.0"/>
+  	<property name="fromSample" value="150"/>
+  	<property name="toSample" value="650"/>
+  	<property name="amplMeanThreshold" value="3.4"/>
+	<property name="windowLen" value="200"/>
+	<property name="shift" value="10"/>
+  	<property name="id" value="WindowClassificator3"/>
+  </bean>
+  
+<!-- ********************************************************************************* -->	  	  
+  
+	<bean id="ExClass1" class="testing.classificators.ExtremeSingleClassificator">
+	  	<property name="freqMeanFrom" value="0.2"/>
+	  	<property name="freqMeanTo" value="3"/>
+	  	<property name="fromSample" value="150"/>
+	  	<property name="toSample" value="650"/>
+	  	<property name="amplThreshold" value="3.0"/>
+	  	<property name="peakLatence" value="350" />
+	  	<property name="maxShift" value="100" />
+	  	<property name="extremesLocator">
+			<ref bean="extremesLocator"/>
+		</property>
+	  	<property name="id" value="ExClass1"/>
+  	</bean> 
+  	
+	<bean id="ExClass3" class="testing.classificators.ExtremeSingleClassificator">
+	  	<property name="freqMeanFrom" value="0.2"/>
+	  	<property name="freqMeanTo" value="3"/>
+	  	<property name="fromSample" value="150"/>
+	  	<property name="toSample" value="650"/>
+	  	<property name="amplThreshold" value="2.5"/>
+	  	<property name="peakLatence" value="350" />
+	  	<property name="maxShift" value="100" />
+	  	<property name="extremesLocator">
+			<ref bean="extremesLocator"/>
+		</property>
+	  	<property name="id" value="ExClass3"/>
+  	</bean>   	
+
+	<bean id="ExClass2" class="testing.classificators.ExtremeSingleClassificator">
+	  	<property name="freqMeanFrom" value="0.2"/>
+	  	<property name="freqMeanTo" value="3"/>
+	  	<property name="fromSample" value="150"/>
+	  	<property name="toSample" value="650"/>
+	  	<property name="amplThreshold" value="2.5"/>
+	  	<property name="peakLatence" value="350" />
+	  	<property name="maxShift" value="50" />
+	  	<property name="extremesLocator">
+			<ref bean="extremesLocator"/>
+		</property>
+	  	<property name="id" value="ExClass2"/>
+  	</bean> 	
+                
+  <bean id="class2" class="testing.classificators.FreqAmplTreshold">
+  	<property name="freqMeanFrom" value="1.5"/>
+  	<property name="freqMeanTo" value="2.5"/>
+  	<property name="fromSample" value="250"/>
+  	<property name="toSample" value="450"/>
+  	<property name="amplMeanThreshold" value="6"/>
+  	<property name="id" value="FreqAmpl2"/>
+  </bean>              
+  <bean id="ExtrMulti1" class="testing.classificators.ExtremeMultipleClassificator">
+	<property name="id" value="ExtrMulti1"/>
+	<property name="fromSample" value="1" />
+	<property name="toSample" value="750" />
+	<property name="freqMeanFrom" value="0.2" />
+	<property name="freqMeanTo" value="5.0" />
+	<property name="maxShift" value="100" />
+	<property name="amplThreshold" value="4" />
+	<property name="latence" value="350"/>
+	<property name="extremesLocator">
+		<ref bean="extremesLocator"/>
+	</property>
+	  
+  </bean>  
+
+  <bean id="ExtrMulti2" class="testing.classificators.ExtremeMultipleClassificator">
+	<property name="id" value="ExtrMulti2"/>
+	<property name="fromSample" value="1" />
+	<property name="toSample" value="750" />
+	<property name="freqMeanFrom" value="0.2" />
+	<property name="freqMeanTo" value="5.0" />
+	<property name="maxShift" value="100" />
+	<property name="amplThreshold" value="2.5" />
+	<property name="latence" value="350"/>
+	<property name="extremesLocator">
+		<ref bean="extremesLocator"/>
+	</property>
+	  
+  </bean>  
+  
+ <bean id="ExtrMulti3" class="testing.classificators.ExtremeMultipleClassificator">
+	<property name="id" value="ExtrMulti3"/>
+	<property name="fromSample" value="1" />
+	<property name="toSample" value="750" />
+	<property name="freqMeanFrom" value="0.5" />
+	<property name="freqMeanTo" value="3.0" />
+	<property name="maxShift" value="100" />
+	<property name="amplThreshold" value="2.5" />
+	<property name="latence" value="350"/>
+	<property name="extremesLocator">
+		<ref bean="extremesLocator"/>
+	</property>	  
+  </bean>    
+
+  <bean id="extremesLocator" class="hht.emd.sifting.extremes.locators.LocateLocalExtremaFacade" >
+		<constructor-arg ref="maxLocator" />
+		<constructor-arg ref="minLocator" />
+	</bean>
+	
+	<bean id="minLocator" class="hht.emd.sifting.extremes.locators.DeltaDifferenceExtrema">
+		<constructor-arg ref="minHelper"/>
+	</bean>
+
+	<bean id="maxLocator" class="hht.emd.sifting.extremes.locators.DeltaDifferenceExtrema">
+		<constructor-arg ref="maxHelper"/>
+	</bean>
+	
+	<bean id="minHelper" class="hht.emd.sifting.extremes.locators.MinimumLocatorHelper">
+		<property name="delta" value="0.00001"/>
+	</bean>
+
+	<bean id="maxHelper" class="hht.emd.sifting.extremes.locators.MaximumLocatorHelper">
+		<property name="delta" value="0.00001"/>
+	</bean>
+                
+</beans>                

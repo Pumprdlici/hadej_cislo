@@ -1,0 +1,43 @@
+group IterationCounterTable;
+
+table(pImfs) ::= <<
+\<?xml version="1.0" encoding="UTF-8"?\>
+\<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"\>
+
+	\<import resource="classifiers.xml"/\>
+
+	\<bean id="RunClassificationAll" class="testing.classificators.RunClassificationAll"\>
+		\<property name="dataDirectories" ref="directories"/\>
+		\<property name="patterns" ref="patterns"/\>	
+		\<property name="classifiers" ref="classifiers"/\>
+		\<property name="resultsPath" value="i:/hhtResultsTesting/!results/classifiers/"/\>
+		\<property name="templateFilename" value="configs//classification//htmlTemplate.stg"/\>
+		\<property name="logsDirName" value="classification"/\>
+	\</bean\>
+	
+	\<util:list id="classifiers"\>
+		\<ref bean="class3"/\>
+		\<ref bean="class4"/\>
+		\<ref bean="class5"/\>
+	\</util:list\>
+
+ 	\<util:list id="directories"\>
+ 		<pImfs.items:dataToProcess(); separator="\n">
+  	\</util:list\>
+
+	\<util:list id="patterns"\>
+		\<value\><pImfs.value>\</value\>
+	\</util:list\>  	
+\</beans\>
+>>
+
+dataToProcess(data) ::= <<
+<data>
+>>

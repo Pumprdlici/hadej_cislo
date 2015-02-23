@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean  id="emd" class="hht.emd.EmpiricalModeDecomposition" >
+		<constructor-arg  ref="sifter"/>
+		<constructor-arg ref="extremesLocator"/>
+	</bean>
+	
+	<bean id="extremesLocator" class="hht.emd.sifting.extremes.locators.LocateLocalExtremaFacade" >
+		<constructor-arg ref="maxLocator" />
+		<constructor-arg ref="minLocator" />
+	</bean>
+	
+	<bean id="minLocator" class="hht.emd.sifting.extremes.locators.DeltaDifferenceExtrema">
+		<constructor-arg ref="minHelper"/>
+	</bean>
+
+	<bean id="maxLocator" class="hht.emd.sifting.extremes.locators.DeltaDifferenceExtrema">
+		<constructor-arg ref="maxHelper"/>
+	</bean>
+	
+	<bean id="minHelper" class="hht.emd.sifting.extremes.locators.MinimumLocatorHelper">
+		<property name="delta" value="0.00001"/>
+	</bean>
+
+	<bean id="maxHelper" class="hht.emd.sifting.extremes.locators.MaximumLocatorHelper">
+		<property name="delta" value="0.00001"/>
+	</bean>
+	
+	
+	<bean id="sifter" class="hht.emd.sifting.Sifter">
+		<constructor-arg ref="Or1"/>
+		<constructor-arg ref="EndPointMirrorEstimator2"/>
+		<constructor-arg ref="extremesLocator"/>
+		<!-- can be "addcrit1, addcrit2 or null
+		<constructor-arg ref="addcrit2"/>-->
+	</bean>
+	
+	<bean id="ZeroEstimator" class="hht.emd.sifting.extremes.estimators.ZeroPoints"/>
+	<bean id="MirrorEstimator" class="hht.emd.sifting.extremes.estimators.Mirror"/>
+	<bean id="EndPointMirrorEstimator2" class="hht.emd.sifting.extremes.estimators.EndPointMirror2"/>
+
+	<bean id="Or1" class="hht.emd.sifting.stoppingCriteria.Or">
+		<property name="criteria">
+			<list>
+				<ref bean="CauchyConvergence" />
+				<ref bean="MonotonicFunction" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="addcrit1" class="hht.emd.sifting.stoppingCriteria.additionalCriteria.EnvelopeMeanCurveMeanValue">
+		<constructor-arg value="0.001"/>
+	</bean>
+	
+	<bean id="addcrit2" class="hht.emd.sifting.stoppingCriteria.additionalCriteria.MeanDistanceFromZero">
+		<constructor-arg value="0.0075"/>
+	</bean>
+	
+	<bean id="CauchyConvergence" class="hht.emd.sifting.stoppingCriteria.CauchyConvergence">
+		<property name="deviationThreshold" value="0.0001" />
+	</bean>
+	
+	<bean id="Mean" class="hht.emd.sifting.stoppingCriteria.Mean">
+		<property name="meanThreshold" value="0.02" />
+	</bean>
+	
+	<bean id="StandardDeviation" class="hht.emd.sifting.stoppingCriteria.StandardDeviation">
+		<property name="deviationThreshold" value="0.2" />
+	</bean>
+	
+	<bean id="MeanStandardDeviation" class="hht.emd.sifting.stoppingCriteria.MeanStandardDeviation">
+		<property name="standardDeviationThreshold" value="0.05" />
+	</bean>
+	<bean id="MonotonicFunction" class="hht.emd.sifting.stoppingCriteria.MonotonicFunction">
+		<property name="diferenceThreshold" value="0.005" />
+	</bean>
+
+	<bean id="ResultsConfigs" class="data.ResultsConfigs">
+		<property name="genPdfFromImfs" value="false"/>
+		<property name="genPdfFromImfsMaps" value="false"/>
+		<property name="genImfsAllMapPdf" value="false"/>
+		<property name="genImfMapToSignalPdf" value="false"/>
+	</bean>
+</beans>

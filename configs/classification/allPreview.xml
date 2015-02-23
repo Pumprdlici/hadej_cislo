@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<import resource="classifiers.xml"/>
+
+	<bean id="ClassifiersSuccessViewer" class="testing.classificators.view.ClassifiersSuccessViewer">
+		<property name="dataDir" value="c://hhtResults//classifiers//"/>
+		<property name="patterns" ref="configsPatterns"/>	
+		<property name="resultsDir" value="c://hhtResults//classifiers//configs" />
+		<property name="next" ref="configsSum" />
+	</bean>
+	
+	<bean id="configsSum" class="testing.classificators.view.ClassifiersSuccessViewer">
+		<property name="dataDir" value="c://hhtResults//classifiers//configs"/>
+		<property name="resultsDir" value="c://hhtResults//classifiers//configs" />
+		<property name="next" ref="classifiers" />
+	</bean>
+
+	<bean id="classifiers" class="testing.classificators.view.ClassifiersSuccessViewer">
+		<property name="dataDir" value="c://hhtResults//classifiers//"/>
+		<property name="resultsDir" value="c://hhtResults//classifiers//classifiers" />
+		<property name="patterns" ref="classifiersPattern"/>
+		<property name="next" ref="classifiersSum" />
+	</bean>
+	<bean id="classifiersSum" class="testing.classificators.view.ClassifiersSuccessViewer">
+		<property name="dataDir" value="c://hhtResults//classifiers//classifiers"/>
+		<property name="resultsDir" value="c://hhtResults//classifiers//classifiers" />
+		<property name="next" ref="averages" />
+	</bean>
+	<bean id="averages" class="testing.classificators.view.ClassifiersSuccessViewer">
+		<property name="dataDir" value="c://hhtResults//classifiers//"/>
+		<property name="resultsDir" value="c://hhtResults//classifiers//averages" />
+		<property name="patterns" ref="averagesPattern"/>
+		<property name="next" ref="averagesSum" />
+	</bean>
+	<bean id="averagesSum" class="testing.classificators.view.ClassifiersSuccessViewer">
+		<property name="dataDir" value="c://hhtResults//classifiers//averages"/>
+		<property name="resultsDir" value="c://hhtResults//classifiers//averages" />
+	</bean>
+		
+	<util:list id="averagesPattern">
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*_01_.*"/>
+					<property name="filename" value="01"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*_02_.*"/>
+					<property name="filename" value="02"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*_05_.*"/>
+					<property name="filename" value="05"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*_10_.*"/>
+					<property name="filename" value="10"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*_20_.*"/>
+					<property name="filename" value="20"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*_30_.*"/>
+					<property name="filename" value="30"/>
+				</bean>
+	</util:list>	
+
+	<util:list id="classifiersPattern">
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*ExClass1.*"/>
+					<property name="filename" value="ExClass1"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*ExClass2.*"/>
+					<property name="filename" value="ExClass2"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*ExClass3.*"/>
+					<property name="filename" value="ExClass3"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*FreqAmpl1.*"/>
+					<property name="filename" value="FreqAmpl1"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*FreqAmpl2.*"/>
+					<property name="filename" value="FreqAmpl2"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*FreqAmpl3.*"/>
+					<property name="filename" value="FreqAmpl3"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*FreqAmpl4.*"/>
+					<property name="filename" value="FreqAmpl4"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*FreqAmpl5.*"/>
+					<property name="filename" value="FreqAmpl5"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*FreqAmpl6.*"/>
+					<property name="filename" value="FreqAmpl6"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*Prob1.*"/>
+					<property name="filename" value="Prob1"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value=".*Prob2.*"/>
+					<property name="filename" value="Prob2"/>
+				</bean>
+
+	</util:list>
+	
+	<util:list id="configsPatterns">
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg1_.*"/>
+					<property name="filename" value="CauchyCfg1"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg2_.*"/>
+					<property name="filename" value="CauchyCfg2"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg3_.*"/>
+					<property name="filename" value="CauchyCfg3"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg4_.*"/>
+					<property name="filename" value="CauchyCfg4"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg5_.*"/>
+					<property name="filename" value="CauchyCfg5"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg6_.*"/>
+					<property name="filename" value="CauchyCfg6"/>
+				</bean>
+	 			<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg7_.*"/>
+					<property name="filename" value="CauchyCfg7"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg9_.*"/>
+					<property name="filename" value="CauchyCfg9"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="CauchyCfg10_.*"/>
+					<property name="filename" value="CauchyCfg10"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg1_.*"/>
+					<property name="filename" value="SDCfg1"/>
+				</bean>
+<!--				<bean class="testing.classificators.view.Value">-->
+<!--					<property name="value" value="SDCfg1_.*"/>-->
+<!--					<property name="filename" value="SDCfg1"/>-->
+<!--				</bean>-->
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg2_.*"/>
+					<property name="filename" value="SDCfg2"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg3_.*"/>
+					<property name="filename" value="SDCfg3"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg4_.*"/>
+					<property name="filename" value="SDCfg4"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg4_.*"/>
+					<property name="filename" value="SDCfg4"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg5_.*"/>
+					<property name="filename" value="SDCfg5"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="SDCfg5_.*"/>
+					<property name="filename" value="SDCfg5"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="testEmdCfg_.*"/>
+					<property name="filename" value="testEmdCfg"/>
+				</bean>
+				<bean class="testing.classificators.view.Value">
+					<property name="value" value="EmdForTestingSignal.*"/>
+					<property name="filename" value="EmdForTestingSignal"/>
+				</bean>
+				
+				
+				
+<!--				<value>20_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>20_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>30_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>30_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>05_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>05_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>02_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--				<value>02_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+	</util:list>  	
+</beans>

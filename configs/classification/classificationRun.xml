@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+                
+	<import resource="classifiers.xml"/>                
+  <util:list id="directories">
+<!--  			<value>c://HHTResults//testEmdCfg//</value>-->
+   			<!--<value>c://HHTResults//EmdForTestingSignal//</value>-->
+                        <value>c://HHTResults2//bez//CauchyCfg3//</value>
+      <value>c://</value>			  			  
+  </util:list>
+  
+  <bean id="RunClassification" class="testing.classificators.RunClassification">
+  	<property name="runners">
+  		<list>
+ 			<ref bean="simpleClassificatorRunner"/>
+			 <!--<ref bean="andClassificatorRunner"/>-->
+			<!--<ref bean="orClassificatorRunner"/>-->
+<!--  			<ref bean="MultiDataClassRunner"/>-->
+  		</list>  		
+  	</property>
+  	<property name="storage">
+  		<ref bean="storage"/>
+  	</property>
+  </bean>
+
+  <bean id="storage" class="testing.classificators.HtmlStorage">
+  	<property name="resultFilename" value="data//eeg/result//classResults.html"/>
+  	<property name="templateFilename" value="configs//classification//htmlTemplate.stg"/>
+  </bean>
+
+  
+  <bean id="simpleClassificatorRunner" class="testing.classificators.SimpleClassificatorRunner">
+  	<property name="dirs" ref="directories"/>
+  	<property name="dataPatterns">
+  		<list>
+<!--  			<value>\d+_Cz_(baseline_)?(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_target</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_nonTarget</value>-->
+                <value>30_Cz_baseline_target</value>
+				<value>30_Cz_baseline_nonTarget</value>
+<!--			<value>5_Cz_nonTarget</value>-->
+<!--			<value>5_Cz_target</value>-->
+  		</list>
+  	</property>
+  	<property name="classificators">
+  		<list>
+<!--  			<ref bean="class1"/>-->
+<!--  			<ref bean="class2"/>-->
+<!--  			<ref bean="class3"/>-->
+<!--  			<ref bean="Prob1"/>-->
+  			<ref bean="class5"/>
+<!--  			<ref bean="Prob2"/>-->
+<!--  			<ref bean="ExClass1"/>-->
+<!--  			<ref bean="ExClass3"/>-->
+			<ref bean="weight"/>
+			<ref bean="window"/>
+  		</list>
+  	</property>
+  	<property name="logsDirName" value="classification"/>
+  </bean>
+
+
+  <bean id="andClassificatorRunner" class="testing.classificators.ANDClassificatorRunner">
+  	<property name="dirs" ref="directories"/>
+  	<property name="dataPatterns">
+  		<list>
+<!--  			<value>\d+_Cz_(baseline_)?(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_target</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_nonTarget</value>-->
+                <value>30_Cz_baseline_target</value>
+				<value>30_Cz_baseline_nonTarget</value>
+<!--			<value>5_Cz_nonTarget</value>-->
+<!--			<value>5_Cz_target</value>-->
+  		</list>
+  	</property>
+  	<property name="classificators">
+  		<list>
+<!--  			<ref bean="class1"/>-->
+<!--  			<ref bean="class2"/>-->
+<!--  			<ref bean="class3"/>-->
+<!--  			<ref bean="Prob1"/>-->
+<!--   			<ref bean="class5"/>-->
+<!--  			<ref bean="Prob2"/>-->
+<!--  			<ref bean="ExClass1"/>-->
+<!--  			<ref bean="ExClass3"/>-->
+				<ref bean="weight"/>
+				<ref bean="window"/>
+  		</list>
+  	</property>
+  	<property name="logsDirName" value="classification"/>
+  </bean>	
+  
+    <bean id="orClassificatorRunner" class="testing.classificators.ORClassificatorRunner">
+  	<property name="dirs" ref="directories"/>
+  	<property name="dataPatterns">
+  		<list>
+<!--  			<value>\d+_Cz_(baseline_)?(ep\[\d{3}\]_)?(target|nonTarget)</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_target</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_nonTarget</value>-->
+                <value>30_Cz_baseline_target</value>
+				<value>30_Cz_baseline_nonTarget</value>
+<!--			<value>5_Cz_nonTarget</value>-->
+<!--			<value>5_Cz_target</value>-->
+  		</list>
+  	</property>
+  	<property name="classificators">
+  		<list>
+<!--  			<ref bean="class1"/>-->
+<!--  			<ref bean="class2"/>-->
+<!--  			<ref bean="class3"/>-->
+<!--  			<ref bean="Prob1"/>-->
+<!--   			<ref bean="class5"/>-->
+<!--  			<ref bean="Prob2"/>-->
+<!--  			<ref bean="ExClass1"/>-->
+<!--  			<ref bean="ExClass3"/>-->
+				<ref bean="weight"/>
+				<!--<ref bean="window"/>-->
+  		</list>
+  	</property>
+  	<property name="logsDirName" value="classification"/>
+  </bean>	
+                
+  <bean id="MultiDataClassRunner" class="testing.classificators.MultiDataClassficatorRunner">
+  	<property name="dataPath" ref="directories"/>
+  	<property name="logsDir" value="data//eeg//result//multiDataClassificators//"/>
+  	<property name="dirPatterns">
+  		<list>
+  <!--			<value>10_Cz_baseline_ep\[\d{3}\]_target</value>-->
+<!--  			<value>10_Cz_baseline_ep\[\d{3}\]_nonTarget</value>-->
+                        <value>30_Cz_baseline_ep\[\d{3}\]_target</value>
+  			<value>30_Cz_baseline_ep\[\d{3}\]_nonTarget</value>
+                        
+  		</list>
+  	</property>
+  	<property name="classificators" ref="MultiClassList"/>
+  </bean>            
+
+   <util:list id="MultiClassList">
+ 	 	<ref bean="ExtrMulti1"/>
+  		<ref bean="ExtrMulti2"/>
+  		<ref bean="ExtrMulti3"/>  	
+   </util:list>
+  
+</beans>                

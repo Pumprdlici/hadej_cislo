@@ -1,0 +1,38 @@
+group IterationCounterTable;
+table(patternImfsCountList) ::= <<
+\<html\>
+\<head\>
+	\<style type="text/css"\>
+		td, th {padding: 7px; }
+		th {text-aling: center; white-space:normal; border: solid 1px black;}
+		td {text-align: right;}
+		td#left {text-align: left;}	\</style\>
+\</head\>
+	\<table rules="cols"\>
+		\<tr\> 
+			\<th\> configuration \</th\>
+			\<th\> pattern \</th\>
+			\<th\> complete \</th\>
+			\<th\> iterationsCountNormalized\</th\>
+			\<th\> imfsCountNormalized\</th\>
+			\<th\> iterationsCount \</th\>
+			\<th\> imfsCount\</th\>
+			\<th\> dataCount\</th\>
+		\</tr\>
+		<patternImfsCountList:row(); separator="\n">
+	\</table\>
+\</html\>
+>>
+
+row(pImfs) ::= <<
+\<tr\>
+ 	\<td\> <pImfs.path> \</td\>
+ 	\<td\> <pImfs.pattern> \</td\>
+ 	\<td\> <if (pImfs.allImfsCalculated)>true<else>false<endif> \</td\>
+ 	\<td\> <pImfs.iterationsCountNormalized; format="#.000"> \</td\>
+ 	\<td\> <pImfs.imfsCountNormalized; format="#.000"> \</td\>
+ 	\<td\> <pImfs.iterationsCount> \</td\>
+ 	\<td\> <pImfs.imfsCount> \</td\>
+ 	\<td\> <pImfs.dataCount> \</td\>
+ \</tr\>
+>>

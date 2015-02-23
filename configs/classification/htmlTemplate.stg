@@ -1,0 +1,44 @@
+group html;
+
+table(pairs) ::= <<
+\<html\>
+\<head\>
+	\<style type="text/css"\>
+		td, th {padding: 7px; }
+		th {text-aling: center; white-space:normal; border: solid 1px black;}
+		td {text-align: right;}
+		td#left {text-align: left;}	\</style\>
+\</head\>
+\<body\>
+	\<p\>\<span\>Success:\</span\>\<span id="success"\><pairs.averageSuccess; format="00.0000%">\</span\>\</p\>
+	\<table rules="cols"\>
+		\<tr\> 
+			\<th\> success[%] \</th\>
+			\<th\> success \</th\>
+			\<th\> ERPs correctly detected\</th\>
+			\<th\> no ERPs correctly detected\</th\>
+			\<th\> classificator \</th\>
+			\<th\> configuration\</th\>
+			\<th\> data name\</th\>
+			\<th\> failed ERPs detection\</th\>
+			\<th\> failed non ERPs detection\</th\>
+		\</tr\>
+		<pairs.orderedBySuccess:row(); separator="\n">
+	\</table\>
+\</body\>
+\</html\>
+>>
+
+row(pair) ::= <<
+ \<tr\>
+ 	\<td\> <pair.relativeSuccess; format="00.0000%"> \</td\>
+ 	\<td\><pair.successCount>/<pair.count>\</td\>
+ 	\<td\><pair.target.posCount>/<pair.target.count>\</td\>
+ 	\<td\><pair.nonTarget.negCount>/<pair.nonTarget.count>\</td\>
+ 	\<td id="left"\><pair.resultsDescription.classificatorId>\</td\>
+ 	\<td id="left"\><pair.resultsDescription.cfgName>\</td\>
+ 	\<td id="left"\><pair.resultsDescription.dataName>\</td\>
+ 	\<td id="left"\><pair.target.negativeDetected; separator="\n"> \</td\>
+ 	\<td id="left"\><pair.nonTarget.positiveDetected; separator="\n"> \</td\>
+ \</tr\>
+>>

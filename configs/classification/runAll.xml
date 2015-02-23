@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<import resource="classifiers.xml"/>
+
+	<bean id="RunClassificationAll" class="testing.classificators.RunClassificationAll">
+		<property name="dataDirectories" ref="directories"/>
+		<property name="patterns" ref="patterns"/>	
+		<property name="classifiers" ref="classifiers"/>
+		<property name="resultsPath" value="c://hhtResults//Classification//best//SD//SD00075"/>
+		<property name="templateFilename" value="configs//classification//htmlTemplate.stg"/>
+		<property name="logsDirName" value="classification"/>
+	</bean>
+	
+	<util:list id="classifiers">
+		<!--<ref bean="Prob1"/>
+		<ref bean="Prob2"/>
+		<ref bean="class1"/>
+		<ref bean="class2"/>
+		<ref bean="class3"/>-->
+		<ref bean="class4"/>
+		<ref bean="class5"/>
+		<!--<ref bean="class6"/>
+		<ref bean="ExClass1"/>
+		<ref bean="ExClass2"/>
+		<ref bean="ExClass3"/>-->
+		<ref bean="weight"/>
+		<ref bean="window"/>
+		<ref bean="window1"/>
+		<ref bean="window2"/>
+		<ref bean="window3"/>
+		<ref bean="weight1l"/>
+		<ref bean="weight2l"/>
+		<ref bean="weight3l"/>
+	</util:list>
+
+ 	<util:list id="directories">
+ 			<!--<value>d://HHTResults//testEmdCfg//</value>
+   			<value>d://HHTResults//EmdForTestingSignal//</value> 
+			<value>c://hhtResults//MV01//CauchyCfg2//</value>
+			<value>c://hhtResults//AddCrit//MV01//CauchyCfg3//</value>
+			<value>c://hhtResults//AddCrit//MV01//CauchyCfg6//</value>
+			<value>c://hhtResults//AddCrit//MV01//CauchyCfg7//</value>-->
+			<!--<value>c://hhtResults//AddCrit//MV01//SDcfg1//</value>
+			<value>c://hhtResults//AddCrit//MV01//SDcfg2//</value>
+			<value>c://hhtResults//AddCrit//MV01//SDcfg3//</value>
+			<value>c://hhtResults//AddCrit//MV01//SDcfg4//</value>
+			<value>c://hhtResults//AddCrit//MV01//SDcfg8//</value>-->
+  			<!--<value>c://hhtResults//new//CauchyCfg3//</value>
+ 			<value>i://hhtResults//SDCfg4//</value>
+ 			<value>c://hhtResults//SDCfg4_3//</value> 			
+                        <value>c://hhtResults//best//MV//bestMV0001//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV001//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV01//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV1//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV0005//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV005//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV05//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV5//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV00025//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV0025//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV025//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV25//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV00075//Cauchybest//</value>-->
+                        <!--<value>c://hhtResults//best//MV//bestMV0075//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV075//Cauchybest//</value>
+                        <value>c://hhtResults//best//MV//bestMV75//Cauchybest//</value>-->
+                        <value>c://hhtResults//best//SD//SD00075//Cauchybest//</value>
+
+  	</util:list>
+
+	<util:list id="patterns">
+            <!--
+				<value>10_Cz_baseline_(ep\[\d{3}\]_)(target|nonTarget)</value>
+				<value>10_Cz_(ep\[\d{3}\]_)(target|nonTarget)</value>
+				<value>20_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>20_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>30_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>30_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>05_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>05_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>02_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>02_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>01_Cz_baseline_(ep\[\d{3}\]_)(target|nonTarget)</value>
+				<value>01_Cz_(ep\[\d{3}\]_)(target|nonTarget)</value>
+                                -->
+                <value>30_Cz_baseline_(target|nonTarget)</value>
+
+	</util:list>  	
+</beans>

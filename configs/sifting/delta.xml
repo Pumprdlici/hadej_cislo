@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+ 	<util:list id="directories">
+  			<value>i://hhtResults//CauchyCfg6//</value>
+   			<value>i://hhtResults//CauchyCfg4//</value>
+   			<value>i://hhtResults//CauchyCfg5//</value>
+   			<value>i://hhtResults//CauchyCfg7//</value>
+   			<value>i://hhtResults//SDCfg3//</value>
+   			<value>i://hhtResults//SDCfg4//</value>
+   			<value>i://hhtResults//SDCfg5//</value> 			  			  
+   			
+  	</util:list>
+  	                
+	<bean id="baseline" class="testing.iterationCount.IterationCounter">
+		<property name="cfgDirectories" ref="directories" />
+		<property name="dataDirectoriesPatterns">
+			<list>
+				<value>\d+_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>\d+_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+			</list>
+		</property>	
+		<property name="outputFile" value="data//itResults//baselineVsNotBaseline_delta.html"/>
+	</bean>      
+
+	<bean id="averages" class="testing.iterationCount.IterationCounter">
+		<property name="cfgDirectories" ref="directories" />
+		<property name="dataDirectoriesPatterns">
+			<list>
+				<value>10_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>10_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>20_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>20_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>30_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>30_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>05_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>05_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>02_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>02_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>01_Cz_baseline_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+				<value>01_Cz_(ep\[\d{3}\]_)?(target|nonTarget)</value>
+			</list>
+		</property>	
+		<property name="outputFile" value="data//itResults//averages_delta.html"/>
+	</bean>     	
+	
+	<util:list id="counters">
+		<ref bean="baseline"/>
+		<ref bean="averages"/>
+	</util:list>          
+</beans>                

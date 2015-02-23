@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       
+       xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+                
+	<import resource="classifiers.xml"/>                
+  <util:list id="directories">
+   			<value>e://hhtResults//SDCfg2//</value> 			  			  
+  </util:list>
+  
+  <bean id="RunClassification" class="testing.classificators.RunClassification">
+  	<property name="runners">
+  		<list>
+  			<ref bean="simpleClassificatorRunner"/>
+  		</list>  		
+  	</property>
+  </bean>
+  
+  <bean id="simpleClassificatorRunner" class="testing.classificators.SimpleClassificatorRunner">
+  	<property name="dirs" ref="directories"/>
+  	<property name="dataPatterns">
+  		<list>
+  			<value>10_Cz_baseline_ep\[\d{3}\]_target</value>
+  			<value>10_Cz_baseline_ep\[\d{3}\]_nonTarget</value>
+  		</list>
+  	</property>
+  	<property name="classificators">
+  		<list>
+  			<ref bean="class4"/>
+  		</list>
+  	</property>
+  	<property name="logsDirName" value="classification"/>
+  </bean>
+
+</beans>                

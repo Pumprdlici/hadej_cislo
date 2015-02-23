@@ -1,0 +1,36 @@
+group EmdCfg;
+table(emdList) ::= <<
+\<html\>
+\<head\>
+	\<style type="text/css"\>
+		td, th {padding: 7px; }
+		th {text-aling: center; white-space:normal; border: solid 1px black;}
+		td {text-align: right;}
+		td#left {text-align: left;}	\</style\>
+\</head\>
+	\<table rules="cols"\>
+		\<tr\> 
+			\<th\> file \</th\>
+			\<th\> Emd Extremes Detection \</th\>
+			\<th\> Sifter Extremes Detection \</th\>
+			\<th\> Stopping criteria \</th\>
+			\<th\> Extremes estimators \</th\>
+		\</tr\>
+		<emdList:row(); separator="\n">
+	\</table\>
+\</html\>
+>>
+
+row(emd) ::= <<
+\<tr\>
+ 	\<td id="left"\> <emd.filename> \</td\>
+ 	\<td id="left"\><emd.emd.extremesLocator.maxLocator.locator.info>\<br\><emd.emd.extremesLocator.minLocator.locator.info>\</td\>
+ 	\<td id="left"\><emd.emd.sifter.extremesLocator.maxLocator.locator.info>\<br\><emd.emd.sifter.extremesLocator.minLocator.locator.info>\</td\>
+ 	\<td id="left"\><emd.emd.sifter.stopSiftingCriteria.criteria:criteria(); separator="\<br\>">\</td\>
+ 	\<td id="left"\><emd.emd.sifter.extremesEstimator>\</td\>
+ \</tr\>
+>>
+
+criteria(crit) ::= <<
+<crit.info>
+>>

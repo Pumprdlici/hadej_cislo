@@ -24,6 +24,11 @@ import libsvm.LibSVM;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.classification.KNearestNeighbors;
+import net.sf.javaml.classification.MeanFeatureVotingClassifier;
+import net.sf.javaml.classification.SOM;
+import net.sf.javaml.clustering.SOM.GridType;
+import net.sf.javaml.clustering.SOM.LearningType;
+import net.sf.javaml.clustering.SOM.NeighbourhoodFunction;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
@@ -35,7 +40,10 @@ public class JavaMLClassifier implements IERPClassifier {
 	private IFeatureExtraction fe;
 	
 	public JavaMLClassifier() {
-		this.classifier = new LibSVM();
+		//this.classifier = new  SOM(10, 10, GridType.HEXAGONAL, 1000, 0.1, 3, LearningType.EXPONENTIAL, NeighbourhoodFunction.GAUSSIAN);
+		//this.classifier = new  KNearestNeighbors(50);
+		this.classifier = new  LibSVM();
+		
 	}
 
 	@Override
@@ -88,7 +96,7 @@ public class JavaMLClassifier implements IERPClassifier {
 
 	@Override
 	public void save(String file)  {
-		 
+		
 	    OutputStream fileF;
 		try {
 			fileF = new FileOutputStream(file);

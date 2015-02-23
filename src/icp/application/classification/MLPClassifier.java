@@ -64,11 +64,10 @@ public class MLPClassifier extends ERPClassifierAdapter {
                     + featureVector.length + " must be the same as the number of input neurons: "
                     + neuralNetwork.getInputsCount() + ".");
         }
-        System.out.println(Arrays.toString(featureVector));
+        
         neuralNetwork.setInput(featureVector);
         neuralNetwork.calculate();
         double[] output = neuralNetwork.getOutput();
-        System.out.println("MLPOutput:" + output[0]);
         return output[0];
     }
 

@@ -9,6 +9,7 @@ import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.JavaMLClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.NoFilterFeatureExtraction;
+import icp.application.classification.WindowedMeansFeatureExtraction;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
 
@@ -24,21 +25,32 @@ public class TrainUsingOfflineProvider implements Observer {
     private final List<Double> targets;
     private int numberOfTargets;
     private int numberOfNonTargets;
+    private int iters;
+    private int middleNeurons;
+    private IERPClassifier classifier;
 
-    public TrainUsingOfflineProvider() {
+    public TrainUsingOfflineProvider(int iters, int middleNeurons) {
         
         epochs = new ArrayList<double[][]>();
         targets = new ArrayList<Double>();
         numberOfTargets = 0;
         numberOfNonTargets = 0;
+        this.iters = iters;
+        this.middleNeurons = middleNeurons;
 
         OffLineDataProvider offLineData = new OffLineDataProvider(new File(Const.TRAINING_RAW_DATA_FILE_NAME), this);
         Thread t = new Thread(offLineData);
         t.start();
+        try {
+			t.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public static void main(String[] args) {
-        TrainUsingOfflineProvider train = new TrainUsingOfflineProvider();
+        TrainUsingOfflineProvider train = new TrainUsingOfflineProvider(2000, 8);
     }
 
     @Override
@@ -70,20 +82,25 @@ public class TrainUsingOfflineProvider implements Observer {
         // create classifiers
         IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
         int numberOfInputNeurons = fe.getFeatureDimension();
-        int middleNeurons = 8;
+        int middleNeurons = this.middleNeurons;
         int outputNeurons = 1;
-        ArrayList<Integer> nnStructure = new ArrayList<>();
+        ArrayList<Integer> nnStructure = new ArrayList<Integer>();
         nnStructure.add(numberOfInputNeurons);
         nnStructure.add(middleNeurons);
         nnStructure.add(outputNeurons);
-        IERPClassifier classifier = new MLPClassifier(nnStructure);
+        classifier = new MLPClassifier(nnStructure);
+      //  classifier = new JavaMLClassifier();
         classifier.setFeatureExtraction(fe);
 
         // training
         System.out.println("Training started.");
-        classifier.train(this.epochs, this.targets, Const.NUMBER_OF_ITERATIONS, fe);
+        classifier.train(this.epochs, this.targets, this.iters, fe);
         classifier.save(Const.TRAINING_FILE_NAME);
         System.out.println("Training finished.");
+    }
+    
+    public IERPClassifier getClassifier() {
+    	return this.classifier;
     }
 
 }

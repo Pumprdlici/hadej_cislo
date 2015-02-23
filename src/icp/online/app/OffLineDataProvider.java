@@ -73,7 +73,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                 
             }
             
-            System.out.println(FZIndex + " " + CZIndex + " " + PZIndex);
+         
             double[] fzChannel = dt.readBinaryData(vhdrFile, FZIndex);
             double[] czChannel = dt.readBinaryData(vhdrFile, CZIndex);
             double[] pzChannel = dt.readBinaryData(vhdrFile, PZIndex);

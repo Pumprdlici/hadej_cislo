@@ -176,10 +176,10 @@ public class MainFrame extends JFrame implements Observer {
             initProbabilities(probabilities);
 
             this.epochCharts.update(((OnlineDetection) message).getPzAvg());
-        } else {
+        } /*else {
             log.error(MainFrame.class.toString() + ": Expencted online detection, but received something else.");
             throw new IllegalArgumentException("Expencted online detection, but received something else.");
-        }
+        }*/
     }
 
     private void initGui() {

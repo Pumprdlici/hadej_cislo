@@ -7,6 +7,7 @@ import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.JavaMLClassifier;
+import icp.application.classification.KNNClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.NoFilterFeatureExtraction;
 import icp.application.classification.WindowedMeansFeatureExtraction;
@@ -36,7 +37,12 @@ public class TestClassificationAccuracy implements Observer {
     
    
     public static void main(String[] args) throws InterruptedException {
+    	long start = System.currentTimeMillis();
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
+        long end = System.currentTimeMillis();
+        
+        System.out.println();
+        System.out.println((double)(end - start) / 1000.0);
     }
     
     public TestClassificationAccuracy() throws InterruptedException {
@@ -73,7 +79,8 @@ public class TestClassificationAccuracy implements Observer {
                         end = false;
                         filename = f.getName();
                         if (classifier == null) {
-                        	classifier = new MLPClassifier();
+                        	classifier = new KNNClassifier();
+                        	//classifier = new MLPClassifier();
                         	 classifier.load(Const.TRAINING_FILE_NAME);
                              IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
                              classifier.setFeatureExtraction(fe);

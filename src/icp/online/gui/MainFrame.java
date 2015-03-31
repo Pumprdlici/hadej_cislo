@@ -5,6 +5,8 @@ import icp.online.app.OnlineDetection;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
+import icp.application.classification.JavaMLClassifier;
+import icp.application.classification.KNNClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.NoFilterFeatureExtraction;
 import icp.online.app.IDataProvider;
@@ -82,7 +84,7 @@ public class MainFrame extends JFrame implements Observer {
         this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        classifier = new MLPClassifier();
+        classifier = new KNNClassifier();
         classifier.load(Const.TRAINING_FILE_NAME);
         IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
         classifier.setFeatureExtraction(fe);

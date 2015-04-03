@@ -89,8 +89,8 @@ public class TrainUsingOfflineProvider implements Observer {
         nnStructure.add(numberOfInputNeurons);
         nnStructure.add(middleNeurons);
         nnStructure.add(outputNeurons);
-        classifier = new KNNClassifier();
-        //classifier = new MLPClassifier(nnStructure);
+        //classifier = new KNNClassifier();
+        classifier = new MLPClassifier(nnStructure);
         //classifier = new JavaMLClassifier();
         classifier.setFeatureExtraction(fe);
 

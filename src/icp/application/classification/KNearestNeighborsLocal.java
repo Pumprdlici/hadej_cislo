@@ -13,7 +13,7 @@ import java.util.Comparator;
  *
  */
 public class KNearestNeighborsLocal implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -30,12 +30,19 @@ public class KNearestNeighborsLocal implements Serializable {
 	private ArrayList<Neighbor> neighbors;
 	
 	/**
+	 * Variable, which indicates if weighted distances between the tested vector
+	 * and its nearest neighbors should be used.
+	 */
+	private boolean useWeightedDistances;
+	
+	/**
 	 * Initialization of the instance. It sets given number of neighbors
 	 *  and initialize ArrayList for training data.
 	 * @param k given number of neighbors
 	 */
-	public KNearestNeighborsLocal(int k) {
+	public KNearestNeighborsLocal(int k, boolean useWeightedDistances) {
 		this.k = k;
+		this.useWeightedDistances = useWeightedDistances;
 		this.neighbors = new ArrayList<Neighbor>();
 	}
 	
@@ -78,7 +85,7 @@ public class KNearestNeighborsLocal implements Serializable {
 			double classValue = neighbors.get(i).getClassValue();
 			if(classValue > 0.0) matches++;
 		}
-		
+	
 		double score = (double)matches / (double)maxNeighbors;
 		return score;
 	}
@@ -112,8 +119,8 @@ public class KNearestNeighborsLocal implements Serializable {
 	
 	/**
 	 * Method for calculating  the euclidian distance between two given vectors.
-	 * @param vector1
-	 * @param vector2
+	 * @param vector1 array of double values representing the vector
+	 * @param vector2 array of double values representing the vector
 	 * @return distance between two given vector
 	 */
 	double calculateDistanceEuclidian(double[] vector1, double[] vector2) {
@@ -155,18 +162,34 @@ public class KNearestNeighborsLocal implements Serializable {
 		}
 	}
 	
+	/**
+	 * Getter for returning the nearest neighbors count.
+	 * @return number of nearest neighbors
+	 */
 	public int getK() {
 		return k;
 	}
-
+	
+	/**
+	 * Setter for the nearest neighbors count.
+	 * @param k number of nearest neighbors
+	 */
 	public void setK(int k) {
 		this.k = k;
 	}
-
+	
+	/**
+	 * Getter for returning the ArrayList with with all Neighbor instances (training data).
+	 * @return ArrayList with with all Neighbor instances
+	 */
 	public ArrayList<Neighbor> getNeighbors() {
 		return neighbors;
 	}
-
+	
+	/**
+	 * Setter for the ArrayList with with all Neighbor instances (training data).
+	 * @param ArrayList with with all Neighbor instances
+	 */
 	public void setNeighbors(ArrayList<Neighbor> neighbors) {
 		this.neighbors = neighbors;
 	}

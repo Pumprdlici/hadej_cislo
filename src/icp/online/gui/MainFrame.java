@@ -84,7 +84,7 @@ public class MainFrame extends JFrame implements Observer {
         this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        classifier = new KNNClassifier();
+        classifier = new MLPClassifier();
         classifier.load(Const.TRAINING_FILE_NAME);
         IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
         classifier.setFeatureExtraction(fe);

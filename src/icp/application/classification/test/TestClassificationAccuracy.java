@@ -79,8 +79,8 @@ public class TestClassificationAccuracy implements Observer {
                         end = false;
                         filename = f.getName();
                         if (classifier == null) {
-                        	classifier = new KNNClassifier();
-                        	//classifier = new MLPClassifier();
+                        	//classifier = new KNNClassifier();
+                        	classifier = new MLPClassifier();
                         	 classifier.load(Const.TRAINING_FILE_NAME);
                              IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
                              classifier.setFeatureExtraction(fe);

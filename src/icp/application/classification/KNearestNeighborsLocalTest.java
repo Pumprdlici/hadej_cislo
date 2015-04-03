@@ -8,12 +8,13 @@ import org.junit.Test;
 public class KNearestNeighborsLocalTest {
 	
 	private static final int K_CNT = 5;
+	private static final boolean W_DISTANCES = false;
 	
 	private KNearestNeighborsLocal knn;
 	
 	@Before
 	public void setup() {
-		this.knn = new KNearestNeighborsLocal(K_CNT);
+		this.knn = new KNearestNeighborsLocal(K_CNT, W_DISTANCES);
 	}
 
 	@Test

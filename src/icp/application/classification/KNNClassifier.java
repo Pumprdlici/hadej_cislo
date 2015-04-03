@@ -16,17 +16,41 @@ import java.util.List;
 
 public class KNNClassifier extends ERPClassifierAdapter {
 	
+	/**
+	 * Attribute for the instance of selected FeatureExtraction class.
+	 */
 	private IFeatureExtraction fe;
+	
+	/**
+	 * Attribute for the instance of KNearestNeighborsLocal classifier.
+	 */
 	private KNearestNeighborsLocal classifier;
+	
+	/**
+	 * Number of nearest neighbors that will be used for classification.
+	 */
 	private int k_cnt;
 	
+	/**
+	 * Default number of nearest neighbors.	
+	 */
+	private static final int K_CNT_DEFAULT = 5;
+	
+	/**
+	 * Constructor for this classifier that uses default number of nearest neighbors (5)
+	 * and doesn't use weighted distances.
+	 */
 	public KNNClassifier() {
-		this(51);
+		this(K_CNT_DEFAULT, false);
 	}
 	
-	public KNNClassifier(int k) {
+	/**
+	 * Constructor for this classifier with variable number of nearest neighbors.
+	 * @param k number of nearest neighbors
+	 */
+	public KNNClassifier(int k, boolean useWeightedDistances) {
 		this.k_cnt = k;
-		this.classifier = new KNearestNeighborsLocal(k_cnt);
+		this.classifier = new KNearestNeighborsLocal(k_cnt, useWeightedDistances);
 	}
 
 	@Override

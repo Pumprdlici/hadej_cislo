@@ -3,15 +3,16 @@ package icp;
 import java.awt.Font;
 
 /**
- * Obsahuje konstanty používané v aplikaci.
+ * Obsahuje konstanty pouï¿½ï¿½vanï¿½ v aplikaci.
  */
 public class Const {
 
     /**
-     * Koncovka souboru ve formátu VDEF.
+     * Koncovka souboru ve formï¿½tu VDEF.
      */
     public static final String VHDR_EXTENSION = ".vhdr";
     public static final String VMRK_EXTENSION = ".vmrk";
+    public static final String EEG_EXTENSION = ".eeg";
 
     //----------------------Settings constants---------------------------
     public static final String DEF_IP_ADDRESS = "147.228.127.95";

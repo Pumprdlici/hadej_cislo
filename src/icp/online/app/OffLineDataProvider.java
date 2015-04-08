@@ -21,6 +21,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 
     private final String vhdrFile;
     private final String vmrkFile;
+    private final String eegFile;
     private int FZIndex;
     private int CZIndex;
     private int PZIndex;
@@ -30,6 +31,11 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     public OffLineDataProvider(String vhdrFile, String markerFile) {
         this.vhdrFile = vhdrFile;
         this.vmrkFile = markerFile;
+
+        String baseName = vhdrFile.substring(0, vhdrFile.lastIndexOf("."));
+        this.eegFile = baseName + Const.EEG_EXTENSION;
+        
+        
         this.running = true;
     }
 
@@ -40,6 +46,8 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 
         this.vhdrFile = baseName + Const.VHDR_EXTENSION;
         this.vmrkFile = baseName + Const.VMRK_EXTENSION;
+        this.eegFile = baseName + Const.EEG_EXTENSION;
+        
         this.running = true;
     }
 
@@ -74,9 +82,9 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
             }
             
          
-            double[] fzChannel = dt.readBinaryData(vhdrFile, FZIndex);
-            double[] czChannel = dt.readBinaryData(vhdrFile, CZIndex);
-            double[] pzChannel = dt.readBinaryData(vhdrFile, PZIndex);
+            double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex);
+            double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex);
+            double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex);
             Map<String, EEGMarker> markers = dt.readMarkers(vmrkFile);
             for (Map.Entry<String, EEGMarker> entry : markers.entrySet()) {
                 if (!running) {

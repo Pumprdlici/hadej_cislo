@@ -30,19 +30,12 @@ public class KNearestNeighborsLocal implements Serializable {
 	private ArrayList<Neighbor> neighbors;
 	
 	/**
-	 * Variable, which indicates if weighted distances between the tested vector
-	 * and its nearest neighbors should be used.
-	 */
-	private boolean useWeightedDistances;
-	
-	/**
 	 * Initialization of the instance. It sets given number of neighbors
 	 *  and initialize ArrayList for training data.
 	 * @param k given number of neighbors
 	 */
-	public KNearestNeighborsLocal(int k, boolean useWeightedDistances) {
+	public KNearestNeighborsLocal(int k) {
 		this.k = k;
-		this.useWeightedDistances = useWeightedDistances;
 		this.neighbors = new ArrayList<Neighbor>();
 	}
 	

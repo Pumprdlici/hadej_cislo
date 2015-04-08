@@ -19,7 +19,7 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
 
 	 private static final int EPOCH_SIZE = 650; /* number of samples to be used - Fs = 1000 Hz expected */
 
-	 private static final int DOWN_SMPL_FACTOR = 32;  /* subsampling factor */
+	 private static final int DOWN_SMPL_FACTOR = 2;  /* subsampling factor */
 
 	 private static final int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
 

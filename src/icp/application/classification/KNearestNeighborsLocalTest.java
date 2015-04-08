@@ -10,13 +10,12 @@ import org.junit.Test;
 public class KNearestNeighborsLocalTest {
 	
 	private static final int K_CNT = 5;
-	private static final boolean W_DISTANCES = false;
 	
 	private KNearestNeighborsLocal knn;
 	
 	@Before
 	public void setup() {
-		this.knn = new KNearestNeighborsLocal(K_CNT, W_DISTANCES);
+		this.knn = new KNearestNeighborsLocal(K_CNT);
 		
 		double[] testVector1 = {2.0, 2.0, 2.0};
 		double[] testVector2 = {3.0, 3.0, 3.0};

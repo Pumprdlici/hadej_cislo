@@ -37,12 +37,7 @@ public class TestClassificationAccuracy implements Observer {
     
    
     public static void main(String[] args) throws InterruptedException {
-    	long start = System.currentTimeMillis();
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
-        long end = System.currentTimeMillis();
-        
-        System.out.println();
-        System.out.println((double)(end - start) / 1000.0);
     }
     
     public TestClassificationAccuracy() throws InterruptedException {

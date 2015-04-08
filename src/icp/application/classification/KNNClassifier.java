@@ -34,23 +34,23 @@ public class KNNClassifier extends ERPClassifierAdapter {
 	/**
 	 * Default number of nearest neighbors.	
 	 */
-	private static final int K_CNT_DEFAULT = 5;
+	private static final int K_CNT_DEFAULT = 11;
 	
 	/**
 	 * Constructor for this classifier that uses default number of nearest neighbors (5)
 	 * and doesn't use weighted distances.
 	 */
 	public KNNClassifier() {
-		this(K_CNT_DEFAULT, false);
+		this(K_CNT_DEFAULT);
 	}
 	
 	/**
 	 * Constructor for this classifier with variable number of nearest neighbors.
 	 * @param k number of nearest neighbors
 	 */
-	public KNNClassifier(int k, boolean useWeightedDistances) {
+	public KNNClassifier(int k) {
 		this.k_cnt = k;
-		this.classifier = new KNearestNeighborsLocal(k_cnt, useWeightedDistances);
+		this.classifier = new KNearestNeighborsLocal(k_cnt);
 	}
 
 	@Override

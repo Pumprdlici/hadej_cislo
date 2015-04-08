@@ -31,7 +31,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Subsampling factor
 	 */
-	private static final int DOWN_SMPL_FACTOR = 1;
+	private static final int DOWN_SMPL_FACTOR = 32;
 
 	/**
 	 * Skip initial samples in each epoch
@@ -41,7 +41,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Name of the wavelet
 	 */
-	private static int NAME;
+	private int NAME;
 
 	/**
 	 * Constructor for the wavelet transform feature extraction with default
@@ -98,6 +98,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 			}
 			i++;
 		}
+		features = SignalProcessing.decimate(features, DOWN_SMPL_FACTOR);
 		features = SignalProcessing.normalize(features);
 
 		return features;
@@ -110,8 +111,14 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	 */
 	@Override
 	public int getFeatureDimension() {
-		// TODO Auto-generated method stub
 		return EPOCH_SIZE * CHANNELS.length / DOWN_SMPL_FACTOR;
+	}
+	
+	
+	public void setWaveletName(int name) {
+		if(name >= 0 && name <= 17) {
+			this.NAME = name;
+		} else throw new IllegalArgumentException("Wavelet name must be >= 0 and <= 17");
 	}
 
 }

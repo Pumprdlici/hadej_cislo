@@ -28,6 +28,7 @@ public class CorrelationAlgorithms {
 	 */
 	private double[] signal2;
 	
+	
 	public CorrelationAlgorithms() {
 		
 	}

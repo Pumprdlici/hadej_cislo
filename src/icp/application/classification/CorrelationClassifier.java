@@ -36,6 +36,7 @@ public class CorrelationClassifier extends ERPClassifierAdapter {
 		this.classifier = new CorrelationAlgorithms();
 	}
 	
+	
 	/** 
 	 * Sets feature extraction method
 	 * @param fe	feature extraction method

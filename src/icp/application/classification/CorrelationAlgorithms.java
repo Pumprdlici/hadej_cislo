@@ -33,7 +33,7 @@ public class CorrelationAlgorithms {
 	}
 	
 	/**
-	 * 
+	 * Score of given feature vector.
 	 * @param feature	feature vector
 	 * @return	score of given feature vector
 	 */

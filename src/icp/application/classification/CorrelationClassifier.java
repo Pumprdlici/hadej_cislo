@@ -106,6 +106,5 @@ public class CorrelationClassifier extends ERPClassifierAdapter {
 			e.printStackTrace();
 		}
 	}
-
 	
 }

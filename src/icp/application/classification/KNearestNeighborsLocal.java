@@ -87,7 +87,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	 * Method for sorting the ArrayList with training data based on calculated distances.
 	 * It uses custom Comparator class to sort elements in ascending order.
 	 */
-	void sortNeighbors() {
+	private void sortNeighbors() {
 		NeighborsComparator comparator = new NeighborsComparator();
 		Collections.sort(neighbors, comparator);
 	}
@@ -98,7 +98,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	 * If the method is called without the training data being already set, it throws NullPointerException. 
 	 * @param featureVector element for which are distances from all neighbors in training data calculated
 	 */
-	void createDistances(double[] featureVector) {
+	private void createDistances(double[] featureVector) {
 		if(neighbors != null) {
 			for(Neighbor n : neighbors) {
 				double distance = calculateDistanceEuclidian(n.getVector(), featureVector);
@@ -116,7 +116,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	 * @param vector2 array of double values representing the vector
 	 * @return distance between two given vector
 	 */
-	double calculateDistanceEuclidian(double[] vector1, double[] vector2) {
+	private double calculateDistanceEuclidian(double[] vector1, double[] vector2) {
 		double distance = 0.0;
 		
 		if(vector1.length == vector2.length) {

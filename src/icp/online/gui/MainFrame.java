@@ -44,6 +44,8 @@ import javax.swing.text.StyledDocument;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Observer {
 
@@ -109,6 +111,30 @@ public class MainFrame extends JFrame implements Observer {
                 System.exit(0);
             }
         });
+        
+        ChangeClassifierFrame c = new ChangeClassifierFrame(this);
+        ChangeFeatureExtractionFrame f = new ChangeFeatureExtractionFrame(this);
+        JMenu settingsMenu = new JMenu("Settings");
+        JMenuItem classifierMenuItem = new JMenuItem("Classifier");
+       classifierMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_K, ActionEvent.CTRL_MASK));
+       classifierMenuItem.addActionListener(new ActionListener() {
+
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               c.setVisible(true);
+           }
+       });
+        JMenuItem featureMenuItem = new JMenuItem("Feature Extraction");
+        featureMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+        featureMenuItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	f.setVisible(true);
+            }
+        });
 
         menuBar.add(fileMenu);
         fileMenu.add(onlineMenuItem);
@@ -116,6 +142,10 @@ public class MainFrame extends JFrame implements Observer {
         fileMenu.add(chartMenuItem);
         fileMenu.addSeparator();
         fileMenu.add(endMenuItem);
+        
+        menuBar.add(settingsMenu);
+        settingsMenu.add(classifierMenuItem);
+        settingsMenu.add(featureMenuItem);
 
         return menuBar;
     }

@@ -1,19 +1,20 @@
 package icp.online.gui;
 
 import icp.Const;
-import icp.online.app.OnlineDetection;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
-import icp.application.classification.JavaMLClassifier;
-import icp.application.classification.KNNClassifier;
 import icp.application.classification.MLPClassifier;
-import icp.application.classification.NoFilterFeatureExtraction;
 import icp.online.app.IDataProvider;
 import icp.online.app.OffLineDataProvider;
 import icp.online.app.OnLineDataProvider;
+import icp.online.app.OnlineDetection;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -44,285 +45,332 @@ import javax.swing.text.StyledDocument;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements Observer {
 
-    private AbstractTableModel data;
+	private AbstractTableModel data;
 
-    private JTextPane winnerJTA;
+	private JTextPane winnerJTA;
 
-    private JFileChooser chooser;
+	private JFileChooser chooser;
 
-    private Observer detection;
+	private Observer detection;
 
-    private IDataProvider dp;
+	private IDataProvider dp;
 
-    public File eegFile;
+	public File eegFile;
 
-    private Thread dataProvider;
+	private Thread dataProvider;
 
-    private final Logger log;
+	private final Logger log;
 
-    private final IERPClassifier classifier;
+	private IFeatureExtraction fe;
 
-    private final ShowChart epochCharts;
+	private IERPClassifier classifier;
 
-    public MainFrame() {
-        super(Const.APP_NAME);
-        BasicConfigurator.configure();
-        log = Logger.getLogger(MainFrame.class);
-        epochCharts = new ShowChart(this);
+	private final ShowChart epochCharts;
 
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        getContentPane().add(createContentJP());
-        this.setJMenuBar(createMenu());
+	private boolean trained = false;
 
-        this.setVisible(true);
-        this.pack();
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+	public MainFrame() {
+		super(Const.APP_NAME);
+		BasicConfigurator.configure();
+		log = Logger.getLogger(MainFrame.class);
+		epochCharts = new ShowChart(this);
 
-        classifier = new MLPClassifier();
-        classifier.load(Const.TRAINING_FILE_NAME);
-        IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
-        classifier.setFeatureExtraction(fe);
-    }
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		getContentPane().add(createContentJP());
+		this.setJMenuBar(createMenu());
 
-    private JMenuBar createMenu() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem offlineMenuItem = new JMenuItem();
-        offlineMenuItem.setAction((new LoadOfflineData()));
-        JMenuItem onlineMenuItem = new JMenuItem();
-        onlineMenuItem.setAction(new LoadOnlineData());
-        JMenuItem chartMenuItem = new JMenuItem();
-        chartMenuItem.setAction(this.epochCharts);
-        JMenuItem endMenuItem = new JMenuItem("Close");
-        endMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
-        endMenuItem.addActionListener(new ActionListener() {
+		this.setVisible(true);
+		this.pack();
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
+				/ 2 - this.getSize().height / 2);
+		this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        
-        ChangeClassifierFrame c = new ChangeClassifierFrame(this);
-        ChangeFeatureExtractionFrame f = new ChangeFeatureExtractionFrame(this);
-        JMenu settingsMenu = new JMenu("Settings");
-        JMenuItem classifierMenuItem = new JMenuItem("Classifier");
-       classifierMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_K, ActionEvent.CTRL_MASK));
-       classifierMenuItem.addActionListener(new ActionListener() {
+		classifier = new MLPClassifier();
+		classifier.load(Const.TRAINING_FILE_NAME);
+		fe = new FilterAndSubsamplingFeatureExtraction();
+		classifier.setFeatureExtraction(fe);
+	}
 
-           @Override
-           public void actionPerformed(ActionEvent e) {
-               c.setVisible(true);
-           }
-       });
-        JMenuItem featureMenuItem = new JMenuItem("Feature Extraction");
-        featureMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-                KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-        featureMenuItem.addActionListener(new ActionListener() {
+	private JMenuBar createMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu fileMenu = new JMenu("File");
+		JMenuItem offlineMenuItem = new JMenuItem();
+		offlineMenuItem.setAction((new LoadOfflineData()));
+		JMenuItem onlineMenuItem = new JMenuItem();
+		onlineMenuItem.setAction(new LoadOnlineData());
+		JMenuItem chartMenuItem = new JMenuItem();
+		chartMenuItem.setAction(this.epochCharts);
+		JMenuItem endMenuItem = new JMenuItem("Close");
+		endMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+				ActionEvent.CTRL_MASK));
+		endMenuItem.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	f.setVisible(true);
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		MainFrame mf = this;
+		JMenu settingsMenu = new JMenu("Settings");
+		JMenuItem classifierMenuItem = new JMenuItem("Classifier");
+		classifierMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,
+				ActionEvent.CTRL_MASK));
+		classifierMenuItem.addActionListener(new ActionListener() {
 
-        menuBar.add(fileMenu);
-        fileMenu.add(onlineMenuItem);
-        fileMenu.add(offlineMenuItem);
-        fileMenu.add(chartMenuItem);
-        fileMenu.addSeparator();
-        fileMenu.add(endMenuItem);
-        
-        menuBar.add(settingsMenu);
-        settingsMenu.add(classifierMenuItem);
-        settingsMenu.add(featureMenuItem);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChangeClassifierFrame c = new ChangeClassifierFrame(mf);
+				c.setVisible(true);
+			}
+		});
+		JMenuItem featureMenuItem = new JMenuItem("Feature Extraction");
+		featureMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
+				ActionEvent.CTRL_MASK));
+		featureMenuItem.addActionListener(new ActionListener() {
 
-        return menuBar;
-    }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChangeFeatureExtractionFrame f = new ChangeFeatureExtractionFrame(
+						mf);
+				f.setVisible(true);
+			}
+		});
 
-    private JPanel createContentJP() {
-        GridLayout mainLayout = new GridLayout(1, 2);
-        JPanel contentJP = new JPanel(mainLayout);
-        contentJP.add(createStimuliJT());
-        contentJP.add(createWinnerJTA());
+		menuBar.add(fileMenu);
+		fileMenu.add(onlineMenuItem);
+		fileMenu.add(offlineMenuItem);
+		fileMenu.add(chartMenuItem);
+		fileMenu.addSeparator();
+		fileMenu.add(endMenuItem);
 
-        return contentJP;
-    }
+		menuBar.add(settingsMenu);
+		settingsMenu.add(classifierMenuItem);
+		settingsMenu.add(featureMenuItem);
 
-    private JTextPane createWinnerJTA() {
-        winnerJTA = new JTextPane();
-        Font font = new Font(Const.RESULT_FONT_NAME, Const.RESULT_FONT_STYLE, Const.RESULT_FONT_SIZE);
-        winnerJTA.setFont(font);
-        winnerJTA.setBackground(Color.BLACK);
-        winnerJTA.setForeground(Color.WHITE);
-        StyledDocument doc = winnerJTA.getStyledDocument();
-        SimpleAttributeSet center = new SimpleAttributeSet();
-        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-        doc.setParagraphAttributes(0, doc.getLength(), center, false);
-        winnerJTA.setText(Const.UNKNOWN_RESULT);
-        return winnerJTA;
-    }
+		return menuBar;
+	}
 
-    private JScrollPane createStimuliJT() {
-        data = new StimuliTableModel();
-        JTable stimuliJT = new JTable(data);
-        JScrollPane jsp = new JScrollPane(stimuliJT);
-        stimuliJT.setFillsViewportHeight(true);
+	private JPanel createContentJP() {
+		GridLayout mainLayout = new GridLayout(1, 2);
+		JPanel contentJP = new JPanel(mainLayout);
+		contentJP.add(createStimuliJT());
+		contentJP.add(createWinnerJTA());
 
-        return jsp;
-    }
+		return contentJP;
+	}
 
-    private void initProbabilities(double[] probabilities) {
-        Integer[] ranks = new Integer[probabilities.length];
-        for (int i = 0; i < ranks.length; ++i) {
-            ranks[i] = i;
-        }
-        Comparator<Integer> gc = new ProbabilityComparator(probabilities);
-        Arrays.sort(ranks, gc);
+	private JTextPane createWinnerJTA() {
+		winnerJTA = new JTextPane();
+		Font font = new Font(Const.RESULT_FONT_NAME, Const.RESULT_FONT_STYLE,
+				Const.RESULT_FONT_SIZE);
+		winnerJTA.setFont(font);
+		winnerJTA.setBackground(Color.BLACK);
+		winnerJTA.setForeground(Color.WHITE);
+		StyledDocument doc = winnerJTA.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		winnerJTA.setText(Const.UNKNOWN_RESULT);
+		return winnerJTA;
+	}
 
-        winnerJTA.setText(String.valueOf(ranks[0] + 1));
-        for (int i = 0; i < probabilities.length; i++) {
-            data.setValueAt(probabilities[ranks[i]], i, 1);
-            data.setValueAt(ranks[i] + 1, i, 0);
-        }
+	private JScrollPane createStimuliJT() {
+		data = new StimuliTableModel();
+		JTable stimuliJT = new JTable(data);
+		JScrollPane jsp = new JScrollPane(stimuliJT);
+		stimuliJT.setFillsViewportHeight(true);
 
-        this.validate();
-        this.repaint();
-    }
+		return jsp;
+	}
 
-    @Override
-    public void update(Observable sender, Object message) throws IllegalArgumentException {
-        if (message instanceof OnlineDetection) {
-            double[] probabilities = ((OnlineDetection) message).getWeightedResults();
+	private void initProbabilities(double[] probabilities) {
+		Integer[] ranks = new Integer[probabilities.length];
+		for (int i = 0; i < ranks.length; ++i) {
+			ranks[i] = i;
+		}
+		Comparator<Integer> gc = new ProbabilityComparator(probabilities);
+		Arrays.sort(ranks, gc);
 
-            initProbabilities(probabilities);
+		winnerJTA.setText(String.valueOf(ranks[0] + 1));
+		for (int i = 0; i < probabilities.length; i++) {
+			data.setValueAt(probabilities[ranks[i]], i, 1);
+			data.setValueAt(ranks[i] + 1, i, 0);
+		}
 
-            this.epochCharts.update(((OnlineDetection) message).getPzAvg());
-        } /*else {
-            log.error(MainFrame.class.toString() + ": Expencted online detection, but received something else.");
-            throw new IllegalArgumentException("Expencted online detection, but received something else.");
-        }*/
-    }
+		this.validate();
+		this.repaint();
+	}
 
-    private void initGui() {
-        double[] zeros = new double[data.getRowCount()];
-        Arrays.fill(zeros, 0);
-        initProbabilities(zeros);
-        winnerJTA.setText(Const.UNKNOWN_RESULT);
-    }
+	@Override
+	public void update(Observable sender, Object message)
+			throws IllegalArgumentException {
+		if (message instanceof OnlineDetection) {
+			double[] probabilities = ((OnlineDetection) message)
+					.getWeightedResults();
 
-    private void stopRunningThread() {
-        try {
-            if (dataProvider != null) {
-                if (dp != null) {
-                    dp.stop();
-                } else {
-                    dataProvider.interrupt();
-                }
-            }
-        } catch (Exception ex) {
+			initProbabilities(probabilities);
 
-        }
-    }
+			this.epochCharts.update(((OnlineDetection) message).getPzAvg());
+		} /*
+		 * else { log.error(MainFrame.class.toString() +
+		 * ": Expencted online detection, but received something else."); throw
+		 * new IllegalArgumentException(
+		 * "Expencted online detection, but received something else."); }
+		 */
+	}
 
-    public class LoadOfflineData extends AbstractAction {
+	private void initGui() {
+		double[] zeros = new double[data.getRowCount()];
+		Arrays.fill(zeros, 0);
+		initProbabilities(zeros);
+		winnerJTA.setText(Const.UNKNOWN_RESULT);
+	}
 
-        MainFrame mainFrame;
+	private void stopRunningThread() {
+		try {
+			if (dataProvider != null) {
+				if (dp != null) {
+					dp.stop();
+				} else {
+					dataProvider.interrupt();
+				}
+			}
+		} catch (Exception ex) {
 
-        @Override
-        public void actionPerformed(ActionEvent actionevent) {
-            initGui();
-            chooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("EEG files .eeg", "EEG", "eeg");
-            chooser.addChoosableFileFilter(filter);
-            chooser.setFileFilter(filter);
-            chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-            int i = chooser.showDialog(mainFrame, "Open");
-            if (i == 0) {
-                eegFile = chooser.getSelectedFile();
-                detection = new OnlineDetection(classifier, mainFrame);
-                stopRunningThread();
+		}
+	}
 
-                try {
-                    dp = new OffLineDataProvider(eegFile, detection);
-                    dataProvider = new Thread((OffLineDataProvider) dp);
-                    dataProvider.start();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+	public IERPClassifier getClassifier() {
+		return classifier;
+	}
 
-        public LoadOfflineData() {
-            super();
-            mainFrame = MainFrame.this;
-            putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-            putValue("Name", "Offline data");
-        }
-    }
+	public void setClassifier(IERPClassifier classifier) {
+		this.classifier = classifier;
+	}
 
-    public class LoadOnlineData extends AbstractAction {
+	public IFeatureExtraction getFe() {
+		return fe;
+	}
 
-        MainFrame mainFrame;
+	public void setFe(IFeatureExtraction fe) {
+		this.fe = fe;
+	}
 
-        @Override
-        public void actionPerformed(ActionEvent actionevent) {
-            initGui();
+	public boolean isTrained() {
+		return trained;
+	}
 
-            SetupDialogContent content = new SetupDialogContent();
-            int result;
-            boolean isOk = false;
-            String recorderIPAddress = null;
-            int port = -1;
-            while (!isOk) {
-                result = JOptionPane.showConfirmDialog(null, content, "Guess the Number: Setup", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (result == JOptionPane.CANCEL_OPTION) {
-                    return;
-                }
+	public void setTrained(boolean trained) {
+		this.trained = trained;
+	}
 
-                recorderIPAddress = content.getIP();
-                port = content.getPort();
-                if (port != -1 && recorderIPAddress != null) {
-                    isOk = true;
-                } else {
-                    if (port == -1) {
-                        JOptionPane.showMessageDialog(null, "Invalid port number!", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    if (recorderIPAddress == null) {
-                        JOptionPane.showMessageDialog(null, "Invalid IP address!", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
+	public class LoadOfflineData extends AbstractAction {
 
-            if (isOk) {
-                stopRunningThread();
+		MainFrame mainFrame;
 
-                detection = new OnlineDetection(classifier, mainFrame);
-                try {
-                    dp = new OnLineDataProvider(recorderIPAddress, port, detection);
-                    dataProvider = new Thread((OnLineDataProvider) dp);
-                    dataProvider.start();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+		@Override
+		public void actionPerformed(ActionEvent actionevent) {
+			initGui();
+			chooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter(
+					"EEG files .eeg", "EEG", "eeg");
+			chooser.addChoosableFileFilter(filter);
+			chooser.setFileFilter(filter);
+			chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+			int i = chooser.showDialog(mainFrame, "Open");
+			if (i == 0) {
+				eegFile = chooser.getSelectedFile();
+				detection = new OnlineDetection(classifier, mainFrame);
+				stopRunningThread();
 
-        public LoadOnlineData() {
-            super();
-            mainFrame = MainFrame.this;
-            putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-            putValue("Name", "Online data");
-        }
-    }
+				try {
+					dp = new OffLineDataProvider(eegFile, detection);
+					dataProvider = new Thread((OffLineDataProvider) dp);
+					dataProvider.start();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(mainFrame, ex.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+
+		public LoadOfflineData() {
+			super();
+			mainFrame = MainFrame.this;
+			putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_O,
+					ActionEvent.CTRL_MASK));
+			putValue("Name", "Offline data");
+		}
+	}
+
+	public class LoadOnlineData extends AbstractAction {
+
+		MainFrame mainFrame;
+
+		@Override
+		public void actionPerformed(ActionEvent actionevent) {
+			initGui();
+
+			SetupDialogContent content = new SetupDialogContent();
+			int result;
+			boolean isOk = false;
+			String recorderIPAddress = null;
+			int port = -1;
+			while (!isOk) {
+				result = JOptionPane
+						.showConfirmDialog(null, content,
+								"Guess the Number: Setup",
+								JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE);
+				if (result == JOptionPane.CANCEL_OPTION) {
+					return;
+				}
+
+				recorderIPAddress = content.getIP();
+				port = content.getPort();
+				if (port != -1 && recorderIPAddress != null) {
+					isOk = true;
+				} else {
+					if (port == -1) {
+						JOptionPane.showMessageDialog(null,
+								"Invalid port number!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+					if (recorderIPAddress == null) {
+						JOptionPane.showMessageDialog(null,
+								"Invalid IP address!", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+
+			if (isOk) {
+				stopRunningThread();
+
+				detection = new OnlineDetection(classifier, mainFrame);
+				try {
+					dp = new OnLineDataProvider(recorderIPAddress, port,
+							detection);
+					dataProvider = new Thread((OnLineDataProvider) dp);
+					dataProvider.start();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(mainFrame, ex.getMessage(),
+							"Connection Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+
+		public LoadOnlineData() {
+			super();
+			mainFrame = MainFrame.this;
+			putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_P,
+					ActionEvent.CTRL_MASK));
+			putValue("Name", "Online data");
+		}
+	}
 }

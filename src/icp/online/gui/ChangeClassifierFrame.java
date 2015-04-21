@@ -61,7 +61,7 @@ public class ChangeClassifierFrame extends JFrame {
 		setEscListener(this);
 	}
 
-	private void setEscListener(ChangeClassifierFrame frame) {
+	private void setEscListener(final ChangeClassifierFrame frame) {
 		ActionListener escListener = new ActionListener() {
 
 			@Override
@@ -249,7 +249,7 @@ public class ChangeClassifierFrame extends JFrame {
 
 	private JPanel createBttnPane() {
 		JPanel bttnPane = new JPanel();
-		JButton trainBttn = new JButton("Train");
+		final JButton trainBttn = new JButton("Train");
 		trainBttn.addActionListener(new ActionListener() {
 
 			@Override
@@ -258,7 +258,7 @@ public class ChangeClassifierFrame extends JFrame {
 			}
 		});
 		JButton okBttn = new JButton("OK");
-		ChangeClassifierFrame c = this;
+		final ChangeClassifierFrame c = this;
 		okBttn.addActionListener(new ActionListener() {
 
 			@Override
@@ -269,7 +269,7 @@ public class ChangeClassifierFrame extends JFrame {
 
 					int input = mainFrame.getFe().getFeatureDimension();
 					int output = 1;
-					int middle = (int) middleNeuronsSpinner.getValue();
+					int middle = (Integer) middleNeuronsSpinner.getValue();
 					ArrayList<Integer> nnStructure = new ArrayList<Integer>();
 					nnStructure.add(input);
 					nnStructure.add(middle);
@@ -281,7 +281,7 @@ public class ChangeClassifierFrame extends JFrame {
 				} else if (knnBttn.isSelected()) {
 					mainFrame.setTrained(false);
 
-					int neighborsNumber = (int) neighborsNumberSpinner
+					int neighborsNumber = (Integer) neighborsNumberSpinner
 							.getValue();
 
 					IERPClassifier classifier = new KNNClassifier(

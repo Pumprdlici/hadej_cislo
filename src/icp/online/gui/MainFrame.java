@@ -115,7 +115,7 @@ public class MainFrame extends JFrame implements Observer {
 				System.exit(0);
 			}
 		});
-		MainFrame mf = this;
+		final MainFrame mf = this;
 		JMenu settingsMenu = new JMenu("Settings");
 		JMenuItem classifierMenuItem = new JMenuItem("Classifier");
 		classifierMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,

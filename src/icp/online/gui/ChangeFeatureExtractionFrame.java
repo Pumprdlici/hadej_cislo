@@ -71,7 +71,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		setEscListener(this);
 	}
 
-	private void setEscListener(ChangeFeatureExtractionFrame frame) {
+	private void setEscListener(final ChangeFeatureExtractionFrame frame) {
 		ActionListener escListener = new ActionListener() {
 
 			@Override
@@ -340,7 +340,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 	private JPanel createBttnPane() {
 		JPanel bttnPane = new JPanel();
-		JButton trainBttn = new JButton("Train");
+		final JButton trainBttn = new JButton("Train");
 		trainBttn.addActionListener(new ActionListener() {
 
 			@Override
@@ -349,7 +349,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 			}
 		});
 		JButton okBttn = new JButton("OK");
-		ChangeFeatureExtractionFrame c = this;
+		final ChangeFeatureExtractionFrame c = this;
 		okBttn.addActionListener(new ActionListener() {
 
 			@Override

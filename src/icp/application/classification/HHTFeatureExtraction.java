@@ -2,9 +2,13 @@ package icp.application.classification;
 
 import icp.Const;
 import icp.algorithm.math.SignalProcessing;
+
+import java.util.ArrayList;
 import java.util.Vector;
+
 import hht.HhtSimpleRunner;
 import hht.HilbertHuangTransform;
+import hht.hilbertTransform.HilbertTransform;
 
 /**
  * Class using HHT library with Hilbert-Huang Transformation algorithm for feature extraction.
@@ -41,9 +45,19 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	private int sampleWindowShift = 5;
 	
 	/**
-	 * variable for storing the average amplitude of P3 wave
+	 * variable for storing the threshold for the amplitude, from which is signal considered as P3 component
 	 */
-	private double optimalAvgAmplitude = 3.0;
+	private double amplitudeThreshold = 3.0;
+	
+	/**
+	 * variable for storing minimal frequency of P3 component 
+	 */
+	private double minFreq = 0.2;
+	
+	/**
+	 * variable for storing maximal frequency of P3 component 
+	 */
+	private double maxFreq = 3.0;
 
 	@Override
 	public double[] extractFeatures(double[][] epoch) {
@@ -61,6 +75,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 				 */
 				HilbertHuangTransform hht = HhtSimpleRunner.runHht(EMD_CONF_FILE , epoch[channel - 1], SAMPLING_FREQUENCY);
 				Vector<double[]> imfs = hht.getImfs();
+				Vector<HilbertTransform> hTransforms = hht.getHilbertTransform();
 				double[] selectedImf;
 				
 				/*
@@ -70,7 +85,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 					/*
 					 * calling the method for selection of best IMF
 					 */
-					selectedImf = selectImf(imfs);
+					selectedImf = selectImf(imfs, hTransforms);
 				}
 				else {
 					selectedImf = epoch[channel - 1];
@@ -115,68 +130,70 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @param imfs - Vector with IMFs got from EMD decomposition
 	 * @return IMF that has average amplitude closest to set optimum
 	 */
-	private double[] selectImf(Vector<double[]> imfs) {
+	private double[] selectImf(Vector<double[]> imfs, Vector<HilbertTransform> hTransforms) {
 		double[] selectedImf;
-		double[] avgAmplitudes = new double[imfs.size()];
+		double[] htAmplitudes = new double[hTransforms.size()]; //array of best window amplitudes
+		double[] htFrequecies = new double[hTransforms.size()]; //array of best window frequencies
+		
+		for(int i = 0; i < hTransforms.size(); i++) {
 			
-		for(int i = 0; i < imfs.size(); i++) {
-				
 			int currIndex = minSample;
-			double bestWindowAmplitude = Double.MAX_VALUE;
-				
+			ArrayList<Double> avgWindowAmplitudes = new ArrayList<Double>();
+			ArrayList<Double> avgWindowFrequencies = new ArrayList<Double>();
+			
+			/*
+			 * loop for iterating through one hilbert transform (amplitudes / frequencies arrays)
+			 */
 			while(currIndex <= maxSample) {
 				int windowIndex = 0;
-				double avgWindowAmplitude = 0.0;
+				double windowAmplitude = 0.0;
+				double windowFrequency = 0.0;
 				
-				//System.out.println(currIndex);
-					
+				/*
+				 * loop for iterating through window in amplitudes / frequencies arrays
+				 */
 				while(windowIndex < sampleWindowSize) {
-					avgWindowAmplitude += imfs.get(i)[currIndex];
+					windowAmplitude += hTransforms.get(i).getAmplitudes()[windowIndex];
+					windowFrequency += hTransforms.get(i).getFrequency()[windowIndex];
 					windowIndex++;
 					currIndex++;
 					if(currIndex >= maxSample) break;
 				}
-				avgWindowAmplitude = avgWindowAmplitude / (double)windowIndex;
-					
-				if(Math.abs(optimalAvgAmplitude - avgWindowAmplitude) < Math.abs(optimalAvgAmplitude - bestWindowAmplitude)) {
-					bestWindowAmplitude = avgWindowAmplitude;
-				}
+				
+				avgWindowAmplitudes.add(windowAmplitude / (double)windowIndex);
+				avgWindowFrequencies.add(windowFrequency / (double)windowIndex);
 				
 				if(currIndex >= maxSample) break;
 				else {
 					currIndex = currIndex - sampleWindowSize + sampleWindowShift;
 				}
 			}
-			avgAmplitudes[i] = bestWindowAmplitude;
-		}
 			
-		int bestAmplitudeIndex = selectBestAmplitudeIndex(avgAmplitudes);
-		selectedImf = imfs.get(bestAmplitudeIndex);
+			htAmplitudes[i] = selectBestWindowAmplitude(avgWindowAmplitudes);
+			htFrequecies[i] = selectBestWindowFrequency(avgWindowFrequencies);
+		}
+		
+		selectedImf = imfs.get(selectIndexOfBestIMF(htAmplitudes, htFrequecies));
 		return selectedImf;
 	}
 
-		
-		
-	
-	/**
-	 * Method for selection of an index of the array containing average amplitudes of IMFs.
-	 * This index should correlate with index of particular IMF in the collection with IMFs.
-	 * @param amplitudes - an array with average amplitudes
-	 * @return index of the best amplitude
-	 */
-	private int selectBestAmplitudeIndex(double[] amplitudes) {
-		int index = 0;
-		double bestAmplitude = Double.MAX_VALUE;
-		
-		for(int i = 0; i < amplitudes.length; i++){
-			if(Math.abs(optimalAvgAmplitude - amplitudes[i]) < Math.abs(optimalAvgAmplitude - bestAmplitude)) {
-				bestAmplitude = amplitudes[i];
-				index = i;
-			}
-		}
-		return index;
+	private double selectBestWindowFrequency(ArrayList<Double> avgWindowFrequencies) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private double selectBestWindowAmplitude(ArrayList<Double> avgWindowAmplitudes) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
+	private int selectIndexOfBestIMF(double[] htAmplitudes, double[] htFrequecies) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	
+
 	/**
 	 * Setter for minimal index of IMF array, from which should be algorithm determining desired features.
 	 * @param minSample - starting sample of particular IMF, from which will be features evaluated.
@@ -205,13 +222,40 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	}
 	
 	/**
-	 * Setter for optimal average amplitude of desired feature.
-	 * @param optimalAvgAmplitude - optimal average amplitude
+	 * Setter for minimal amplitude threshold of desired feature.
+	 * @param amplitudeThreshold - minimal amplitude threshold
 	 */
-	public void setOptimalAvgAmplitude(double optimalAvgAmplitude) {
-		this.optimalAvgAmplitude = optimalAvgAmplitude;
+	public void setAmplitudeThreshold(double amplitudeThreshold) {
+		this.amplitudeThreshold = amplitudeThreshold;
 	}
 	
+	/**
+	 * Setter for minimal frequency of desired feature.
+	 * @param minFreq - minimal frequency of desired feature
+	 */
+	public void setMinFreq(double minFreq) {
+		if(minFreq > 0.0) {
+			this.minFreq = minFreq;
+		}
+		else {
+			throw new IllegalArgumentException("Wrong input value! Frequency must have positive value.");
+		}
+	}
+	
+	/**
+	 * Setter for maximal frequency of desired feature.
+	 * @param maxFreq - maximal frequency of desired feature
+	 */
+	public void setMaxFreq(double maxFreq) {
+		if(maxFreq > 0.0) {
+			this.maxFreq = maxFreq;
+		}
+		else {
+			throw new IllegalArgumentException("Wrong input value! Frequency must have positive value.");
+		}
+		
+	}
+
 	/**
 	 * Setter for value representing size of the window, for which is average amplitude calculated.
 	 * @param sampleWindowSize - size of the sample window

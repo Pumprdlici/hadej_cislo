@@ -76,7 +76,6 @@ public class FirFilter implements IFilter {
 		for (int j=0; j<Np; j++) {
 			H[j] = H[M-1-j];
 		}
-    	System.out.println(Arrays.toString(H));
     	return H;
     }
     

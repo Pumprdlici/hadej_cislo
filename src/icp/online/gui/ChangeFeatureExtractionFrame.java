@@ -2,7 +2,6 @@ package icp.online.gui;
 
 import icp.Const;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -18,10 +17,10 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 
@@ -29,7 +28,29 @@ import javax.swing.SpinnerNumberModel;
 public class ChangeFeatureExtractionFrame extends JFrame {
 
 	private MainFrame mainFrame;
-	private JPanel parameters;
+	private JSpinner fasEpochSpinner;
+	private JSpinner fasSubsampleSpinner;
+	private JSpinner fasSkipSpinner;
+	private JSpinner wtEpochSpinner;
+	private JSpinner wtSubsampleSpinner;
+	private JSpinner wtSkipSpinner;
+	private JSpinner waveletNameSpinner;
+	private JSpinner mpEpochSpinner;
+	private JSpinner mpSubsampleSpinner;
+	private JSpinner mpSkipSpinner;
+	private JSpinner hhtEpochSpinner;
+	private JSpinner hhtSubsampleSpinner;
+	private JSpinner hhtSkipSpinner;
+	private final SpinnerNumberModel epochSnm = new SpinnerNumberModel(1, 1,
+			Const.POSTSTIMULUS_VALUES, 1);
+	private final SpinnerNumberModel subsampleSnm = new SpinnerNumberModel(0,
+			0, 512, 1);
+	private final SpinnerNumberModel skipSnm = new SpinnerNumberModel(0, 0,
+			512, 1);
+	private JRadioButton fasBttn;
+	private JRadioButton wtBttn;
+	private JRadioButton mpBttn;
+	private JRadioButton hhtBttn;
 
 	public ChangeFeatureExtractionFrame(MainFrame mainFrame) {
 		super("Choose Feature Extractor and Its Parameters");
@@ -69,142 +90,97 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		JPanel contentJP = new JPanel(mainLayout);
 
 		contentJP.add(createRadioBttns());
-		parameters = createParameters();
-		contentJP.add(parameters);
+		contentJP.add(createParameters());
 
 		return contentJP;
 	}
 
 	private JPanel createRadioBttns() {
-		JRadioButton fasBttn = new JRadioButton("Filter and Subsample");
+		fasBttn = new JRadioButton("Filter and Subsample");
 		fasBttn.setSelected(false);
 		fasBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set extractor
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("fas")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)
-									|| newC.getClass().equals(JSpinner.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					} else {
-						if (c.getName() != null
-								&& c.getName().contains("fas")) {
-							c.setEnabled(true);
-						} else if (c.getClass().equals(JTextField.class)
-								|| c.getClass().equals(JSpinner.class)) {
-							c.setEnabled(false);
-						}
-					}
-				}
+				fasEpochSpinner.setEnabled(true);
+				fasSubsampleSpinner.setEnabled(true);
+				fasSkipSpinner.setEnabled(true);
+				wtEpochSpinner.setEnabled(false);
+				wtSubsampleSpinner.setEnabled(false);
+				wtSkipSpinner.setEnabled(false);
+				waveletNameSpinner.setEnabled(false);
+				mpEpochSpinner.setEnabled(false);
+				mpSubsampleSpinner.setEnabled(false);
+				mpSkipSpinner.setEnabled(false);
+				hhtEpochSpinner.setEnabled(false);
+				hhtSubsampleSpinner.setEnabled(false);
+				hhtSkipSpinner.setEnabled(false);
 			}
 		});
 
-		JRadioButton wtBttn = new JRadioButton("Wavelet Transform");
+		wtBttn = new JRadioButton("Wavelet Transform");
 		wtBttn.setSelected(false);
 		wtBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set extractor
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("wt")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)
-									|| newC.getClass().equals(JSpinner.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					} else {
-						if (c.getName() != null
-								&& c.getName().contains("wt")) {
-							c.setEnabled(true);
-						} else if (c.getClass().equals(JTextField.class)
-								|| c.getClass().equals(JSpinner.class)) {
-							c.setEnabled(false);
-						}
-					}
-				}
+				fasEpochSpinner.setEnabled(false);
+				fasSubsampleSpinner.setEnabled(false);
+				fasSkipSpinner.setEnabled(false);
+				wtEpochSpinner.setEnabled(true);
+				wtSubsampleSpinner.setEnabled(true);
+				wtSkipSpinner.setEnabled(true);
+				waveletNameSpinner.setEnabled(true);
+				mpEpochSpinner.setEnabled(false);
+				mpSubsampleSpinner.setEnabled(false);
+				mpSkipSpinner.setEnabled(false);
+				hhtEpochSpinner.setEnabled(false);
+				hhtSubsampleSpinner.setEnabled(false);
+				hhtSkipSpinner.setEnabled(false);
 			}
 		});
 
-		JRadioButton mpBttn = new JRadioButton("Matching Pursuit");
+		mpBttn = new JRadioButton("Matching Pursuit");
 		mpBttn.setSelected(false);
 		mpBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set extractor
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("mp")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)
-									|| newC.getClass().equals(JSpinner.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					} else {
-						if (c.getName() != null
-								&& c.getName().contains("mp")) {
-							c.setEnabled(true);
-						} else if (c.getClass().equals(JTextField.class)
-								|| c.getClass().equals(JSpinner.class)) {
-							c.setEnabled(false);
-						}
-					}
-				}
+				fasEpochSpinner.setEnabled(false);
+				fasSubsampleSpinner.setEnabled(false);
+				fasSkipSpinner.setEnabled(false);
+				wtEpochSpinner.setEnabled(false);
+				wtSubsampleSpinner.setEnabled(false);
+				wtSkipSpinner.setEnabled(false);
+				waveletNameSpinner.setEnabled(false);
+				mpEpochSpinner.setEnabled(true);
+				mpSubsampleSpinner.setEnabled(true);
+				mpSkipSpinner.setEnabled(true);
+				hhtEpochSpinner.setEnabled(false);
+				hhtSubsampleSpinner.setEnabled(false);
+				hhtSkipSpinner.setEnabled(false);
 			}
 		});
 
-		JRadioButton hhtBttn = new JRadioButton("Hilbert-Huang Transform");
+		hhtBttn = new JRadioButton("Hilbert-Huang Transform");
 		hhtBttn.setSelected(false);
 		hhtBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set extractor
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("hht")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)
-									|| newC.getClass().equals(JSpinner.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					} else {
-						if (c.getName() != null
-								&& c.getName().contains("hht")) {
-							c.setEnabled(true);
-						} else if (c.getClass().equals(JTextField.class)
-								|| c.getClass().equals(JSpinner.class)) {
-							c.setEnabled(false);
-						}
-					}
-				}
+				fasEpochSpinner.setEnabled(false);
+				fasSubsampleSpinner.setEnabled(false);
+				fasSkipSpinner.setEnabled(false);
+				wtEpochSpinner.setEnabled(false);
+				wtSubsampleSpinner.setEnabled(false);
+				wtSkipSpinner.setEnabled(false);
+				waveletNameSpinner.setEnabled(false);
+				mpEpochSpinner.setEnabled(false);
+				mpSubsampleSpinner.setEnabled(false);
+				mpSkipSpinner.setEnabled(false);
+				hhtEpochSpinner.setEnabled(true);
+				hhtSubsampleSpinner.setEnabled(true);
+				hhtSkipSpinner.setEnabled(true);
 			}
 		});
 
@@ -226,130 +202,20 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	}
 
 	private JPanel createParameters() {
-		SpinnerNumberModel epochSnm = new SpinnerNumberModel(1, 1, Const.POSTSTIMULUS_VALUES, 1);
-		SpinnerNumberModel subsampleSnm = new SpinnerNumberModel(0, 0, 512, 1);
-		SpinnerNumberModel skipSnm = new SpinnerNumberModel(0, 0, 512, 1);
-		
+
 		// Filter and Subsample
-		JPanel fasPane = new JPanel();
-		fasPane.setBorder(BorderFactory
-				.createTitledBorder("Filter and Subsample"));
-		fasPane.setLayout(new GridLayout(0, 2));
-		
-		JLabel fasEpochLabel = new JLabel("Epoch Size");
-		fasPane.add(fasEpochLabel);
-		JSpinner fasEpochSpinner = new JSpinner(epochSnm);
-		fasEpochSpinner.setName("fasParameter");
-		fasEpochSpinner.setEnabled(false);
-		fasPane.add(fasEpochSpinner);
-		
-		JLabel fasSubsampleLable = new JLabel("Subsampling Factor");
-		fasPane.add(fasSubsampleLable);
-		JSpinner fasSubsampleSpinner = new JSpinner(subsampleSnm);
-		fasSubsampleSpinner.setName("fasParameter");
-		fasSubsampleSpinner.setEnabled(false);
-		fasPane.add(fasSubsampleSpinner);
-		
-		JLabel fasSkipLabel = new JLabel("Skip Samples");
-		fasPane.add(fasSkipLabel);
-		JSpinner fasSkipSpinner = new JSpinner(skipSnm);
-		fasSkipSpinner.setName("fasParameter");
-		fasSkipSpinner.setEnabled(false);
-		fasPane.add(fasSkipSpinner);
+		JPanel fasPane = createFasPane();
 
 		// Wavelet Transform
-		JPanel wtPane = new JPanel();
-		wtPane.setBorder(BorderFactory.createTitledBorder("Wavelet Transform"));
-		wtPane.setLayout(new GridLayout(0, 2));
-		
-		JLabel wtEpochLabel = new JLabel("Epoch Size");
-		wtPane.add(wtEpochLabel);
-		JSpinner wtEpochSpinner = new JSpinner(epochSnm);
-		wtEpochSpinner.setName("wtParameter");
-		wtEpochSpinner.setEnabled(false);
-		wtPane.add(wtEpochSpinner);
-		
-		JLabel wtSubsampleLable = new JLabel("Subsampling Factor");
-		wtPane.add(wtSubsampleLable);
-		JSpinner wtSubsampleSpinner = new JSpinner(subsampleSnm);
-		wtSubsampleSpinner.setName("wtParameter");
-		wtSubsampleSpinner.setEnabled(false);
-		wtPane.add(wtSubsampleSpinner);
-		
-		JLabel wtSkipLabel = new JLabel("Skip Samples");
-		wtPane.add(wtSkipLabel);
-		JSpinner wtSkipSpinner = new JSpinner(skipSnm);
-		wtSkipSpinner.setName("wtParameter");
-		wtSkipSpinner.setEnabled(false);
-		wtPane.add(wtSkipSpinner);
-		
-		JLabel waveletNameLabel = new JLabel("Wavelet Name");
-		wtPane.add(waveletNameLabel);
-		SpinnerNumberModel waveletSnm = new SpinnerNumberModel(0, 0, 17, 1);
-		JSpinner waveletNameSpinner = new JSpinner(waveletSnm);
-		waveletNameSpinner.setName("wtParameter");
-		waveletNameSpinner.setEnabled(false);
-		wtPane.add(waveletNameSpinner);
+		JPanel wtPane = createWtPane();
 
 		// Matching Pursuit
-		JPanel mpPane = new JPanel();
-		mpPane.setBorder(BorderFactory.createTitledBorder("Matching Pursuit"));
-		mpPane.setLayout(new GridLayout(0, 2));
-		
-		JLabel mpEpochLabel = new JLabel("Epoch Size");
-		mpPane.add(mpEpochLabel);
-		JSpinner mpEpochSpinner = new JSpinner(epochSnm);
-		mpEpochSpinner.setName("mpParameter");
-		mpEpochSpinner.setEnabled(false);
-		mpPane.add(mpEpochSpinner);
-		
-		JLabel mpSubsampleLable = new JLabel("Subsampling Factor");
-		mpPane.add(mpSubsampleLable);
-		JSpinner mpSubsampleSpinner = new JSpinner(subsampleSnm);
-		mpSubsampleSpinner.setName("mpParameter");
-		mpSubsampleSpinner.setEnabled(false);
-		mpPane.add(mpSubsampleSpinner);
-		
-		JLabel mpSkipLabel = new JLabel("Skip Samples");
-		mpPane.add(mpSkipLabel);
-		JSpinner mpSkipSpinner = new JSpinner(skipSnm);
-		mpSkipSpinner.setName("mpParameter");
-		mpSkipSpinner.setEnabled(false);
-		mpPane.add(mpSkipSpinner);
+		JPanel mpPane = createMpPane();
 
 		// Hilbert-Huang Transform
-		JPanel hhtPane = new JPanel();
-		hhtPane.setBorder(BorderFactory
-				.createTitledBorder("Hilbert-Huang Transform"));
-		hhtPane.setLayout(new GridLayout(0, 2));
-		
-		JLabel hhtEpochLabel = new JLabel("Epoch Size");
-		hhtPane.add(hhtEpochLabel);
-		JSpinner hhtEpochSpinner = new JSpinner(epochSnm);
-		hhtEpochSpinner.setName("hhtParameter");
-		hhtEpochSpinner.setEnabled(false);
-		hhtPane.add(hhtEpochSpinner);
-		
-		JLabel hhtSubsampleLable = new JLabel("Subsampling Factor");
-		hhtPane.add(hhtSubsampleLable);
-		JSpinner hhtSubsampleSpinner = new JSpinner(subsampleSnm);
-		hhtSubsampleSpinner.setName("hhtParameter");
-		hhtSubsampleSpinner.setEnabled(false);
-		hhtPane.add(hhtSubsampleSpinner);
-		
-		JLabel hhtSkipLabel = new JLabel("Skip Samples");
-		hhtPane.add(hhtSkipLabel);
-		JSpinner hhtSkipSpinner = new JSpinner(skipSnm);
-		hhtSkipSpinner.setName("hhtParameter");
-		hhtSkipSpinner.setEnabled(false);
-		hhtPane.add(hhtSkipSpinner);
+		JPanel hhtPane = createHhtPane();
 
-		JButton okBttn = new JButton("OK");
-
-		JPanel bttnPane = new JPanel();
-		bttnPane.setLayout(new BoxLayout(bttnPane, BoxLayout.LINE_AXIS));
-		bttnPane.add(Box.createHorizontalGlue());
-		bttnPane.add(okBttn);
+		JPanel bttnPane = createBttnPane();
 
 		JPanel pane = new JPanel();
 		pane.setBorder(BorderFactory.createTitledBorder("Parameters"));
@@ -361,5 +227,169 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		pane.add(bttnPane);
 
 		return pane;
+	}
+
+	private JPanel createFasPane() {
+		JPanel fasPane = new JPanel();
+		fasPane.setBorder(BorderFactory
+				.createTitledBorder("Filter and Subsample"));
+		fasPane.setLayout(new GridLayout(0, 2));
+
+		JLabel fasEpochLabel = new JLabel("Epoch Size");
+		fasPane.add(fasEpochLabel);
+		fasEpochSpinner = new JSpinner(epochSnm);
+		fasEpochSpinner.setEnabled(false);
+		fasPane.add(fasEpochSpinner);
+
+		JLabel fasSubsampleLable = new JLabel("Subsampling Factor");
+		fasPane.add(fasSubsampleLable);
+		fasSubsampleSpinner = new JSpinner(subsampleSnm);
+		fasSubsampleSpinner.setEnabled(false);
+		fasPane.add(fasSubsampleSpinner);
+
+		JLabel fasSkipLabel = new JLabel("Skip Samples");
+		fasPane.add(fasSkipLabel);
+		fasSkipSpinner = new JSpinner(skipSnm);
+		fasSkipSpinner.setEnabled(false);
+		fasPane.add(fasSkipSpinner);
+		return fasPane;
+	}
+
+	private JPanel createWtPane() {
+		JPanel wtPane = new JPanel();
+		wtPane.setBorder(BorderFactory.createTitledBorder("Wavelet Transform"));
+		wtPane.setLayout(new GridLayout(0, 2));
+
+		JLabel wtEpochLabel = new JLabel("Epoch Size");
+		wtPane.add(wtEpochLabel);
+		wtEpochSpinner = new JSpinner(epochSnm);
+		wtEpochSpinner.setEnabled(false);
+		wtPane.add(wtEpochSpinner);
+
+		JLabel wtSubsampleLable = new JLabel("Subsampling Factor");
+		wtPane.add(wtSubsampleLable);
+		wtSubsampleSpinner = new JSpinner(subsampleSnm);
+		wtSubsampleSpinner.setEnabled(false);
+		wtPane.add(wtSubsampleSpinner);
+
+		JLabel wtSkipLabel = new JLabel("Skip Samples");
+		wtPane.add(wtSkipLabel);
+		wtSkipSpinner = new JSpinner(skipSnm);
+		wtSkipSpinner.setEnabled(false);
+		wtPane.add(wtSkipSpinner);
+
+		JLabel waveletNameLabel = new JLabel("Wavelet Name");
+		wtPane.add(waveletNameLabel);
+		SpinnerNumberModel waveletSnm = new SpinnerNumberModel(0, 0, 17, 1);
+		waveletNameSpinner = new JSpinner(waveletSnm);
+		waveletNameSpinner.setEnabled(false);
+		wtPane.add(waveletNameSpinner);
+		return wtPane;
+	}
+
+	private JPanel createMpPane() {
+		JPanel mpPane = new JPanel();
+		mpPane.setBorder(BorderFactory.createTitledBorder("Matching Pursuit"));
+		mpPane.setLayout(new GridLayout(0, 2));
+
+		JLabel mpEpochLabel = new JLabel("Epoch Size");
+		mpPane.add(mpEpochLabel);
+		mpEpochSpinner = new JSpinner(epochSnm);
+		mpEpochSpinner.setEnabled(false);
+		mpPane.add(mpEpochSpinner);
+
+		JLabel mpSubsampleLable = new JLabel("Subsampling Factor");
+		mpPane.add(mpSubsampleLable);
+		mpSubsampleSpinner = new JSpinner(subsampleSnm);
+		mpSubsampleSpinner.setEnabled(false);
+		mpPane.add(mpSubsampleSpinner);
+
+		JLabel mpSkipLabel = new JLabel("Skip Samples");
+		mpPane.add(mpSkipLabel);
+		mpSkipSpinner = new JSpinner(skipSnm);
+		mpSkipSpinner.setEnabled(false);
+		mpPane.add(mpSkipSpinner);
+		return mpPane;
+	}
+
+	private JPanel createHhtPane() {
+		JPanel hhtPane = new JPanel();
+		hhtPane.setBorder(BorderFactory
+				.createTitledBorder("Hilbert-Huang Transform"));
+		hhtPane.setLayout(new GridLayout(0, 2));
+
+		JLabel hhtEpochLabel = new JLabel("Epoch Size");
+		hhtPane.add(hhtEpochLabel);
+		hhtEpochSpinner = new JSpinner(epochSnm);
+		hhtEpochSpinner.setEnabled(false);
+		hhtPane.add(hhtEpochSpinner);
+
+		JLabel hhtSubsampleLable = new JLabel("Subsampling Factor");
+		hhtPane.add(hhtSubsampleLable);
+		hhtSubsampleSpinner = new JSpinner(subsampleSnm);
+		hhtSubsampleSpinner.setEnabled(false);
+		hhtPane.add(hhtSubsampleSpinner);
+
+		JLabel hhtSkipLabel = new JLabel("Skip Samples");
+		hhtPane.add(hhtSkipLabel);
+		hhtSkipSpinner = new JSpinner(skipSnm);
+		hhtSkipSpinner.setEnabled(false);
+		hhtPane.add(hhtSkipSpinner);
+		return hhtPane;
+	}
+
+	private JPanel createBttnPane() {
+		JPanel bttnPane = new JPanel();
+		JButton trainBttn = new JButton("Train");
+		trainBttn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("training");
+			}
+		});
+		JButton okBttn = new JButton("OK");
+		ChangeFeatureExtractionFrame c = this;
+		okBttn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO how to create the classifier with its parameters
+				if(fasBttn.isSelected()) {
+					mainFrame.setTrained(false);
+					
+				} else if(wtBttn.isSelected()) {
+					mainFrame.setTrained(false);
+					
+				} else if(mpBttn.isSelected()) {
+					mainFrame.setTrained(false);
+					
+				} else if(hhtBttn.isSelected()) {
+					mainFrame.setTrained(false);
+					
+				}
+				
+				if (mainFrame.isTrained() == false) {
+					int dialogResult = JOptionPane
+							.showConfirmDialog(
+									null,
+									"You have to train the classifier in order to use it\nWould you like to train it now?",
+									"Classifier is not trained",
+									JOptionPane.YES_NO_OPTION);
+					if (dialogResult == JOptionPane.YES_OPTION) {
+						c.dispose();
+						trainBttn.doClick();
+						mainFrame.setTrained(true);
+					} else {
+						c.dispose();
+					}
+				}
+			}
+		});
+		bttnPane.setLayout(new BoxLayout(bttnPane, BoxLayout.LINE_AXIS));
+		bttnPane.add(Box.createHorizontalGlue());
+		bttnPane.add(trainBttn);
+		bttnPane.add(okBttn);
+		return bttnPane;
 	}
 }

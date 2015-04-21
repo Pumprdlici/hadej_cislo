@@ -31,17 +31,22 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Subsampling factor
 	 */
-	private static final int DOWN_SMPL_FACTOR = 32;
+	private static final int DOWN_SMPL_FACTOR = 1;
 
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private static final int SKIP_SAMPLES = 0;
+	private static final int SKIP_SAMPLES = 200;
 
 	/**
 	 * Name of the wavelet
 	 */
 	private int NAME;
+
+	/**
+	 * Size of feature vector
+	 */
+	private static final int FEATURE_SIZE = 32;
 
 	/**
 	 * Constructor for the wavelet transform feature extraction with default
@@ -59,7 +64,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	 *            - name of the wavelet transform method
 	 */
 	public WaveletTransformFeatureExtraction(int name) {
-		this.NAME = name;
+		setWaveletName(name);
 	}
 
 	/**
@@ -88,19 +93,23 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 
 		ISignalProcessingResult res;
 		int numberOfChannels = CHANNELS.length;
-		double[] features = new double[EPOCH_SIZE * numberOfChannels];
+		double[] features = new double[FEATURE_SIZE * numberOfChannels];
 		int i = 0;
 		for (int channel : CHANNELS) {
-			res = dwt.processSignal(epoch[channel - 1]);
+			double[] currChannelData = new double[EPOCH_SIZE * numberOfChannels];
 			for (int j = 0; j < EPOCH_SIZE; j++) {
-				features[i * EPOCH_SIZE + j] = ((WaveletResultDiscrete) res)
-						.getDwtCoefficients()[j + SKIP_SAMPLES];
+				currChannelData[i * EPOCH_SIZE + j] = epoch[channel - 1][j
+						+ SKIP_SAMPLES];
+			}
+			res = dwt.processSignal(currChannelData);
+			for (int j = 0; j < FEATURE_SIZE; j++) {
+				features[i * FEATURE_SIZE + j] = ((WaveletResultDiscrete) res)
+						.getDwtCoefficients()[j];
 			}
 			i++;
 		}
-		features = SignalProcessing.decimate(features, DOWN_SMPL_FACTOR);
 		features = SignalProcessing.normalize(features);
-
+		
 		return features;
 	}
 
@@ -111,14 +120,15 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	 */
 	@Override
 	public int getFeatureDimension() {
-		return EPOCH_SIZE * CHANNELS.length / DOWN_SMPL_FACTOR;
+		return FEATURE_SIZE * CHANNELS.length / DOWN_SMPL_FACTOR;
 	}
-	
-	
+
 	public void setWaveletName(int name) {
-		if(name >= 0 && name <= 17) {
+		if (name >= 0 && name <= 17) {
 			this.NAME = name;
-		} else throw new IllegalArgumentException("Wavelet name must be >= 0 and <= 17");
+		} else
+			throw new IllegalArgumentException(
+					"Wavelet name must be >= 0 and <= 17");
 	}
 
 }

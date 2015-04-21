@@ -1,12 +1,19 @@
 package icp.online.gui;
 
-import java.awt.Component;
+import icp.application.classification.CorrelationClassifier;
+import icp.application.classification.IERPClassifier;
+import icp.application.classification.KNNClassifier;
+import icp.application.classification.LinearDiscriminantAnalysisClassifier;
+import icp.application.classification.MLPClassifier;
+import icp.application.classification.SVMClassifier;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,16 +23,24 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
+import javax.swing.SpinnerNumberModel;
 
 @SuppressWarnings("serial")
 public class ChangeClassifierFrame extends JFrame {
 
 	private MainFrame mainFrame;
-	private JPanel parameters;
+	private JSpinner middleNeuronsSpinner;
+	private JSpinner neighborsNumberSpinner;
+	private JRadioButton mlpBttn;
+	private JRadioButton knnBttn;
+	private JRadioButton ldaBttn;
+	private JRadioButton svmBttn;
+	private JRadioButton correlationBttn;
 
 	public ChangeClassifierFrame(MainFrame mainFrame) {
 		super("Choose Classifier and its Parameters");
@@ -45,17 +60,19 @@ public class ChangeClassifierFrame extends JFrame {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setEscListener(this);
 	}
-	
+
 	private void setEscListener(ChangeClassifierFrame frame) {
 		ActionListener escListener = new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 			}
 		};
-		
-		this.getRootPane().registerKeyboardAction(escListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+		this.getRootPane().registerKeyboardAction(escListener,
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	private JPanel createClassifierFrame() {
@@ -63,130 +80,69 @@ public class ChangeClassifierFrame extends JFrame {
 		JPanel contentJP = new JPanel(mainLayout);
 
 		contentJP.add(createRadioBttns());
-		parameters = createParameters();
-		contentJP.add(parameters);
+		contentJP.add(createParameters());
 
 		return contentJP;
 	}
 
 	private JPanel createRadioBttns() {
-		JRadioButton mlpBttn = new JRadioButton("MLP");
+		mlpBttn = new JRadioButton("MLP");
 		mlpBttn.setSelected(false);
 		mlpBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO set classifier
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("mlp")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					}
-				}
+				middleNeuronsSpinner.setEnabled(true);
+				neighborsNumberSpinner.setEnabled(false);
 			}
 		});
 
-		JRadioButton knnBttn = new JRadioButton("K Nearest Neighbors");
+		knnBttn = new JRadioButton("K Nearest Neighbors");
 		knnBttn.setSelected(false);
 		knnBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO set classifier
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("knn")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					}
-				}
+				middleNeuronsSpinner.setEnabled(false);
+				neighborsNumberSpinner.setEnabled(true);
 			}
 		});
 
-		JRadioButton ldaBttn = new JRadioButton("Linear Discriminant Analysis");
+		ldaBttn = new JRadioButton("Linear Discriminant Analysis");
 		ldaBttn.setSelected(false);
 		ldaBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO set classifier
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("lda")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					}
-				}
+				middleNeuronsSpinner.setEnabled(false);
+				neighborsNumberSpinner.setEnabled(false);
 			}
 		});
 
-		JRadioButton svmBttn = new JRadioButton("Support Vector Machines");
+		svmBttn = new JRadioButton("Support Vector Machines");
 		svmBttn.setSelected(false);
 		svmBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO set classifier
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("svm")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					}
-				}
+				// TODO set classifier)
+				middleNeuronsSpinner.setEnabled(false);
+				neighborsNumberSpinner.setEnabled(false);
 			}
 		});
 
-		JRadioButton correlationBttn = new JRadioButton("Correlation");
+		correlationBttn = new JRadioButton("Correlation");
 		correlationBttn.setSelected(false);
 		correlationBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO set classifier
-				Component cmp[] = parameters.getComponents();
-				for (Component c : cmp) {
-					if (c.getClass().equals(JPanel.class)) {
-						Component[] newCmp = ((JPanel) c).getComponents();
-						for (Component newC : newCmp) {
-							if (newC.getName() != null
-									&& newC.getName().contains("correlation")) {
-								newC.setEnabled(true);
-							} else if (newC.getClass().equals(JTextField.class)) {
-								newC.setEnabled(false);
-							}
-						}
-					}
-				}
+				middleNeuronsSpinner.setEnabled(false);
+				neighborsNumberSpinner.setEnabled(false);
 			}
 		});
 
@@ -210,58 +166,22 @@ public class ChangeClassifierFrame extends JFrame {
 	}
 
 	private JPanel createParameters() {
-		JPanel mlpPane = new JPanel();
-		mlpPane.setBorder(BorderFactory.createTitledBorder("MLP"));
-		mlpPane.setLayout(new GridLayout(0, 2));
-		JLabel inputNeuronsLabel = new JLabel("Number of Input Neurons");
-		mlpPane.add(inputNeuronsLabel);
-		JTextField inputNeuronsText = new JTextField();
-		inputNeuronsText.setName("mlpParameter");
-		inputNeuronsText.setEnabled(false);
-		mlpPane.add(inputNeuronsText);
-		JLabel middleNeuronsLabel = new JLabel("Number of Middle Neurons");
-		mlpPane.add(middleNeuronsLabel);
-		JTextField middleNeuronsText = new JTextField();
-		middleNeuronsText.setName("mlpParameter");
-		middleNeuronsText.setEnabled(false);
-		mlpPane.add(middleNeuronsText);
-		JLabel outputNeuronsLabel = new JLabel("Number of Output Neurons");
-		mlpPane.add(outputNeuronsLabel);
-		JTextField outputNeuronsText = new JTextField();
-		outputNeuronsText.setName("mlpParameter");
-		outputNeuronsText.setEnabled(false);
-		mlpPane.add(outputNeuronsText);
+		// MLP
+		JPanel mlpPane = createMlpPane();
 
-		JPanel knnPane = new JPanel();
-		knnPane.setBorder(BorderFactory
-				.createTitledBorder("K Nearest Neighbors"));
-		knnPane.setLayout(new GridLayout(0, 2));
-		JLabel neighborsNumberLabel = new JLabel("Number of Neighbors");
-		knnPane.add(neighborsNumberLabel);
-		JTextField neighborsNumberText = new JTextField();
-		neighborsNumberText.setName("knnParameter");
-		neighborsNumberText.setEnabled(false);
-		knnPane.add(neighborsNumberText);
+		// KNN
+		JPanel knnPane = createKnnPane();
 
-		JPanel ldaPane = new JPanel();
-		ldaPane.setBorder(BorderFactory
-				.createTitledBorder("Linear Discriminant Analysis"));
-		ldaPane.add(new JLabel("No parameters for this classifier"));
+		// LDA
+		JPanel ldaPane = createLdaPane();
 
-		JPanel svmPane = new JPanel();
-		svmPane.setBorder(BorderFactory
-				.createTitledBorder("Support Vector Machines"));
+		// SVM
+		JPanel svmPane = createSvmPane();
 
-		JPanel correlationPane = new JPanel();
-		correlationPane.setBorder(BorderFactory
-				.createTitledBorder("Correlation"));
+		// Correlation
+		JPanel correlationPane = createCorrelationPane();
 
-		JButton okBttn = new JButton("OK");
-
-		JPanel bttnPane = new JPanel();
-		bttnPane.setLayout(new BoxLayout(bttnPane, BoxLayout.LINE_AXIS));
-		bttnPane.add(Box.createHorizontalGlue());
-		bttnPane.add(okBttn);
+		JPanel bttnPane = createBttnPane();
 
 		JPanel pane = new JPanel();
 		pane.setBorder(BorderFactory.createTitledBorder("Parameters"));
@@ -274,5 +194,146 @@ public class ChangeClassifierFrame extends JFrame {
 		pane.add(bttnPane);
 
 		return pane;
+	}
+
+	private JPanel createMlpPane() {
+		JPanel mlpPane = new JPanel();
+		mlpPane.setBorder(BorderFactory.createTitledBorder("MLP"));
+		mlpPane.setLayout(new GridLayout(0, 2));
+		JLabel middleNeuronsLabel = new JLabel("Number of Middle Neurons");
+		mlpPane.add(middleNeuronsLabel);
+		SpinnerNumberModel middleNeuronsSnm = new SpinnerNumberModel(8, 1, 750,
+				1);
+		middleNeuronsSpinner = new JSpinner(middleNeuronsSnm);
+		middleNeuronsSpinner.setEnabled(false);
+		mlpPane.add(middleNeuronsSpinner);
+		return mlpPane;
+	}
+
+	private JPanel createKnnPane() {
+		JPanel knnPane = new JPanel();
+		knnPane.setBorder(BorderFactory
+				.createTitledBorder("K Nearest Neighbors"));
+		knnPane.setLayout(new GridLayout(0, 2));
+		JLabel neighborsNumberLabel = new JLabel("Number of Neighbors");
+		knnPane.add(neighborsNumberLabel);
+		SpinnerNumberModel neighborsNumberSnm = new SpinnerNumberModel(1, 1,
+				750, 1);
+		neighborsNumberSpinner = new JSpinner(neighborsNumberSnm);
+		neighborsNumberSpinner.setEnabled(false);
+		knnPane.add(neighborsNumberSpinner);
+		return knnPane;
+	}
+
+	private JPanel createLdaPane() {
+		JPanel ldaPane = new JPanel();
+		ldaPane.setBorder(BorderFactory
+				.createTitledBorder("Linear Discriminant Analysis"));
+		ldaPane.add(new JLabel("No parameters for this classifier"));
+		return ldaPane;
+	}
+
+	private JPanel createSvmPane() {
+		JPanel svmPane = new JPanel();
+		svmPane.setBorder(BorderFactory
+				.createTitledBorder("Support Vector Machines"));
+		return svmPane;
+	}
+
+	private JPanel createCorrelationPane() {
+		JPanel correlationPane = new JPanel();
+		correlationPane.setBorder(BorderFactory
+				.createTitledBorder("Correlation"));
+		return correlationPane;
+	}
+
+	private JPanel createBttnPane() {
+		JPanel bttnPane = new JPanel();
+		JButton trainBttn = new JButton("Train");
+		trainBttn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("training");
+			}
+		});
+		JButton okBttn = new JButton("OK");
+		ChangeClassifierFrame c = this;
+		okBttn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO create classifiers
+				if (mlpBttn.isSelected()) {
+					mainFrame.setTrained(false);
+
+					int input = mainFrame.getFe().getFeatureDimension();
+					int output = 1;
+					int middle = (int) middleNeuronsSpinner.getValue();
+					ArrayList<Integer> nnStructure = new ArrayList<Integer>();
+					nnStructure.add(input);
+					nnStructure.add(middle);
+					nnStructure.add(output);
+
+					IERPClassifier classifier = new MLPClassifier(nnStructure);
+					classifier.setFeatureExtraction(mainFrame.getFe());
+					mainFrame.setClassifier(classifier);
+				} else if (knnBttn.isSelected()) {
+					mainFrame.setTrained(false);
+
+					int neighborsNumber = (int) neighborsNumberSpinner
+							.getValue();
+
+					IERPClassifier classifier = new KNNClassifier(
+							neighborsNumber);
+					classifier.setFeatureExtraction(mainFrame.getFe());
+					mainFrame.setClassifier(classifier);
+				} else if (ldaBttn.isSelected()) {
+					mainFrame.setTrained(false);
+
+					IERPClassifier classifier = new LinearDiscriminantAnalysisClassifier();
+					classifier.setFeatureExtraction(mainFrame.getFe());
+					mainFrame.setClassifier(classifier);
+				} else if (svmBttn.isSelected()) {
+					mainFrame.setTrained(false);
+
+					IERPClassifier classifier;
+					try {
+						classifier = new SVMClassifier();
+						classifier.setFeatureExtraction(mainFrame.getFe());
+						mainFrame.setClassifier(classifier);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				} else if (correlationBttn.isSelected()) {
+					mainFrame.setTrained(false);
+
+					IERPClassifier classifier = new CorrelationClassifier();
+					classifier.setFeatureExtraction(mainFrame.getFe());
+					mainFrame.setClassifier(classifier);
+				}
+
+				if (mainFrame.isTrained() == false) {
+					int dialogResult = JOptionPane
+							.showConfirmDialog(
+									null,
+									"You have to train the classifier in order to use it\nWould you like to train it now?",
+									"Classifier is not trained",
+									JOptionPane.YES_NO_OPTION);
+					if (dialogResult == JOptionPane.YES_OPTION) {
+						c.dispose();
+						trainBttn.doClick();
+						mainFrame.setTrained(true);
+					} else {
+						c.dispose();
+					}
+				}
+			}
+		});
+		bttnPane.setLayout(new BoxLayout(bttnPane, BoxLayout.LINE_AXIS));
+		bttnPane.add(Box.createHorizontalGlue());
+		bttnPane.add(trainBttn);
+		bttnPane.add(okBttn);
+		return bttnPane;
 	}
 }

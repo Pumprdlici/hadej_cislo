@@ -1,5 +1,6 @@
 package icp.application.classification;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,7 +10,9 @@ import java.util.Scanner;
  * @author Karel Silhavy
  *
  */
-public class CorrelationAlgorithms {
+public class CorrelationAlgorithms implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Path to the file which contains waveform of P300.
@@ -66,9 +69,6 @@ public class CorrelationAlgorithms {
 			if(result < div) {
 				result = div;
 			}
-		}
-		if(result < 0) {
-			result = 0;
 		}
 		
 		if(switched) {

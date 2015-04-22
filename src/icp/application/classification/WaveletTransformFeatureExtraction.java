@@ -96,9 +96,9 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 		double[] features = new double[FEATURE_SIZE * numberOfChannels];
 		int i = 0;
 		for (int channel : CHANNELS) {
-			double[] currChannelData = new double[EPOCH_SIZE * numberOfChannels];
+			double[] currChannelData = new double[EPOCH_SIZE];
 			for (int j = 0; j < EPOCH_SIZE; j++) {
-				currChannelData[i * EPOCH_SIZE + j] = epoch[channel - 1][j
+				currChannelData[j] = epoch[channel - 1][j
 						+ SKIP_SAMPLES];
 			}
 			res = dwt.processSignal(currChannelData);

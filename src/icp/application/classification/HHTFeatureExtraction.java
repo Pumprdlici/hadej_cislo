@@ -1,6 +1,5 @@
 package icp.application.classification;
 
-import icp.Const;
 import icp.algorithm.math.SignalProcessing;
 
 import java.util.ArrayList;
@@ -17,9 +16,9 @@ import hht.hilbertTransform.HilbertTransform;
  *
  */
 public class HHTFeatureExtraction implements IFeatureExtraction {
-
+	
 	private static final int[] CHANNELS = {1, 2, 3};
-	private static final int SKIP_SAMPLES = 200;
+	private static final int SKIP_SAMPLES = 150;
 	private static final int EPOCH_SIZE = 512;
 	private static final int SAMPLING_FREQUENCY = 1000;
 	private static final int DOWN_SMPL_FACTOR = 6;
@@ -110,10 +109,15 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @return array with selected samples
 	 */
 	private double[] selectEpochSamples(double[] epochChannel) {
-		double[] epochSamples = new double[EPOCH_SIZE];
+		int size = EPOCH_SIZE;
+		if(EPOCH_SIZE > epochChannel.length) size = epochChannel.length;
 		
-		for(int i = 0; i < EPOCH_SIZE; i++) {
-			epochSamples[i] = epochChannel[i+SKIP_SAMPLES];
+		double[] epochSamples = new double[size];
+		
+		for(int i = 0; i < size; i++) {
+			if ((i+SKIP_SAMPLES) < epochChannel.length) {
+				epochSamples[i] = epochChannel[i+SKIP_SAMPLES];
+			}
 		}
 		
 		return epochSamples;
@@ -128,22 +132,31 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 */
 	private double[] processFeatures(double[] epochSamples) {
 		
-		double[] processedFeatures = new double[maxSample-minSample];
+		int size = maxSample-minSample;
+		if(size > epochSamples.length) size = epochSamples.length;
+		
+		double[] processedFeatures = new double[size];
 		
 		try{
 			HilbertHuangTransform hht = HhtSimpleRunner.runHht(EMD_CONF_FILE , epochSamples, SAMPLING_FREQUENCY);
 			Vector<HilbertTransform> hTransforms = hht.getHilbertTransform();
 			
 			if(hTransforms.size() > 0) {
-				processedFeatures = Arrays.copyOfRange(selectFeatures(hTransforms), minSample, maxSample);
+				if(size < epochSamples.length) {
+					processedFeatures = Arrays.copyOfRange(selectFeatures(hTransforms), minSample-SKIP_SAMPLES, maxSample-SKIP_SAMPLES);
+				}
+				else {
+					processedFeatures = Arrays.copyOf(selectFeatures(hTransforms), size);
+				}
 			}
 			else {
-				int featureIndex = 0;
-				
-				for(int i = (minSample-SKIP_SAMPLES); i < (maxSample-SKIP_SAMPLES); i++) {
-					processedFeatures[featureIndex] = epochSamples[i];
-					featureIndex++;
+				if(size < epochSamples.length) {
+					processedFeatures = Arrays.copyOfRange(epochSamples, minSample-SKIP_SAMPLES, maxSample-SKIP_SAMPLES);
 				}
+				else {
+					processedFeatures = epochSamples;
+				}
+				
 			}
 		}
 		catch(Exception e) {
@@ -293,28 +306,28 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	
 	/**
 	 * Setter for minimal index of IMF array, from which should be algorithm determining desired features.
-	 * @param minSample - starting sample of particular IMF, from which will be features evaluated.
+	 * @param minSample - starting sample of particular hilbert transform, from which will be features evaluated.
 	 */
 	public void setMinSample(int minSample) {
-		if(minSample < EPOCH_SIZE && minSample >= 0) {
+		if(minSample >= 0) {
 			this.minSample = minSample;
 		}
 		else {
-			throw new IllegalArgumentException("Wrong input value! Max. sample has to be in the interval <0, "+Const.POSTSTIMULUS_VALUES+").");
+			throw new IllegalArgumentException("Wrong input value! Min. sample has to be non-negative.");
 		}
 	}
 
 	/**
 	 * Setter for maximal index of IMF array, from which should be algorithm determining desired feature.
-	 * @param maxSample - ending sample of particular IMF, to which will be features evaluated.
+	 * @param maxSample - ending sample of particular hilbert transform, to which will be features evaluated.
 	 */
 	public void setMaxSample(int maxSample) {
-		if(maxSample < EPOCH_SIZE && maxSample >= 0)
+		if(maxSample >= 0)
 		{
 			this.maxSample = maxSample;
 		}
 		else {
-			throw new IllegalArgumentException("Wrong input value! Max. sample has to be in the interval <0, "+Const.POSTSTIMULUS_VALUES+").");
+			throw new IllegalArgumentException("Wrong input value! Max. sample has to be non-negative.");
 		}
 	}
 	
@@ -358,11 +371,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @param sampleWindowSize - size of the sample window
 	 */
 	public void setSampleWindowSize(int sampleWindowSize) {
-		if(sampleWindowSize > 0 && sampleWindowSize <= EPOCH_SIZE) {
+		if(sampleWindowSize > 0) {
 			this.sampleWindowSize = sampleWindowSize;
 		}
 		else {
-			throw new IllegalArgumentException("Wrong input value! Size of the sample window has to be in the interval (0, "+Const.POSTSTIMULUS_VALUES+").");
+			throw new IllegalArgumentException("Wrong input value! Size of the sample window has to be greater than 0.");
 		}
 	}
 	
@@ -372,11 +385,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @param sampleWindowShift - number of samples for shift of the sample window
 	 */
 	public void setSampleWindowShift(int sampleWindowShift) {
-		if(sampleWindowShift > 0 && sampleWindowShift < EPOCH_SIZE) {
+		if(sampleWindowShift > 0) {
 			this.sampleWindowShift = sampleWindowShift;
 		}
 		else {
-			throw new IllegalArgumentException("Wrong input value! Shift of the sample window has to be in the interval (0, "+Const.POSTSTIMULUS_VALUES+").");
+			throw new IllegalArgumentException("Wrong input value! Shift of the sample window has to be greater than 0.");
 		}
 	}
 	

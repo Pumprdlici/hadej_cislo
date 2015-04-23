@@ -28,7 +28,7 @@ public class FilterFeatureExtraction implements IFeatureExtraction {
        int i = 0;
 
        // filter the data
-       IFilter lowPassFilter = new FirFilter(lowPassCoeffs);
+       IFilter lowPassFilter = new FirFilter();
        for (int channel : CHANNELS) {
            double[] currChannelData = epoch[channel - 1];
            for (int j = 0; j < EPOCH_SIZE; j++) {

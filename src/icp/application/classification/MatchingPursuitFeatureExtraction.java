@@ -17,18 +17,18 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Number of samples to be used - Fs = 1000 Hz expected
 	 */
-	private static final int EPOCH_SIZE = 1024;
+	private static final int EPOCH_SIZE = 512;
 	
 	/**
 	 * Subsampling factor
 	 */
-	private static final int DOWN_SMPL_FACTOR = 8;
+	private static final int DOWN_SMPL_FACTOR = 2;
 
 	
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private static final int SKIP_SAMPLES = 0;
+	private static final int SKIP_SAMPLES = 300;
 	
 	/**
 	 * Private instance of singleton.
@@ -52,8 +52,8 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 		
 		int k = 0;
 		for(int i = 0; i < numberOfChannels; i++) {
-			for(int j = 0; j < (EPOCH_SIZE  / DOWN_SMPL_FACTOR); j++) {
-				signal[k] = epoch[i][j + SKIP_SAMPLES];
+			for(int j = 0; j < (EPOCH_SIZE  / DOWN_SMPL_FACTOR - SKIP_SAMPLES); j++) {
+				signal[k] = epoch[i][j * DOWN_SMPL_FACTOR + SKIP_SAMPLES];
 				k++;
 			}
 		}

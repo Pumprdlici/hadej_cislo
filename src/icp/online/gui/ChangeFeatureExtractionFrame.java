@@ -19,6 +19,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,23 +37,44 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 	private JSpinner epochSpinner;
 
+	private final SpinnerNumberModel epochSnm = new SpinnerNumberModel(512, 1,
+			Const.POSTSTIMULUS_VALUES, 1);
+
 	private JSpinner subsampleSpinner;
+
+	private final SpinnerNumberModel subsampleSnm = new SpinnerNumberModel(1,
+			1, Const.POSTSTIMULUS_VALUES, 1);
 
 	private JSpinner skipSpinner;
 
-	private JSpinner waveletNameSpinner;
-
-	private final SpinnerNumberModel epochSnm = new SpinnerNumberModel(512, 1,
-
-	Const.POSTSTIMULUS_VALUES, 1);
-
-	private final SpinnerNumberModel subsampleSnm = new SpinnerNumberModel(1,
-
-	1, Const.POSTSTIMULUS_VALUES, 1);
-
 	private final SpinnerNumberModel skipSnm = new SpinnerNumberModel(0, 0,
+			Const.POSTSTIMULUS_VALUES, 1);
 
-	Const.POSTSTIMULUS_VALUES, 1);
+	private JComboBox<String> waveletNameComboBox;
+
+	private String[] waveletNames = { "Coiflet 6", "Coiflet 12", "Coiflet 18",
+			"Coiflet 24", "Coiflet 30", "Daubechies 4", "Daubechies 6",
+			"Daubechies 8", "Daubechies 10", "Daubechies 12", "Daubechies 14",
+			"Daubechies 16", "Daubechies 18", "Daubechies 20", "Haar",
+			"Symmlet 4", "Symmlet 6", "Symmlet 8" };
+
+	private JSpinner hhtMinSample;
+
+	private JSpinner hhtMaxSample;
+
+	private JSpinner hhtSampleWindowSize;
+
+	private JSpinner hhtSampleWindowShift;
+
+	private JSpinner hhtAmplitudeThreshold;
+
+	private JSpinner hhtMinFreq;
+
+	private JSpinner hhtMaxFreq;
+
+	private JComboBox<String> hhtTypeOfFeatures;
+
+	private String[] hhtFeatureTypes = { "Frequencies", "Amplitudes" };
 
 	private JRadioButton fasBttn;
 
@@ -63,7 +85,6 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	private JRadioButton hhtBttn;
 
 	public ChangeFeatureExtractionFrame(MainFrame mainFrame) {
-
 		super("Choose Feature Extractor and Its Parameters");
 		this.mainFrame = mainFrame;
 		this.getContentPane().add(createClassifierFrame());
@@ -71,7 +92,6 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		this.pack();
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		// TODO this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
 		this.setSize(900, 600);
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2);
@@ -111,6 +131,16 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO disable other input fields
+				subsampleSpinner.setEnabled(true);
+				waveletNameComboBox.setEnabled(false);
+				hhtMinSample.setEnabled(false);
+				hhtMaxSample.setEnabled(false);
+				hhtSampleWindowSize.setEnabled(false);
+				hhtSampleWindowShift.setEnabled(false);
+				hhtAmplitudeThreshold.setEnabled(false);
+				hhtMinFreq.setEnabled(false);
+				hhtMaxFreq.setEnabled(false);
+				hhtTypeOfFeatures.setEnabled(false);
 			}
 		});
 
@@ -121,6 +151,16 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO disable other input fields
+				subsampleSpinner.setEnabled(false);
+				waveletNameComboBox.setEnabled(true);
+				hhtMinSample.setEnabled(false);
+				hhtMaxSample.setEnabled(false);
+				hhtSampleWindowSize.setEnabled(false);
+				hhtSampleWindowShift.setEnabled(false);
+				hhtAmplitudeThreshold.setEnabled(false);
+				hhtMinFreq.setEnabled(false);
+				hhtMaxFreq.setEnabled(false);
+				hhtTypeOfFeatures.setEnabled(false);
 			}
 		});
 
@@ -131,6 +171,16 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO disable other input fields
+				subsampleSpinner.setEnabled(true);
+				waveletNameComboBox.setEnabled(false);
+				hhtMinSample.setEnabled(false);
+				hhtMaxSample.setEnabled(false);
+				hhtSampleWindowSize.setEnabled(false);
+				hhtSampleWindowShift.setEnabled(false);
+				hhtAmplitudeThreshold.setEnabled(false);
+				hhtMinFreq.setEnabled(false);
+				hhtMaxFreq.setEnabled(false);
+				hhtTypeOfFeatures.setEnabled(false);
 			}
 		});
 
@@ -141,6 +191,16 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO disable other input fields
+				subsampleSpinner.setEnabled(true);
+				waveletNameComboBox.setEnabled(false);
+				hhtMinSample.setEnabled(true);
+				hhtMaxSample.setEnabled(true);
+				hhtSampleWindowSize.setEnabled(true);
+				hhtSampleWindowShift.setEnabled(true);
+				hhtAmplitudeThreshold.setEnabled(true);
+				hhtMinFreq.setEnabled(true);
+				hhtMaxFreq.setEnabled(true);
+				hhtTypeOfFeatures.setEnabled(true);
 			}
 		});
 
@@ -242,13 +302,12 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		JLabel waveletNameLabel = new JLabel("Wavelet Name");
 		wtPane.add(waveletNameLabel);
 
-		SpinnerNumberModel waveletSnm = new SpinnerNumberModel(0, 0, 17, 1);
-		waveletNameSpinner = new JSpinner(waveletSnm);
-		waveletNameSpinner.setEnabled(false);
-		wtPane.add(waveletNameSpinner);
+		waveletNameComboBox = new JComboBox<String>(waveletNames);
+		waveletNameComboBox.setSelectedIndex(8);
+		waveletNameComboBox.setEnabled(false);
+		wtPane.add(waveletNameComboBox);
 
 		return wtPane;
-
 	}
 
 	private JPanel createMpPane() {
@@ -265,6 +324,77 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		hhtPane.setBorder(BorderFactory
 				.createTitledBorder("Hilbert-Huang Transform"));
 		hhtPane.setLayout(new GridLayout(0, 2));
+
+		JLabel minSampleLabel = new JLabel("Min Sample");
+		hhtPane.add(minSampleLabel);
+
+		SpinnerNumberModel minSampleSnm = new SpinnerNumberModel(0, 0,
+				Const.POSTSTIMULUS_VALUES, 1);
+		hhtMinSample = new JSpinner(minSampleSnm);
+		hhtMinSample.setEnabled(false);
+		hhtPane.add(hhtMinSample);
+
+		JLabel maxSampleLabel = new JLabel("Max Sample");
+		hhtPane.add(maxSampleLabel);
+
+		SpinnerNumberModel maxSampleSnm = new SpinnerNumberModel(0, 0,
+				Const.POSTSTIMULUS_VALUES, 1);
+		hhtMaxSample = new JSpinner(maxSampleSnm);
+		hhtMaxSample.setEnabled(false);
+		hhtPane.add(hhtMaxSample);
+
+		JLabel sampleWindowsSizeLabel = new JLabel("Sample Window Size");
+		hhtPane.add(sampleWindowsSizeLabel);
+
+		SpinnerNumberModel sampleWindowSizeSnn = new SpinnerNumberModel(1, 1,
+				Const.POSTSTIMULUS_VALUES, 1);
+		hhtSampleWindowSize = new JSpinner(sampleWindowSizeSnn);
+		hhtSampleWindowSize.setEnabled(false);
+		hhtPane.add(hhtSampleWindowSize);
+
+		JLabel sampleWindowsShiftLabel = new JLabel("Sample Window Shift");
+		hhtPane.add(sampleWindowsShiftLabel);
+
+		SpinnerNumberModel sampleWindowShiftSnn = new SpinnerNumberModel(1, 1,
+				Const.POSTSTIMULUS_VALUES - 1, 1);
+		hhtSampleWindowShift = new JSpinner(sampleWindowShiftSnn);
+		hhtSampleWindowShift.setEnabled(false);
+		hhtPane.add(hhtSampleWindowShift);
+
+		JLabel amplitudeThresholdLabel = new JLabel("Amplitude Threshold");
+		hhtPane.add(amplitudeThresholdLabel);
+
+		SpinnerNumberModel amplitudeThresholdSnn = new SpinnerNumberModel(0, 0,
+				Const.POSTSTIMULUS_VALUES, 1);
+		hhtAmplitudeThreshold = new JSpinner(amplitudeThresholdSnn);
+		hhtAmplitudeThreshold.setEnabled(false);
+		hhtPane.add(hhtAmplitudeThreshold);
+
+		JLabel minFreqLabel = new JLabel("Min Frequency");
+		hhtPane.add(minFreqLabel);
+
+		SpinnerNumberModel minFreqSnn = new SpinnerNumberModel(1, 1,
+				Const.POSTSTIMULUS_VALUES, 1);
+		hhtMinFreq = new JSpinner(minFreqSnn);
+		hhtMinFreq.setEnabled(false);
+		hhtPane.add(hhtMinFreq);
+
+		JLabel maxFreqLabel = new JLabel("Max Frequency");
+		hhtPane.add(maxFreqLabel);
+
+		SpinnerNumberModel maxFreqSnn = new SpinnerNumberModel(1, 1,
+				Const.POSTSTIMULUS_VALUES, 1);
+		hhtMaxFreq = new JSpinner(maxFreqSnn);
+		hhtMaxFreq.setEnabled(false);
+		hhtPane.add(hhtMaxFreq);
+
+		JLabel typeOfFeatures = new JLabel("Type of Features");
+		hhtPane.add(typeOfFeatures);
+
+		hhtTypeOfFeatures = new JComboBox<String>(hhtFeatureTypes);
+		hhtTypeOfFeatures.setSelectedIndex(0);
+		hhtTypeOfFeatures.setEnabled(false);
+		hhtPane.add(hhtTypeOfFeatures);
 
 		return hhtPane;
 	}
@@ -317,17 +447,38 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					cc.setVisible(true);
 
 				} else if (hhtBttn.isSelected()) {
+					if (hhtConditions() == true) {
+						mainFrame.setTrained(false);
 
-					mainFrame.setTrained(false);
+						IFeatureExtraction fe = new HHTFeatureExtraction();
+						((HHTFeatureExtraction) fe)
+								.setMinSample((int) hhtMinSample.getValue());
+						((HHTFeatureExtraction) fe)
+								.setMaxSample((int) hhtMaxSample.getValue());
+						((HHTFeatureExtraction) fe)
+								.setSampleWindowSize((int) hhtSampleWindowSize
+										.getValue());
+						((HHTFeatureExtraction) fe)
+								.setSampleWindowShift((int) hhtSampleWindowShift
+										.getValue());
+						((HHTFeatureExtraction) fe)
+								.setAmplitudeThreshold((int) hhtAmplitudeThreshold
+										.getValue());
+						((HHTFeatureExtraction) fe).setMinFreq((int) hhtMinFreq
+								.getValue());
+						((HHTFeatureExtraction) fe).setMaxFreq((int) hhtMaxFreq
+								.getValue());
+						((HHTFeatureExtraction) fe)
+								.setTypeOfFeatures(hhtTypeOfFeatures
+										.getSelectedIndex() + 1);
 
-					IFeatureExtraction fe = new HHTFeatureExtraction();
+						c.dispose();
 
-					c.dispose();
+						ChangeClassifierFrame cc = new ChangeClassifierFrame(
+								mainFrame, fe);
 
-					ChangeClassifierFrame cc = new ChangeClassifierFrame(
-							mainFrame, fe);
-					cc.setVisible(true);
-
+						cc.setVisible(true);
+					}
 				} else {
 					JOptionPane
 							.showMessageDialog(null,
@@ -341,5 +492,43 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		bttnPane.add(okBttn);
 
 		return bttnPane;
+	}
+
+	private boolean hhtConditions() {
+		if (((int) hhtMinSample.getValue()) >= ((int) hhtMaxSample.getValue())) {
+			JOptionPane.showMessageDialog(null,
+					"Min Sample must be < Max Sample");
+			return false;
+		}
+		if (((int) hhtSampleWindowShift.getValue()) > ((int) hhtSampleWindowSize
+				.getValue())) {
+			JOptionPane.showMessageDialog(null,
+					"Sample Window Shift must be <= Sample Window Size");
+			return false;
+		}
+		if (((int) hhtMinFreq.getValue()) > ((int) hhtMaxFreq.getValue())) {
+			JOptionPane.showMessageDialog(null,
+					"Min Frequency must be <= Max Frequency");
+			return false;
+		}
+		if ((((int) hhtMaxSample.getValue()) - ((int) hhtMinSample.getValue())) > ((int) epochSpinner
+				.getValue())) {
+			JOptionPane.showMessageDialog(null,
+					"(Max Sample - Min Sample) must be <= Epoch Size");
+			return false;
+		}
+		if (((int) hhtSampleWindowSize.getValue()) > (((int) hhtMaxSample
+				.getValue()) - ((int) hhtMinSample.getValue()))) {
+			JOptionPane.showMessageDialog(null,
+					"Sample Window Size must be <= (Max Sample - Min Sample)");
+			return false;
+		}
+		if (((int) hhtMinSample.getValue()) < ((int) skipSpinner.getValue())) {
+			JOptionPane.showMessageDialog(null,
+					"Min Sample must be >= Skip Samples");
+			return false;
+		}
+
+		return true;
 	}
 }

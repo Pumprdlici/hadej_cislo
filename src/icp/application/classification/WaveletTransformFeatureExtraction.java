@@ -1,5 +1,6 @@
 package icp.application.classification;
 
+import icp.Const;
 import icp.algorithm.math.SignalProcessing;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessingResult;
 import cz.zcu.kiv.eegdsp.common.ISignalProcessor;
@@ -26,7 +27,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Number of samples to be used - Fs = 1000 Hz expected
 	 */
-	private static final int EPOCH_SIZE = 512;
+	private int EPOCH_SIZE = 512;
 
 	/**
 	 * Subsampling factor
@@ -36,7 +37,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private static final int SKIP_SAMPLES = 200;
+	private int SKIP_SAMPLES = 200;
 
 	/**
 	 * Name of the wavelet
@@ -46,7 +47,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Size of feature vector
 	 */
-	private static final int FEATURE_SIZE = 32;
+	private int FEATURE_SIZE = 32;
 
 	/**
 	 * Constructor for the wavelet transform feature extraction with default
@@ -98,8 +99,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 		for (int channel : CHANNELS) {
 			double[] currChannelData = new double[EPOCH_SIZE];
 			for (int j = 0; j < EPOCH_SIZE; j++) {
-				currChannelData[j] = epoch[channel - 1][j
-						+ SKIP_SAMPLES];
+				currChannelData[j] = epoch[channel - 1][j + SKIP_SAMPLES];
 			}
 			res = dwt.processSignal(currChannelData);
 			for (int j = 0; j < FEATURE_SIZE; j++) {
@@ -109,7 +109,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 			i++;
 		}
 		features = SignalProcessing.normalize(features);
-		
+
 		return features;
 	}
 
@@ -128,7 +128,34 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 			this.NAME = name;
 		} else
 			throw new IllegalArgumentException(
-					"Wavelet name must be >= 0 and <= 17");
+					"Wavelet Name must be >= 0 and <= 17");
 	}
 
+	public void setEpochSize(int epochSize) {
+		if (epochSize > 0 && epochSize <= Const.POSTSTIMULUS_VALUES) {
+			this.EPOCH_SIZE = epochSize;
+		} else {
+			throw new IllegalArgumentException("Epoch Size must be > 0 and <= "
+					+ Const.POSTSTIMULUS_VALUES);
+		}
+	}
+
+	public void setSkipSamples(int skipSamples) {
+		if (skipSamples > 0 && skipSamples <= Const.POSTSTIMULUS_VALUES) {
+			this.SKIP_SAMPLES = skipSamples;
+		} else {
+			throw new IllegalArgumentException(
+					"Skip Samples must be > 0 and <= "
+							+ Const.POSTSTIMULUS_VALUES);
+		}
+	}
+
+	public void setFeatureSize(int featureSize) {
+		if (featureSize > 0 && featureSize <= 1024) {
+			this.FEATURE_SIZE = featureSize;
+		} else {
+			throw new IllegalArgumentException(
+					"Feature Size must be > 0 and <= 1024");
+		}
+	}
 }

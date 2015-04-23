@@ -1,4 +1,4 @@
-Qckage icp.online.gui;
+package icp.online.gui;
 
 
 

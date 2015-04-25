@@ -34,7 +34,7 @@ public class KNNClassifier extends ERPClassifierAdapter {
 	/**
 	 * Default number of nearest neighbors.	
 	 */
-	private static final int K_CNT_DEFAULT = 11;
+	private static final int K_CNT_DEFAULT = 5;
 	
 	/**
 	 * Constructor for this classifier that uses default number of nearest neighbors (5)
@@ -123,6 +123,10 @@ public class KNNClassifier extends ERPClassifierAdapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public int getK_cnt() {
+		return this.k_cnt;
 	}
 
 }

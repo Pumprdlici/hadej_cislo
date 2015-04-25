@@ -157,8 +157,8 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 */
 	private double[] selectFeatures(Vector<HilbertTransform> hTransforms) {
 		double[] selectedFeatures;
-		double[] htAmplitudesScore = new double[hTransforms.size()]; //array of amplitude score for each HilbertTranform
-		double[] htFrequenciesScore = new double[hTransforms.size()]; //array frequency score for each HilbertTranform
+		double[] htAmplitudesScore = new double[hTransforms.size()];
+		double[] htFrequenciesScore = new double[hTransforms.size()];
 		
 		for(int i = 0; i < hTransforms.size(); i++) {
 			
@@ -169,9 +169,6 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 			ArrayList<Double> avgWindowAmplitudes = new ArrayList<Double>();
 			ArrayList<Double> avgWindowFrequencies = new ArrayList<Double>();
 			
-			/*
-			 * loop for iterating through one hilbert transform (amplitudes / frequencies arrays)
-			 */
 			while(currIndex < epochSize) {
 				int windowIndex = 0;
 				int windowAmplitudeIndex = 0;
@@ -179,9 +176,6 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 				double windowAmplitude = 0.0;
 				double windowFrequency = 0.0;
 				
-				/*
-				 * loop for iterating through window in amplitudes / frequencies arrays
-				 */
 				while(windowIndex < sampleWindowSize) {
 					if(!Double.isNaN(frequencies[currIndex])) {
 						windowFrequency += frequencies[currIndex];
@@ -232,7 +226,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @param avgWindowFrequencies - {@link ArrayList} with average frequencies gotten from sample window
 	 * @return final score for frequencies of current Hilbert transform
 	 */
-	private double getWindowFrequencyScore(ArrayList<Double> avgWindowFrequencies) {
+	double getWindowFrequencyScore(ArrayList<Double> avgWindowFrequencies) {
 		double score = 0.0;
 		
 		for(double freq : avgWindowFrequencies) {
@@ -260,7 +254,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @param avgWindowAmplitudes - {@link ArrayList} with average amplitudes gotten from sample window
 	 * @return final score for amplitudes of current Hilbert transform
 	 */
-	private double getWindowAmplitudeScore(ArrayList<Double> avgWindowAmplitudes) {
+	double getWindowAmplitudeScore(ArrayList<Double> avgWindowAmplitudes) {
 		double score = 0.0;
 		
 		for(double amp : avgWindowAmplitudes) {
@@ -283,7 +277,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * @param htFrequenciesScore - array with scores for frequencies of all transforms
 	 * @return index (in {@link Vector}) of HilberTransform with greatest score
 	 */
-	private int selectIndexOfBestHT(double[] htAmplitudesScore, double[] htFrequenciesScore) {
+	int selectIndexOfBestHT(double[] htAmplitudesScore, double[] htFrequenciesScore) {
 		int index = 0;
 		double bestScore = Double.MIN_VALUE;
 		

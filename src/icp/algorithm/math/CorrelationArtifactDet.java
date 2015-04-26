@@ -150,6 +150,8 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 	public void setThreshold(double threshold){
 		if(Math.abs(threshold) > 1){
 			this.threshold = DEFAULT_THRESHOLD;
+		} else {
+			this.threshold = threshold;
 		}
 	}
 }

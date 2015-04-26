@@ -14,7 +14,7 @@ import icp.online.app.EpochMessenger;
  */
 public class CorrelationArtifactDet implements IArtifactDetection{
 	
-	private static final double DEFAULT_THRESHOLD = 0.6;
+	private static final double DEFAULT_THRESHOLD = 0.86;
 	private static final String EYE_ARTIFACT_FILE = "data/blink.txt";
 	private static final String DEFAULT_DELIMITER = " ";
 	

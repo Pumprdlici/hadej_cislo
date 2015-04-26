@@ -15,13 +15,13 @@ import icp.algorithm.math.SignalProcessing;
  */
 public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction {
 	
-	 private static final int[] CHANNELS = {1, 2, 3}; /* EEG channels to be transformed to feature vectors */
+	 private static int[] CHANNELS = {1, 2, 3}; /* EEG channels to be transformed to feature vectors */
 
-	 private static final int EPOCH_SIZE = 650; /* number of samples to be used - Fs = 1000 Hz expected */
+	 private int EPOCH_SIZE = 650; /* number of samples to be used - Fs = 1000 Hz expected */
 
-	 private static final int DOWN_SMPL_FACTOR = 2;  /* subsampling factor */
+	 private int DOWN_SMPL_FACTOR = 2;  /* subsampling factor */
 
-	 private static final int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
+	 private int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
 
 	    /* low pass 0 - 8 Hz, M = 19  */
 	 private static final double[] lowPassCoeffs = {0.000308, 0.001094, 0.002410,
@@ -56,5 +56,32 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
     public int getFeatureDimension() {
         return CHANNELS.length * EPOCH_SIZE / DOWN_SMPL_FACTOR /* subsampling */;
     }
+    
+    public void setEpochSize(int epochSize) {
+		if (epochSize > 0 && epochSize <= Const.POSTSTIMULUS_VALUES) {
+			this.EPOCH_SIZE = epochSize;
+		} else {
+			throw new IllegalArgumentException("Epoch Size must be > 0 and <= "
+					+ Const.POSTSTIMULUS_VALUES);
+		}
+	}
 
+	public void setSkipSamples(int skipSamples) {
+		if (skipSamples > 0 && skipSamples <= Const.POSTSTIMULUS_VALUES) {
+			this.SKIP_SAMPLES = skipSamples;
+		} else {
+			throw new IllegalArgumentException(
+					"Skip Samples must be > 0 and <= "
+							+ Const.POSTSTIMULUS_VALUES);
+		}
+	}
+
+	public void setSubsampling(int subsampling) {
+		if (subsampling > 0) {
+			this.DOWN_SMPL_FACTOR = subsampling;
+		} else {
+			throw new IllegalArgumentException(
+					"Subsampling must be > 0");
+		}
+	}
 }

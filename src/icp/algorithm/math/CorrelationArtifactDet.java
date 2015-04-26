@@ -12,9 +12,16 @@ import icp.online.app.EpochMessenger;
  * @author Michal Veverka
  * @version 1.00
  */
-public class CorrelationArtifactDet implements IArtifactDetection {
+public class CorrelationArtifactDet {
 	
 	private static final double DEFAULT_THRESHOLD = 0.6;
+	private static final String EYE_ARTIFACT_FILE = "data/blink.txt";
+	private static final String DEFAULT_DELIMITER = " ";
+	
+	/**
+	 * Pattern used for correlation.
+	 */
+	private double[] pattern;
 	
 	/**
 	 * The maximum value of correlation coefficient allowed.
@@ -23,9 +30,10 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 	
 	/**
 	 * Creates an instance of CorrelationArtifactDet with threshold set to {@link DEFAULT_THRESHOLD}.
+	 * The default pattern of eye blink is used.
 	 */
 	public CorrelationArtifactDet(){
-		this.threshold = DEFAULT_THRESHOLD;
+		this(readPatternFromFile(EYE_ARTIFACT_FILE, DEFAULT_DELIMITER),DEFAULT_THRESHOLD);
 	}
 	
 	/**
@@ -35,10 +43,19 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 	 * @param threshold Threshold of correlation coefficient.
 	 */
 	public CorrelationArtifactDet(double threshold){
-		if(Math.abs(threshold) > 1) 
-			this.threshold = DEFAULT_THRESHOLD;
-		else
-			this.threshold = threshold;
+		this(readPatternFromFile(EYE_ARTIFACT_FILE, DEFAULT_DELIMITER), threshold);
+	}
+	
+	/**
+	 * Creates an instance of CorrelationArtifactDet with the threshold given 
+	 * as parameter.
+	 * 
+	 * @param pattern Pattern that is used for correlation.
+	 * @param threshold Maximal correlation coefficient.
+	 */
+	public CorrelationArtifactDet(double[] pattern, double threshold){
+		this.setThreshold(threshold);
+		this.pattern = pattern;
 	}
 	
 	/**
@@ -65,21 +82,46 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 	}
 	
 	/**
-	 * Shifts the pattern against the epoch and with each shift calculates the correlation 
-	 * coefficient. If the correlation coefficient is higher than the threshold, than the part of 
-	 * the epoch is similar to the pattern (contains artifact) and the epoch is removed.
-	 * The correlation coefficient can have the values from -1 (not similar at all) to 1 
-	 * (exactly the same) and is calculated using the Pearson's correlation equation: 
-	 * r = (n*sum(xi*yi)-sum(xi)*sum(yi))/(sqrt(n*sum(xi*xi)-sum(xi)*sum(xi))*
-	 * 	   sqrt(n*sum(yi*yi)-sum(yi)*sum(yi))
+	 * Reads pattern for correlation from a file with name given as parameter fileName. 
+	 * The values in the file must be separated by the given delimiter.
 	 * 
-	 * @param epochMes Epoch to be correlated with pattern.
-	 * @return epochMes Returns the correlated epoch, unless it contains artifact. In that 
-	 * case returns null.
+	 * @param fileName Name of the file.
+	 * @param delimiter Delimiter seperating the values.
+	 * @return Array of doubles representing the pattern.
 	 */
-	public EpochMessenger detectArtifact(EpochMessenger epochMes){
-		epochMes = detectArtifact(epochMes, generateGaussianPattern(60, 40, 1, 0));
-		return epochMes;
+	public static double[] readPatternFromFile(String fileName, String delimiter){
+		ArrayList<Double> patternList = new ArrayList<Double>();
+		try {
+			BufferedReader bfr = new BufferedReader(new FileReader(new File(fileName)));
+			String line;
+			try {
+				while((line = bfr.readLine()) != null){
+					String[] hodnoty = line.trim().split(delimiter);
+					for(int i = 0; i<hodnoty.length; i++){
+						try {
+							double a = Double.parseDouble(hodnoty[i]);
+							patternList.add(a);
+						} catch(NumberFormatException e){
+							e.printStackTrace();
+							bfr.close();
+							return null;
+						}
+					}
+				}
+				bfr.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+		double[] pattern = new double[patternList.size()];
+		for(int i = 0; i < pattern.length; i++){
+			pattern[i] = patternList.get(i);
+		}
+		return pattern;
 	}
 	
 	/**
@@ -92,12 +134,30 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 	 * 	   sqrt(n*sum(yi*yi)-sum(yi)*sum(yi))
 	 * 
 	 * @param epochMes Epoch to be correlated with pattern.
+	 * @return epochMes Returns the correlated epoch, unless it contains artifact. In that 
+	 * case returns null.
+	 */
+	public EpochMessenger detectArtifacts(EpochMessenger epochMes){
+		epochMes = detectArtifacts(epochMes, this.pattern);
+		return epochMes;
+	}
+	
+	/**
+	 * Shifts the pattern against the epoch and with each shift calculates the correlation 
+	 * coefficient. If the correlation coefficient is lower than the threshold, then that part of 
+	 * the epoch is similar to the pattern (contains artifact) and the epoch is removed.
+	 * The correlation coefficient can have the values from -1 (not similar at all) to 1 
+	 * (exactly the same) and is calculated using the Pearson's correlation equation: 
+	 * r = (n*sum(xi*yi)-sum(xi)*sum(yi))/(sqrt(n*sum(xi*xi)-sum(xi)*sum(xi))*
+	 * 	   sqrt(n*sum(yi*yi)-sum(yi)*sum(yi))
+	 * 
+	 * @param epochMes Epoch to be correlated with pattern.
 	 * @param pattern Pattern to be correlated with epoch.
 	 * 
 	 * @return epochMes Returns the correlated epoch, unless it contains artifact. In that 
 	 * case returns null.
 	 */
-	public EpochMessenger detectArtifact(EpochMessenger epochMes, double[] pattern){
+	public EpochMessenger detectArtifacts(EpochMessenger epochMes, double[] pattern){
 		double[][] epoch = epochMes.getEpoch();
 		double n = pattern.length;
 		for(int channel = 0; channel<epoch.length; channel++){
@@ -118,8 +178,11 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 						(Math.sqrt(n*sumXSqr-sumX*sumX) * 
 						Math.sqrt(n*sumYSqr-sumY*sumY));
 				
-				if(corrCoef < this.threshold)
+				if(corrCoef > this.threshold)
+				{
 					return null;
+				}
+					
 				sumXY = 0;
 				sumX = 0;
 				sumY = 0;
@@ -148,10 +211,17 @@ public class CorrelationArtifactDet implements IArtifactDetection {
 	 * @param threshold Maximal correlation coefficient.
 	 */
 	public void setThreshold(double threshold){
-		if(Math.abs(threshold) > 1){
+		if(Math.abs(threshold) > 1)
 			this.threshold = DEFAULT_THRESHOLD;
-		} else {
+		else
 			this.threshold = threshold;
-		}
+	}
+	
+	public double[] getPattern(){
+		return this.pattern;
+	}
+	
+	public void setPattern(double[] pattern){
+		this.pattern = pattern;
 	}
 }

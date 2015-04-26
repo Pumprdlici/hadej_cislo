@@ -47,7 +47,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 	private JSpinner skipSpinner;
 
-	private final SpinnerNumberModel skipSnm = new SpinnerNumberModel(0, 0,
+	private final SpinnerNumberModel skipSnm = new SpinnerNumberModel(200, 1,
 			Const.POSTSTIMULUS_VALUES, 1);
 
 	private JComboBox<String> waveletNameComboBox;
@@ -57,10 +57,8 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 			"Daubechies 8", "Daubechies 10", "Daubechies 12", "Daubechies 14",
 			"Daubechies 16", "Daubechies 18", "Daubechies 20", "Haar",
 			"Symmlet 4", "Symmlet 6", "Symmlet 8" };
-
-	private JSpinner hhtMinSample;
-
-	private JSpinner hhtMaxSample;
+	
+	private JSpinner wtFeatureSize;
 
 	private JSpinner hhtSampleWindowSize;
 
@@ -130,11 +128,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO disable other input fields
 				subsampleSpinner.setEnabled(true);
 				waveletNameComboBox.setEnabled(false);
-				hhtMinSample.setEnabled(false);
-				hhtMaxSample.setEnabled(false);
+				wtFeatureSize.setEnabled(false);
 				hhtSampleWindowSize.setEnabled(false);
 				hhtSampleWindowShift.setEnabled(false);
 				hhtAmplitudeThreshold.setEnabled(false);
@@ -150,11 +146,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO disable other input fields
 				subsampleSpinner.setEnabled(false);
 				waveletNameComboBox.setEnabled(true);
-				hhtMinSample.setEnabled(false);
-				hhtMaxSample.setEnabled(false);
+				wtFeatureSize.setEnabled(true);
 				hhtSampleWindowSize.setEnabled(false);
 				hhtSampleWindowShift.setEnabled(false);
 				hhtAmplitudeThreshold.setEnabled(false);
@@ -170,11 +164,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO disable other input fields
 				subsampleSpinner.setEnabled(true);
 				waveletNameComboBox.setEnabled(false);
-				hhtMinSample.setEnabled(false);
-				hhtMaxSample.setEnabled(false);
+				wtFeatureSize.setEnabled(false);
 				hhtSampleWindowSize.setEnabled(false);
 				hhtSampleWindowShift.setEnabled(false);
 				hhtAmplitudeThreshold.setEnabled(false);
@@ -190,11 +182,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO disable other input fields
 				subsampleSpinner.setEnabled(true);
 				waveletNameComboBox.setEnabled(false);
-				hhtMinSample.setEnabled(true);
-				hhtMaxSample.setEnabled(true);
+				wtFeatureSize.setEnabled(false);
 				hhtSampleWindowSize.setEnabled(true);
 				hhtSampleWindowShift.setEnabled(true);
 				hhtAmplitudeThreshold.setEnabled(true);
@@ -299,6 +289,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		wtPane.setBorder(BorderFactory.createTitledBorder("Wavelet Transform"));
 		wtPane.setLayout(new GridLayout(0, 2));
 
+		// Wavelet Name
 		JLabel waveletNameLabel = new JLabel("Wavelet Name");
 		wtPane.add(waveletNameLabel);
 
@@ -306,6 +297,15 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		waveletNameComboBox.setSelectedIndex(8);
 		waveletNameComboBox.setEnabled(false);
 		wtPane.add(waveletNameComboBox);
+		
+		// Wavelet Feature Size
+		JLabel wtFeatureSizeLabel = new JLabel("Feature Size");
+		wtPane.add(wtFeatureSizeLabel);
+		
+		SpinnerNumberModel wtFeatureSizeSnm = new SpinnerNumberModel(32, 1, 1024, 1);
+		wtFeatureSize = new JSpinner(wtFeatureSizeSnm);
+		wtFeatureSize.setEnabled(false);
+		wtPane.add(wtFeatureSize);
 
 		return wtPane;
 	}
@@ -325,26 +325,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 				.createTitledBorder("Hilbert-Huang Transform"));
 		hhtPane.setLayout(new GridLayout(0, 2));
 
-		JLabel minSampleLabel = new JLabel("Min Sample");
-		hhtPane.add(minSampleLabel);
-
-		SpinnerNumberModel minSampleSnm = new SpinnerNumberModel(0, 0,
-				Const.POSTSTIMULUS_VALUES, 1);
-		hhtMinSample = new JSpinner(minSampleSnm);
-		hhtMinSample.setEnabled(false);
-		hhtPane.add(hhtMinSample);
-
-		JLabel maxSampleLabel = new JLabel("Max Sample");
-		hhtPane.add(maxSampleLabel);
-
-		SpinnerNumberModel maxSampleSnm = new SpinnerNumberModel(0, 0,
-				Const.POSTSTIMULUS_VALUES, 1);
-		hhtMaxSample = new JSpinner(maxSampleSnm);
-		hhtMaxSample.setEnabled(false);
-		hhtPane.add(hhtMaxSample);
-
-		JLabel sampleWindowsSizeLabel = new JLabel("Sample Window Size");
-		hhtPane.add(sampleWindowsSizeLabel);
+		// Sample Window Size
+		JLabel sampleWindowSizeLabel = new JLabel("Sample Window Size");
+		hhtPane.add(sampleWindowSizeLabel);
 
 		SpinnerNumberModel sampleWindowSizeSnn = new SpinnerNumberModel(1, 1,
 				Const.POSTSTIMULUS_VALUES, 1);
@@ -352,42 +335,47 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		hhtSampleWindowSize.setEnabled(false);
 		hhtPane.add(hhtSampleWindowSize);
 
+		// Sample Window Shift
 		JLabel sampleWindowsShiftLabel = new JLabel("Sample Window Shift");
 		hhtPane.add(sampleWindowsShiftLabel);
 
 		SpinnerNumberModel sampleWindowShiftSnn = new SpinnerNumberModel(1, 1,
-				Const.POSTSTIMULUS_VALUES - 1, 1);
+				Const.POSTSTIMULUS_VALUES, 1);
 		hhtSampleWindowShift = new JSpinner(sampleWindowShiftSnn);
 		hhtSampleWindowShift.setEnabled(false);
 		hhtPane.add(hhtSampleWindowShift);
 
+		// Amplitude Threshold
 		JLabel amplitudeThresholdLabel = new JLabel("Amplitude Threshold");
 		hhtPane.add(amplitudeThresholdLabel);
 
 		SpinnerNumberModel amplitudeThresholdSnn = new SpinnerNumberModel(0, 0,
-				Const.POSTSTIMULUS_VALUES, 1);
+				Double.MAX_VALUE, 1);
 		hhtAmplitudeThreshold = new JSpinner(amplitudeThresholdSnn);
 		hhtAmplitudeThreshold.setEnabled(false);
 		hhtPane.add(hhtAmplitudeThreshold);
 
+		// Min Frequency
 		JLabel minFreqLabel = new JLabel("Min Frequency");
 		hhtPane.add(minFreqLabel);
 
 		SpinnerNumberModel minFreqSnn = new SpinnerNumberModel(1, 1,
-				Const.POSTSTIMULUS_VALUES, 1);
+				Double.MAX_VALUE, 1);
 		hhtMinFreq = new JSpinner(minFreqSnn);
 		hhtMinFreq.setEnabled(false);
 		hhtPane.add(hhtMinFreq);
 
+		// Max Frequency
 		JLabel maxFreqLabel = new JLabel("Max Frequency");
 		hhtPane.add(maxFreqLabel);
 
 		SpinnerNumberModel maxFreqSnn = new SpinnerNumberModel(1, 1,
-				Const.POSTSTIMULUS_VALUES, 1);
+				Double.MAX_VALUE, 1);
 		hhtMaxFreq = new JSpinner(maxFreqSnn);
 		hhtMaxFreq.setEnabled(false);
 		hhtPane.add(hhtMaxFreq);
 
+		// Type of Features
 		JLabel typeOfFeatures = new JLabel("Type of Features");
 		hhtPane.add(typeOfFeatures);
 
@@ -407,14 +395,17 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				// TODO set parameters to extractors
-
 				if (fasBttn.isSelected()) {
 
 					mainFrame.setTrained(false);
 
 					IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
+					((FilterAndSubsamplingFeatureExtraction) fe)
+							.setEpochSize((int) epochSpinner.getValue());
+					((FilterAndSubsamplingFeatureExtraction) fe)
+							.setSubsampling((int) subsampleSpinner.getValue());
+					((FilterAndSubsamplingFeatureExtraction) fe)
+							.setSkipSamples((int) skipSpinner.getValue());
 
 					c.dispose();
 
@@ -427,6 +418,14 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					mainFrame.setTrained(false);
 
 					IFeatureExtraction fe = new WaveletTransformFeatureExtraction();
+					((WaveletTransformFeatureExtraction) fe)
+							.setEpochSize((int) epochSpinner.getValue());
+					((WaveletTransformFeatureExtraction) fe)
+							.setSkipSamples((int) skipSpinner.getValue());
+					((WaveletTransformFeatureExtraction) fe)
+							.setWaveletName(waveletNameComboBox.getSelectedIndex());
+					((WaveletTransformFeatureExtraction) fe)
+							.setFeatureSize((int)wtFeatureSize.getValue());
 
 					c.dispose();
 
@@ -451,10 +450,6 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 						mainFrame.setTrained(false);
 
 						IFeatureExtraction fe = new HHTFeatureExtraction();
-						((HHTFeatureExtraction) fe)
-								.setMinSample((int) hhtMinSample.getValue());
-						((HHTFeatureExtraction) fe)
-								.setMaxSample((int) hhtMaxSample.getValue());
 						((HHTFeatureExtraction) fe)
 								.setSampleWindowSize((int) hhtSampleWindowSize
 										.getValue());
@@ -495,11 +490,6 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	}
 
 	private boolean hhtConditions() {
-		if (((int) hhtMinSample.getValue()) >= ((int) hhtMaxSample.getValue())) {
-			JOptionPane.showMessageDialog(null,
-					"Min Sample must be < Max Sample");
-			return false;
-		}
 		if (((int) hhtSampleWindowShift.getValue()) > ((int) hhtSampleWindowSize
 				.getValue())) {
 			JOptionPane.showMessageDialog(null,
@@ -509,23 +499,6 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		if (((int) hhtMinFreq.getValue()) > ((int) hhtMaxFreq.getValue())) {
 			JOptionPane.showMessageDialog(null,
 					"Min Frequency must be <= Max Frequency");
-			return false;
-		}
-		if ((((int) hhtMaxSample.getValue()) - ((int) hhtMinSample.getValue())) > ((int) epochSpinner
-				.getValue())) {
-			JOptionPane.showMessageDialog(null,
-					"(Max Sample - Min Sample) must be <= Epoch Size");
-			return false;
-		}
-		if (((int) hhtSampleWindowSize.getValue()) > (((int) hhtMaxSample
-				.getValue()) - ((int) hhtMinSample.getValue()))) {
-			JOptionPane.showMessageDialog(null,
-					"Sample Window Size must be <= (Max Sample - Min Sample)");
-			return false;
-		}
-		if (((int) hhtMinSample.getValue()) < ((int) skipSpinner.getValue())) {
-			JOptionPane.showMessageDialog(null,
-					"Min Sample must be >= Skip Samples");
 			return false;
 		}
 

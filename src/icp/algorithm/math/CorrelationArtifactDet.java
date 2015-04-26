@@ -12,7 +12,7 @@ import icp.online.app.EpochMessenger;
  * @author Michal Veverka
  * @version 1.00
  */
-public class CorrelationArtifactDet {
+public class CorrelationArtifactDet implements IArtifactDetection{
 	
 	private static final double DEFAULT_THRESHOLD = 0.6;
 	private static final String EYE_ARTIFACT_FILE = "data/blink.txt";
@@ -137,7 +137,7 @@ public class CorrelationArtifactDet {
 	 * @return epochMes Returns the correlated epoch, unless it contains artifact. In that 
 	 * case returns null.
 	 */
-	public EpochMessenger detectArtifacts(EpochMessenger epochMes){
+	public EpochMessenger detectArtifact(EpochMessenger epochMes){
 		epochMes = detectArtifacts(epochMes, this.pattern);
 		return epochMes;
 	}
@@ -157,7 +157,7 @@ public class CorrelationArtifactDet {
 	 * @return epochMes Returns the correlated epoch, unless it contains artifact. In that 
 	 * case returns null.
 	 */
-	public EpochMessenger detectArtifacts(EpochMessenger epochMes, double[] pattern){
+	public EpochMessenger detectArtifact(EpochMessenger epochMes, double[] pattern){
 		double[][] epoch = epochMes.getEpoch();
 		double n = pattern.length;
 		for(int channel = 0; channel<epoch.length; channel++){

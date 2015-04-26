@@ -1,5 +1,6 @@
 package icp.application.classification;
 
+import icp.Const;
 import icp.algorithm.math.SignalProcessing;
 
 import java.util.ArrayList;
@@ -13,15 +14,14 @@ import hht.hilbertTransform.HilbertTransform;
 /**
  * Class using HHT library with Hilbert-Huang Transformation algorithm for feature extraction.
  * @author Vlada47
- *
  */
 public class HHTFeatureExtraction implements IFeatureExtraction {
 	
 	private static final int[] CHANNELS = {1, 2, 3};
-	private static final int SKIP_SAMPLES = 150;
-	private static final int EPOCH_SIZE = 512;
-	private static final int SAMPLING_FREQUENCY = 1000;
-	private static final int DOWN_SMPL_FACTOR = 6;
+	
+	/**
+	 * configuration file for EMD decomposition
+	 */
 	private static final String EMD_CONF_FILE = "configs//emd//Cauchybest.xml";
 	
 	/**
@@ -35,30 +35,35 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	public static final int FREQUENCY_FEATURES = 2;
 	
 	/**
+	 * variable, which sets the number of samples of original epoch that will be skipped
+	 */
+	private int skipSamples = 200;
+	
+	/**
+	 * variable, which sets number of samples of original epoch that will be used
+	 */
+	private int epochSize = 512;
+	
+	/**
+	 * variable, which sets a factor for sub-sampling method that is used on output features 
+	 */
+	private int downSmplFactor = 4;
+	
+	/**
 	 * variable for storing, which array (amplitudes or frequencies) will be used from
 	 * hilbert transforms as features
 	 */
 	private int typeOfFeatures = 1;
-
-	/**
-	 * variable for storing the index of the first sample of evaluated signal
-	 */
-	private int minSample = 200;
-	
-	/**
-	 * variable for storing the index of the last sample of evaluated signal
-	 */
-	private int maxSample = 500;
 	
 	/**
 	 * variable for storing number of samples, which will be evaluated in one shift
 	 */
-	private int sampleWindowSize = 150;
+	private int sampleWindowSize = 256;
 	
 	/**
 	 * variable for storing the number of samples, which will be the window shifted for 
 	 */
-	private int sampleWindowShift = 5;
+	private int sampleWindowShift = 8;
 	
 	/**
 	 * variable for storing the threshold for the amplitude, from which is signal considered as P3 component
@@ -78,21 +83,21 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	@Override
 	public double[] extractFeatures(double[][] epoch) {
 		
-		double[] featureVector = new double[(maxSample - minSample) * CHANNELS.length];
+		double[] featureVector = new double[epochSize * CHANNELS.length];
 		int featureIndex = 0;
 		
 		for(int channel : CHANNELS) {
-			double[] epochSamples = selectEpochSamples(epoch[channel - 1]);
+			double[] epochSamples = Arrays.copyOfRange(epoch[channel - 1], skipSamples, skipSamples + epochSize);
 			double[] processedFeatures = processFeatures(epochSamples);
 			
-			for(int i = 0; i < (maxSample - minSample); i++) {
+			for(int i = 0; i < epochSize; i++) {
 				featureVector[i+featureIndex] = processedFeatures[i];
 			}
 			
-			featureIndex += (maxSample - minSample);
+			featureIndex += epochSize;
 		}
 		
-		featureVector = SignalProcessing.decimate(featureVector, DOWN_SMPL_FACTOR);
+		featureVector = SignalProcessing.decimate(featureVector, downSmplFactor);
 		featureVector = SignalProcessing.normalize(featureVector);
 		
 		return featureVector;
@@ -100,63 +105,29 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 
 	@Override
 	public int getFeatureDimension() {
-		return ((maxSample - minSample) * CHANNELS.length / DOWN_SMPL_FACTOR);
+		return (epochSize * CHANNELS.length / downSmplFactor);
 	}
 	
 	/**
-	 * Method for selection of particular part of the input epoch depending on values of EPOCH_SIZE and SKIP_SAMPLES.
-	 * @param epochChannel - original channel of the epoch
-	 * @return array with selected samples
-	 */
-	private double[] selectEpochSamples(double[] epochChannel) {
-		int size = EPOCH_SIZE;
-		if(EPOCH_SIZE > epochChannel.length) size = epochChannel.length;
-		
-		double[] epochSamples = new double[size];
-		
-		for(int i = 0; i < size; i++) {
-			if ((i+SKIP_SAMPLES) < epochChannel.length) {
-				epochSamples[i] = epochChannel[i+SKIP_SAMPLES];
-			}
-		}
-		
-		return epochSamples;
-	}
-	
-	/**
-	 * Method, which calls processing from HHT library, gets hilbert transforms of epoch samples
+	 * Method, which calls processing from HHT library, gets Hilbert transforms of epoch samples
 	 * and then selects suitable features from them by calling selectFeatures method.
-	 * In case none hilbert transform will be returned, method returns original signal between specified samples.
+	 * In the case none Hilbert transform will be returned, method returns original signal for set epoch size.
 	 * @param epochSamples - array of input samples, which will by processed by HHT library 
 	 * @return array with processed features
 	 */
 	private double[] processFeatures(double[] epochSamples) {
 		
-		int size = maxSample-minSample;
-		if(size > epochSamples.length) size = epochSamples.length;
-		
-		double[] processedFeatures = new double[size];
+		double[] processedFeatures = new double[epochSize];
 		
 		try{
-			HilbertHuangTransform hht = HhtSimpleRunner.runHht(EMD_CONF_FILE , epochSamples, SAMPLING_FREQUENCY);
+			HilbertHuangTransform hht = HhtSimpleRunner.runHht(EMD_CONF_FILE , epochSamples, Const.SAMPLING_FQ);
 			Vector<HilbertTransform> hTransforms = hht.getHilbertTransform();
 			
 			if(hTransforms.size() > 0) {
-				if(size < epochSamples.length) {
-					processedFeatures = Arrays.copyOfRange(selectFeatures(hTransforms), minSample-SKIP_SAMPLES, maxSample-SKIP_SAMPLES);
-				}
-				else {
-					processedFeatures = Arrays.copyOf(selectFeatures(hTransforms), size);
-				}
+				processedFeatures = Arrays.copyOf(selectFeatures(hTransforms), epochSize);
 			}
 			else {
-				if(size < epochSamples.length) {
-					processedFeatures = Arrays.copyOfRange(epochSamples, minSample-SKIP_SAMPLES, maxSample-SKIP_SAMPLES);
-				}
-				else {
-					processedFeatures = epochSamples;
-				}
-				
+				processedFeatures = epochSamples;
 			}
 		}
 		catch(Exception e) {
@@ -168,61 +139,61 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	}
 	
 	/**
-	 * Method for selecting most suitable features from input hilbert transforms.
+	 * Method for selecting the most suitable features from input Hilbert transformations.
 	 * It iterates through all HilbertTransform objects and their amplitudes and frequency arrays.
 	 * It creates a sample window of specific size, which is shifted through aforementioned arrays
 	 * and for each shift calculates average value of read frequencies and amplitudes and stores them into
-	 * an ArrayList.
-	 * When all possible shifts has been made, ArrayLists are passed to methods for calculation of score,
-	 * which represents how much are frequencies and amplitudes in specified array of samples similar
-	 * to frequency and amplitude of P3 component. Score is saved in arrays, where index 0 match with index
+	 * an {@link ArrayList}.
+	 * When all possible shifts have been made, ArrayLists are passed to methods for calculation of the score,
+	 * which represents how much are frequencies and amplitudes in array of samples similar
+	 * to frequency and amplitude of P3 component. Score is saved in arrays, where index match with index in Vector
 	 * of HilbertTransform object with relevant frequencies and amplitudes.
 	 * Based on typeOfFeatures variable is determined what type of features should be returned.
 	 * Then it's decided what HilbertTranform is best to get features from (based on its score) and from the
 	 * one selected, we get the desired features.
-	 * @param hTransforms - Vector with HilbertTransform object, which holds arrays with frequencies and amplitudes
+	 * @param hTransforms - {@link Vector} with HilbertTransform objects, which hold arrays with frequencies and amplitudes
 	 * of relevant IMFs
-	 * @return features from selected hilbert transform
+	 * @return features from selected Hilbert transform
 	 */
 	private double[] selectFeatures(Vector<HilbertTransform> hTransforms) {
 		double[] selectedFeatures;
-		double[] htAmplitudesScore = new double[hTransforms.size()]; //array of best window amplitudes
-		double[] htFrequenciesScore = new double[hTransforms.size()]; //array of best window frequencies
+		double[] htAmplitudesScore = new double[hTransforms.size()];
+		double[] htFrequenciesScore = new double[hTransforms.size()];
 		
 		for(int i = 0; i < hTransforms.size(); i++) {
 			
 			double[] amplitudes = hTransforms.get(i).getAmplitudes();
 			double[] frequencies = hTransforms.get(i).getFrequency();
 			
-			int currIndex = minSample;
+			int currIndex = 0;
 			ArrayList<Double> avgWindowAmplitudes = new ArrayList<Double>();
 			ArrayList<Double> avgWindowFrequencies = new ArrayList<Double>();
 			
-			/*
-			 * loop for iterating through one hilbert transform (amplitudes / frequencies arrays)
-			 */
-			while(currIndex <= maxSample) {
+			while(currIndex < epochSize) {
 				int windowIndex = 0;
+				int windowAmplitudeIndex = 0;
+				int windowFrequencyIndex = 0;
 				double windowAmplitude = 0.0;
 				double windowFrequency = 0.0;
 				
-				/*
-				 * loop for iterating through window in amplitudes / frequencies arrays
-				 */
 				while(windowIndex < sampleWindowSize) {
-					if(!Double.isNaN(frequencies[currIndex - SKIP_SAMPLES])) {
-						windowFrequency += frequencies[currIndex - SKIP_SAMPLES];
+					if(!Double.isNaN(frequencies[currIndex])) {
+						windowFrequency += frequencies[currIndex];
+						windowFrequencyIndex++;
 					}
-					windowAmplitude += amplitudes[currIndex - SKIP_SAMPLES];
+					if(!Double.isNaN(amplitudes[currIndex])) {
+						windowAmplitude += amplitudes[currIndex];
+						windowAmplitudeIndex++;
+					}
 					windowIndex++;
 					currIndex++;
-					if(currIndex >= maxSample) break;
+					if(currIndex >= epochSize-1) break;
 				}
 				
-				avgWindowAmplitudes.add(windowAmplitude / (double)windowIndex);
-				avgWindowFrequencies.add(windowFrequency / (double)windowIndex);
+				avgWindowAmplitudes.add(windowAmplitude / (double)windowAmplitudeIndex);
+				avgWindowFrequencies.add(windowFrequency / (double)windowFrequencyIndex);
 				
-				if(currIndex >= maxSample) break;
+				if(currIndex >= epochSize-1) break;
 				else {
 					currIndex = currIndex - sampleWindowSize + sampleWindowShift;
 				}
@@ -245,8 +216,17 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		
 		return selectedFeatures;
 	}
-
-	private double getWindowFrequencyScore(ArrayList<Double> avgWindowFrequencies) {
+	
+	/**
+	 * Method for calculation of the score for frequencies of current Hilbert transform.
+	 * It starts at 0.0 and increases by 1.0 for every frequency in avgWindowFrequencies {@link ArrayList}
+	 * that is between minFreq and maxFreq variables. It decreases in interval between 0.0 and 1.0
+	 * for every frequency that isn't between those variables. More difference is between the frequency and
+	 * those numbers, the more will be the score decreased (by 1.0 should the frequency be Double.MAX_VALUE or Double.MIN_VALUE). 
+	 * @param avgWindowFrequencies - {@link ArrayList} with average frequencies gotten from sample window
+	 * @return final score for frequencies of current Hilbert transform
+	 */
+	double getWindowFrequencyScore(ArrayList<Double> avgWindowFrequencies) {
 		double score = 0.0;
 		
 		for(double freq : avgWindowFrequencies) {
@@ -264,8 +244,17 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 		return score;
 	}
-
-	private double getWindowAmplitudeScore(ArrayList<Double> avgWindowAmplitudes) {
+	
+	/**
+	 * Method for calculation of the score for amplitudes of current Hilbert transform.
+	 * It starts at 0.0 and increases by 1.0 for every amplitude in avgWindowAmplitudes {@link ArrayList}
+	 * that is at least equals to amplitudeThreshold variable. It decreases in interval between 0.0 and 1.0
+	 * for every amplitude that is lesser than that variable. More difference is between the amplitude and
+	 * the variable, the more will be the score decreased (by 1.0 should the amplitude be Double.MIN_VALUE). 
+	 * @param avgWindowAmplitudes - {@link ArrayList} with average amplitudes gotten from sample window
+	 * @return final score for amplitudes of current Hilbert transform
+	 */
+	double getWindowAmplitudeScore(ArrayList<Double> avgWindowAmplitudes) {
 		double score = 0.0;
 		
 		for(double amp : avgWindowAmplitudes) {
@@ -280,7 +269,15 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		return score;
 	}
 	
-	private int selectIndexOfBestHT(double[] htAmplitudesScore, double[] htFrequenciesScore) {
+	/**
+	 * This method determines the index of the best Hilbert transform via score of theirs amplitudes and frequencies.
+	 * It iterates through arrays with scores, calculates arithmetic average for scores on the same index
+	 * and the compares it with the last greatest score and sets the index.
+	 * @param htAmplitudesScore - array with scores for amplitudes of all transforms
+	 * @param htFrequenciesScore - array with scores for frequencies of all transforms
+	 * @return index (in {@link Vector}) of HilberTransform with greatest score
+	 */
+	int selectIndexOfBestHT(double[] htAmplitudesScore, double[] htFrequenciesScore) {
 		int index = 0;
 		double bestScore = Double.MIN_VALUE;
 		
@@ -296,53 +293,41 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		return index;
 	}
 	
-	/**
-	 * Setter for desired type of features (frequency or amplitudes of hilbert transformations).
-	 * @param typeOfFeatures - desired type of features
-	 */
-	public void setTypeOfFeatures(int typeOfFeatures) {
-		this.typeOfFeatures = typeOfFeatures;
-	}
-	
-	/**
-	 * Setter for minimal index of IMF array, from which should be algorithm determining desired features.
-	 * @param minSample - starting sample of particular hilbert transform, from which will be features evaluated.
-	 */
-	public void setMinSample(int minSample) {
-		if(minSample >= 0) {
-			this.minSample = minSample;
+	public void setSkipSamples(int skipSamples) {
+		if(skipSamples >= 0) {
+			this.skipSamples = skipSamples;
 		}
 		else {
-			throw new IllegalArgumentException("Wrong input value! Min. sample has to be non-negative.");
+			throw new IllegalArgumentException("Wrong input value! You cannot skip negative number of samples.");
+		}
+	}
+	
+	public void setEpochSize(int epochSize) {
+		if(epochSize > 0) {
+			this.epochSize = epochSize;
+		}
+		else {
+			throw new IllegalArgumentException("Wrong input value! Size of the epoch has to be positive.");
+		}
+	}
+	
+	public void setDownSmplFactor(int downSmplFactor) {
+		if(downSmplFactor >= 0) {
+			this.downSmplFactor = downSmplFactor;
+		}
+		else {
+			throw new IllegalArgumentException("Wrong input value! You cannot set negative sub-sampling factor.");
 		}
 	}
 
-	/**
-	 * Setter for maximal index of IMF array, from which should be algorithm determining desired feature.
-	 * @param maxSample - ending sample of particular hilbert transform, to which will be features evaluated.
-	 */
-	public void setMaxSample(int maxSample) {
-		if(maxSample >= 0)
-		{
-			this.maxSample = maxSample;
-		}
-		else {
-			throw new IllegalArgumentException("Wrong input value! Max. sample has to be non-negative.");
-		}
+	public void setTypeOfFeatures(int typeOfFeatures) {
+		this.typeOfFeatures = typeOfFeatures;
 	}
-	
-	/**
-	 * Setter for minimal amplitude threshold of desired feature.
-	 * @param amplitudeThreshold - minimal amplitude threshold
-	 */
+
 	public void setAmplitudeThreshold(double amplitudeThreshold) {
 		this.amplitudeThreshold = amplitudeThreshold;
 	}
 	
-	/**
-	 * Setter for minimal frequency of desired feature.
-	 * @param minFreq - minimal frequency of desired feature
-	 */
 	public void setMinFreq(double minFreq) {
 		if(minFreq > 0.0) {
 			this.minFreq = minFreq;
@@ -352,10 +337,6 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
-	/**
-	 * Setter for maximal frequency of desired feature.
-	 * @param maxFreq - maximal frequency of desired feature
-	 */
 	public void setMaxFreq(double maxFreq) {
 		if(maxFreq > 0.0) {
 			this.maxFreq = maxFreq;
@@ -366,10 +347,6 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		
 	}
 
-	/**
-	 * Setter for value representing size of the window, for which is average amplitude calculated.
-	 * @param sampleWindowSize - size of the sample window
-	 */
 	public void setSampleWindowSize(int sampleWindowSize) {
 		if(sampleWindowSize > 0) {
 			this.sampleWindowSize = sampleWindowSize;
@@ -379,11 +356,6 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
-	/**
-	 * Setter for value representing number of samples, for which will be the sample window
-	 * shifted in each cycle.
-	 * @param sampleWindowShift - number of samples for shift of the sample window
-	 */
 	public void setSampleWindowShift(int sampleWindowShift) {
 		if(sampleWindowShift > 0) {
 			this.sampleWindowShift = sampleWindowShift;
@@ -393,16 +365,20 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
+	public int getSkipSamples() {
+		return skipSamples;
+	}
+	
+	public int getEpochSize() {
+		return epochSize;
+	}
+	
+	public int getDownSmplFactor() {
+		return downSmplFactor;
+	}
+	
 	public int getTypeOfFeatures() {
 		return typeOfFeatures;
-	}
-
-	public int getMinSample() {
-		return minSample;
-	}
-
-	public int getMaxSample() {
-		return maxSample;
 	}
 
 	public int getSampleWindowSize() {

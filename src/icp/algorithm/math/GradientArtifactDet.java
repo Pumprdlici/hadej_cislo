@@ -15,7 +15,7 @@ public class GradientArtifactDet implements IArtifactDetection{
 	/**
 	 * The default maximal difference.
 	 */
-	private static final double DEFAULT_MAXDIFF = 40;
+	private static final double DEFAULT_MAXDIFF = 100;
 	
 	/**
 	 * The maximal difference between average and value of a point 

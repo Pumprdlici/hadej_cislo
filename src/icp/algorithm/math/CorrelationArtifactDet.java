@@ -75,7 +75,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 		double width = 2*Math.sqrt(2*Math.log(10))*sigma;
 		width*=1.1;
 		for(int i = 0; i < nPoints; i++){
-			double x = width*(i/nPoints) - width/2;
+			double x = width*((double)i/(double)nPoints) - width/2;
 			curve[i] = Math.pow(a*Math.E,-(x-mu)*(x-mu)/(2*sigma*sigma));
 		}
 		return curve;

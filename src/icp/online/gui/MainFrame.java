@@ -5,6 +5,7 @@ import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.test.TrainUsingOfflineProvider;
 import icp.online.app.IDataProvider;
 import icp.online.app.OffLineDataProvider;
 import icp.online.app.OnLineDataProvider;
@@ -131,7 +132,8 @@ public class MainFrame extends JFrame implements Observer {
         statusBar.add(separator);
         statusBar.add(Box.createHorizontalStrut(5));
 		
-		classifierStatus = new JLabel("Classifier: " + this.classifier.getClass().getSimpleName());
+		classifierStatus = new JLabel("Classifier: "
+				+ this.classifier.getClass().getSimpleName());
 		statusBar.add(classifierStatus);
 		
 		return statusBar;
@@ -169,6 +171,18 @@ public class MainFrame extends JFrame implements Observer {
 				ChangeFeatureExtractionFrame f = new ChangeFeatureExtractionFrame(
 						mf);
 				f.setVisible(true);
+			}
+		});
+		JMenuItem trainMenuItem = new JMenuItem("Train");
+		trainMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,
+				ActionEvent.CTRL_MASK));
+		trainMenuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO training
+				new TrainUsingOfflineProvider(fe, classifier);
+				setTrained(true);
 			}
 		});
 

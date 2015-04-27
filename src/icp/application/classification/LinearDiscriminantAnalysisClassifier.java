@@ -2,8 +2,6 @@ package icp.application.classification;
 
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class LinearDiscriminantAnalysisClassifier extends ERPClassifierAdapter {
 
 	/**

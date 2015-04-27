@@ -10,30 +10,30 @@ import icp.online.tcpip.objects.RDA_Marker;
 import icp.online.tcpip.objects.RDA_MessageData;
 
 /**
- * Název úlohy: Jednoduché BCI Tøída: Buffer
+ * NÃ¡zev Ãºlohy: JednoduchÃ© BCI TÃ¸Ã­da: Buffer
  *
- * @author Bohumil Podlesák První verze vytvoøena: 28.3.2010
+ * @author Bohumil PodlesÃ¡k PrvnÃ­ verze vytvoÃ¸ena: 28.3.2010
  * @version 2.0
  *
- * Tøída, do které se mohou prùbìnì ukládat datové objekty RDA MessageData.
- * Tyto objekty jsou následnì zpracovány a mohou bıt vráceny jako pole typu
+ * TÃ¸Ã­da, do kterÃ© se mohou prÃ¹bÃ¬Å¾nÃ¬ uklÃ¡dat datovÃ© objekty RDA MessageData.
+ * Tyto objekty jsou nÃ¡slednÃ¬ zpracovÃ¡ny a mohou bÃ½t vrÃ¡ceny jako pole typu
  * float.
  */
 public class Buffer {
 
     /**
-     * Index elektrody FZ. Tato elektroda je v poli zapsána jako šestnáctá v
-     * poøadí.
+     * Index elektrody FZ. Tato elektroda je v poli zapsÃ¡na jako Å¡estnÃ¡ctÃ¡ v
+     * poÃ¸adÃ­.
      */
     private int indexFz;
     /**
-     * Index elektrody PZ. Tato elektroda je v poli zapsána jako sedmnáctá v
-     * poøadí.
+     * Index elektrody PZ. Tato elektroda je v poli zapsÃ¡na jako sedmnÃ¡ctÃ¡ v
+     * poÃ¸adÃ­.
      */
     private int indexPz;
     /**
-     * Index elektrody FZ. Tato elektroda je v poli zapsána jako osmnáctá v
-     * poøadí.
+     * Index elektrody FZ. Tato elektroda je v poli zapsÃ¡na jako osmnÃ¡ctÃ¡ v
+     * poÃ¸adÃ­.
      */
     private int indexCz;
 
@@ -51,15 +51,15 @@ public class Buffer {
     private final LinkedList<Integer> stimuli;
 
     /**
-     * Konstruktor Z prvu je nutné zaèínat plnit buffer a od indexu
-     * predMarkerem, protoe jinak by v pøípadì brzkého pøíchodu markeru bylo
-     * nutno vybírat hodnoty mimo rozsah pole. Délka pole hodnot v Bufferu by
-     * mìla bıt mnohem vìtší ne predMarkerem + zaMarkerem
+     * Konstruktor Z prvu je nutnÃ© zaÃ¨Ã­nat plnit buffer aÅ¾ od indexu
+     * predMarkerem, protoÅ¾e jinak by v pÃ¸Ã­padÃ¬ brzkÃ©ho pÃ¸Ã­chodu markeru bylo
+     * nutno vybÃ­rat hodnoty mimo rozsah pole. DÃ©lka pole hodnot v Bufferu by
+     * mÃ¬la bÃ½t mnohem vÃ¬tÅ¡Ã­ neÅ¾ predMarkerem + zaMarkerem
      *
-     * @param size - poèáteèní délka pole, do kterého Buffer ukládá hodnoty
-     * @param preMarker - poèet poloek pole, které se budou vybírat pøed
+     * @param size - poÃ¨Ã¡teÃ¨nÃ­ dÃ©lka pole, do kterÃ©ho Buffer uklÃ¡dÃ¡ hodnoty
+     * @param preMarker - poÃ¨et poloÅ¾ek pole, kterÃ© se budou vybÃ­rat pÃ¸ed
      * markerem
-     * @param postMarker - poèet poloek pole, které se budou vybírat za
+     * @param postMarker - poÃ¨et poloÅ¾ek pole, kterÃ© se budou vybÃ­rat za
      * markerem
      */
     public Buffer(int size, int preMarker, int postMarker) {
@@ -138,12 +138,12 @@ public class Buffer {
     }
 
     /**
-     * Zápis dat do bufferu (do pole data) a pøidání markeru do fronty. Pokud by
-     * byl buffer pøíliš zaplnìn a nevešly by se do nìj informace o dalším
-     * prvku, pak se jeho velikost zdvojnásobí. V ideálním pøípadì se ale bude
-     * pouívat tak, aby jeho zvìtšování nemuselo nastávat.
+     * ZÃ¡pis dat do bufferu (do pole data) a pÃ¸idÃ¡nÃ­ markeru do fronty. Pokud by
+     * byl buffer pÃ¸Ã­liÅ¡ zaplnÃ¬n a neveÅ¡ly by se do nÃ¬j informace o dalÅ¡Ã­m
+     * prvku, pak se jeho velikost zdvojnÃ¡sobÃ­. V ideÃ¡lnÃ­m pÃ¸Ã­padÃ¬ se ale bude
+     * pouÅ¾Ã­vat tak, aby jeho zvÃ¬tÅ¡ovÃ¡nÃ­ nemuselo nastÃ¡vat.
      *
-     * @param data - objekt, obsahující pole dat pro zápis do bufferu
+     * @param data - objekt, obsahujÃ­cÃ­ pole dat pro zÃ¡pis do bufferu
      */
     public void write(RDA_MessageData data) {
         float[] fz = getFz(data.getfData());
@@ -178,10 +178,10 @@ public class Buffer {
     }
 
     /**
-     * Dvojnásobné zvìtšení stávajícího pole dat. Zároveò dojde k nastavení
-     * všech potøebnıch atributù tøídy (délka, index zaèátku a konce)
+     * DvojnÃ¡sobnÃ© zvÃ¬tÅ¡enÃ­ stÃ¡vajÃ­cÃ­ho pole dat. ZÃ¡roveÃ² dojde k nastavenÃ­
+     * vÅ¡ech potÃ¸ebnÃ½ch atributÃ¹ tÃ¸Ã­dy (dÃ©lka, index zaÃ¨Ã¡tku a konce)
      *
-     * @return - nové dvojnásobnì zvìtšené pole
+     * @return - novÃ© dvojnÃ¡sobnÃ¬ zvÃ¬tÅ¡enÃ© pole
      */
     private float[] resize(float[] array) {
         System.out.println("*** VOLANA METODA ZVETSI Z INTANCE BUFFERU ***");
@@ -196,14 +196,14 @@ public class Buffer {
     }
 
     /**
-     * Vıbìr z Bufferu. Pokud není v bufferu ádnı marker, pak v nìm jistì
-     * nejsou u ádná data, která by mìla nìjakou hodnotu (ve smyslu vybírání
+     * VÃ½bÃ¬r z Bufferu. Pokud nenÃ­ v bufferu Å¾Ã¡dnÃ½ marker, pak v nÃ¬m jistÃ¬
+     * nejsou uÅ¾ Å¾Ã¡dnÃ¡ data, kterÃ¡ by mÃ¬la nÃ¬jakou hodnotu (ve smyslu vybÃ­rÃ¡nÃ­
      * pole dat pro Epochu) a metoda vrati null. Pokud neni v bufferu zapsanych
      * dost hodnot za poslednim markerem, metoda take vrati null. Tato metoda
-     * bude vybírat hodnoty z bufferu podle markerù postupnì (FIFO).
+     * bude vybÃ­rat hodnoty z bufferu podle markerÃ¹ postupnÃ¬ (FIFO).
      *
-     * @return - pole floatù o délce (this.pred + this.po), obsahující hodnoty z
-     * bufferu kolem posledního markeru plus èíslo Stimulu (0 - 9)
+     * @return - pole floatÃ¹ o dÃ©lce (this.pred + this.po), obsahujÃ­cÃ­ hodnoty z
+     * bufferu kolem poslednÃ­ho markeru plus Ã¨Ã­slo Stimulu (0 - 9)
      */
     public EpochDataCarrier get() {
         if (this.indexes.isEmpty()) {
@@ -223,7 +223,7 @@ public class Buffer {
         /* index markeru minus pocet hodnot pred markerem je indexem prvni polozky, kterou vybereme */
         /* nutno kvuli zaznamenani, na ktery stimul byla tato reakce zaznamenana */
         int waveType = this.stimuli.removeFirst();
-        int index = this.indexes.removeFirst() - this.preMarker;
+        int index = this.indexes.removeFirst() - this.preMarker + 1;
         for (int i = 0; i < (this.preMarker + this.postMarker); i++) {
             fz[i] = this.dataFZ[index + i];
             cz[i] = this.dataCZ[index + i];
@@ -242,24 +242,24 @@ public class Buffer {
     }
 
     /**
-     * Metoda pro kontrolu zaplnìnosti bufferu. Sloui k tomu, aby tøída, která
-     * s ním bude pracovat vìdela, kdy má zaèít vybírat prvky
+     * Metoda pro kontrolu zaplnÃ¬nosti bufferu. SlouÅ¾i k tomu, aby tÃ¸Ã­da, kterÃ¡
+     * s nÃ­m bude pracovat vÃ¬dela, kdy mÃ¡ zaÃ¨Ã­t vybÃ­rat prvky
      *
-     * @return - true, kdy je buffer plnı (zbıvá v nìm ménì místa ne REZERVA)
+     * @return - true, kdyÅ¾ je buffer plnÃ½ (zbÃ½vÃ¡ v nÃ¬m mÃ©nÃ¬ mÃ­sta neÅ¾ REZERVA)
      */
     public boolean isFull() {
         return (this.size - this.endIndex <= Const.RESERVE);
     }
 
     /**
-     * Uvolní buffer. Doporuèeno provádìt pokadé, kdy se vyberou všechny
-     * hodnoty, ktere jdou pomoci metody get(). Tato metoda nastaví poloky pole
-     * float[] data na Float.MAX_VALUE. Nebudou však vymazány všechy poloky,
-     * ponechá se nìkolik poloek pøed koncem (this.konec) toto je z dùvodu, aby
-     * v pøípadì brzkého pøíchodu markeru mohl tento odkazovat na staré poloky.
-     * Marker oznaèuje pozici, pøed kterou se berou data v metodì get(). Je
-     * nutno pro nejhorší pøípad (marker pøijde hned v prvním objektu) ponechat
-     * nejménì this.predMarkerem starıch hodnot. Pokud v bufferu zustal nejaky
+     * UvolnÃ­ buffer. DoporuÃ¨eno provÃ¡dÃ¬t pokaÅ¾dÃ©, kdyÅ¾ se vyberou vÅ¡echny
+     * hodnoty, ktere jdou pomoci metody get(). Tato metoda nastavÃ­ poloÅ¾ky pole
+     * float[] data na Float.MAX_VALUE. Nebudou vÅ¡ak vymazÃ¡ny vÅ¡echy poloÅ¾ky,
+     * ponechÃ¡ se nÃ¬kolik poloÅ¾ek pÃ¸ed koncem (this.konec) toto je z dÃ¹vodu, aby
+     * v pÃ¸Ã­padÃ¬ brzkÃ©ho pÃ¸Ã­chodu markeru mohl tento odkazovat na starÃ© poloÅ¾ky.
+     * Marker oznaÃ¨uje pozici, pÃ¸ed kterou se berou data v metodÃ¬ get(). Je
+     * nutno pro nejhorÅ¡Ã­ pÃ¸Ã­pad (marker pÃ¸ijde hned v prvnÃ­m objektu) ponechat
+     * nejmÃ©nÃ¬ this.predMarkerem starÃ½ch hodnot. Pokud v bufferu zustal nejaky
      * marker, tak se musi ponechat vice polozek. V takovem pripade se v
      * promazanem bufferu musi na pocatku objevit this.predMarkerem hodnot pred
      * indexem markeru ze stareho bufferu a zaroven i vsechna data po nem. Toto
@@ -300,8 +300,8 @@ public class Buffer {
         /* pokud zustaly indexy markeru ve fronte indexu, musi se prepsat na nove hodnoty */
         LinkedList<Integer> newIndexes = new LinkedList<Integer>();
         while (!this.indexes.isEmpty()) {
-            /* všechny indexy markerù z fronty se musí pøepsat -> odeèíst od nich
-             indexPredMarkerem; tím se všechny posunou na zaèátek  */
+            /* vÅ¡echny indexy markerÃ¹ z fronty se musÃ­ pÃ¸epsat -> odeÃ¨Ã­st od nich
+             indexPredMarkerem; tÃ­m se vÅ¡echny posunou na zaÃ¨Ã¡tek  */
             int indexMarkeru = this.indexes.removeFirst() - preMarkerIndex;
             newIndexes.add(indexMarkeru);
         }

@@ -55,8 +55,15 @@ public class LinearDiscriminantAnalysisClassifier extends ERPClassifierAdapter {
 	 */
 	public ClassificationStatistics test(List<double[][]> epochs,
 			List<Double> targets) {
-		// TODO implement ClassificationStatistics
-		throw new NotImplementedException();
+		ClassificationStatistics resultsStats = new ClassificationStatistics();
+
+		for (int i = 0; i < epochs.size(); i++) {
+			double[][] epoch = epochs.get(i);
+			double result = this.classify(epoch);
+			resultsStats.add(result, targets.get(i));
+		}
+
+		return resultsStats;
 	}
 
 	/**

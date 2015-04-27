@@ -1,5 +1,7 @@
 package icp.application.classification;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,14 +85,18 @@ public class CorrelationAlgorithms implements Serializable {
 	 * Loading waveform of P3 from the file.
 	 */
 	public void loadP300() { 
-		Scanner sc;
-		sc = new Scanner(FILE_CONTAINING_P3);
+		Scanner sc = null;
+		try {
+			sc = new Scanner(new File(FILE_CONTAINING_P3));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		List<Double> loading = new ArrayList<Double>();
 		
-        while(sc.hasNextDouble())
+        while(sc.hasNextLine())
         {
-            loading.add(sc.nextDouble());
+            loading.add(Double.valueOf(sc.nextLine()));
         }
         sc.close();
         

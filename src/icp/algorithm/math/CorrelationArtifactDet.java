@@ -158,6 +158,8 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * case returns null.
 	 */
 	public EpochMessenger detectArtifact(EpochMessenger epochMes, double[] pattern){
+		if(pattern == null)return epochMes;
+		
 		double[][] epoch = epochMes.getEpoch();
 		double n = pattern.length;
 		for(int channel = 0; channel<epoch.length; channel++){

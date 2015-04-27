@@ -1,5 +1,8 @@
 package icp.algorithm.math;
 
+import java.io.*;
+import java.util.*;
+
 import icp.online.app.EpochMessenger;
 
 /**
@@ -14,7 +17,7 @@ import icp.online.app.EpochMessenger;
  */
 public class CorrelationArtifactDet implements IArtifactDetection{
 	
-	private static final double DEFAULT_THRESHOLD = 0.86;
+	public static final double DEFAULT_THRESHOLD = 0.86;
 	private static final String EYE_ARTIFACT_FILE = "data/blink.txt";
 	private static final String DEFAULT_DELIMITER = " ";
 	
@@ -26,7 +29,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	/**
 	 * The maximum value of correlation coefficient allowed.
 	 */
-	private double threshold;
+	public double threshold;
 	
 	/**
 	 * Creates an instance of CorrelationArtifactDet with threshold set to {@link DEFAULT_THRESHOLD}.

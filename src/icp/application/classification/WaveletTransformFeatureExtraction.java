@@ -53,7 +53,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	 * wavelet
 	 */
 	public WaveletTransformFeatureExtraction() {
-		this.NAME = 7;
+		this.NAME = 8;
 	}
 
 	/**

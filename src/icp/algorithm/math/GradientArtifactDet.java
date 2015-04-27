@@ -83,6 +83,8 @@ public class GradientArtifactDet implements IArtifactDetection{
 	public void setMaxDiff(double maxDiff){
 		if(maxDiff < 0){
 			this.maxDiff = DEFAULT_MAXDIFF;
+		} else {
+			this.maxDiff = maxDiff;
 		}
 	}
 }

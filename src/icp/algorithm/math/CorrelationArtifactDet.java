@@ -33,7 +33,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * The default pattern of eye blink is used.
 	 */
 	public CorrelationArtifactDet(){
-		this(readPatternFromFile(EYE_ARTIFACT_FILE, DEFAULT_DELIMITER),DEFAULT_THRESHOLD);
+		this.threshold = DEFAULT_THRESHOLD;
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * @param threshold Threshold of correlation coefficient.
 	 */
 	public CorrelationArtifactDet(double threshold){
-		this(readPatternFromFile(EYE_ARTIFACT_FILE, DEFAULT_DELIMITER), threshold);
+		this.setThreshold(threshold);
 	}
 	
 	/**

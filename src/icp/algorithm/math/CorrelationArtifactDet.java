@@ -138,7 +138,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * case returns null.
 	 */
 	public EpochMessenger detectArtifact(EpochMessenger epochMes){
-		epochMes = detectArtifacts(epochMes, this.pattern);
+		epochMes = detectArtifact(epochMes, this.pattern);
 		return epochMes;
 	}
 	

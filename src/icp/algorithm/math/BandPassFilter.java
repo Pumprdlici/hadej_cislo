@@ -17,7 +17,7 @@ public class BandPassFilter implements IFilter {
 	public double getOutputSample(double inputSample) {
 		double result;
 		result = lowPass.getOutputSample(inputSample);
-		//result = highPass.getOutputSample(inputSample);
+		result = highPass.getOutputSample(inputSample);
 		return result;
 	}
 }

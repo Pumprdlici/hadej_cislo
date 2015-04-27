@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Taken from http://ptolemy.eecs.berkeley.edu/eecs20/week12/implementation.html
  *
- * Impulse calculation and Bessel func taken from:
+ * Impulse calculation and Bessel function taken from:
  * http://www.academia.edu/4919182/The_Io-sinh_function_calculation_of_Kaiser_windows_and_design_of_FIR_filters
  */
 public class FirFilter implements IFilter {
@@ -15,18 +15,18 @@ public class FirFilter implements IFilter {
     private final double[] impulseResponse;
     private int count = 0;
 
-    public FirFilter(int Fa, int Fb, int Fs, int M, int Att) {
-        impulseResponse = calculateImpResponce(Fa, Fb, Fs, M, Att);
+    public FirFilter(double Fa, double Fb, int sampleRate, int M, int Att) {
+        impulseResponse = calculateImpResponce(Fa, Fb, sampleRate, M, Att);
         length = impulseResponse.length;
         delayLine = new double[length];
     }
     
     public FirFilter() {
-        this(0, 8, 1024, 19, 60);
+        this(0.1, 30, 1000, 19, 60);
     }
     
-    public FirFilter(int Fa, int Fb, int Fs) {
-        this(Fa, Fb, Fs, 19, 60);
+    public FirFilter(int Fa, int Fb, int sampleRate) {
+        this(Fa, Fb, sampleRate, 19, 60);
     }
 
     @Override
@@ -43,10 +43,11 @@ public class FirFilter implements IFilter {
         if (++count >= length) {
             count = 0;
         }
+        System.out.println("FIR: filtruju -> " + result);
         return result;
     }
     
-    private double[] calculateImpResponce(int Fa, int Fb, int Fs, int M, int Att) {
+    private double[] calculateImpResponce(double Fa, double Fb, int Fs, int M, int Att) {
     	int Np = (M - 1)/2;
     	double[] H = new double[M];
     	double[] A = new double[Np + 1];
@@ -76,6 +77,8 @@ public class FirFilter implements IFilter {
 		for (int j=0; j<Np; j++) {
 			H[j] = H[M-1-j];
 		}
+		
+		System.out.println(Arrays.toString(H));
     	return H;
     }
     

@@ -19,11 +19,11 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 */
 	private Matrix w;
 	/**
-	 * 
+	 * Linear scores for training data
 	 */
 	private Matrix l;
 	/**
-	 * 
+	 * Probabilities for classification
 	 */
 	private Matrix p;
 	/**
@@ -87,16 +87,28 @@ public class LinearDiscriminantAnalysisAlgorithms {
 		calculateW();
 	}
 
+	/**
+	 * Classifies feature vector
+	 * 
+	 * @param featureVector
+	 *            - feature vector
+	 * @return probability of epoch to be target or non-target
+	 */
 	public double classify(double[] featureVector) {
 		double[][] feature = new double[1][featureVector.length];
 		feature[0] = featureVector;
 		input = new Matrix(feature);
 		calculateL();
 		calculateP();
-		System.out.println(p.get(0, 1));
 		return p.get(0, 1);
 	}
 
+	/**
+	 * Saves data needed for classification
+	 * 
+	 * @param file
+	 *            - name of the file to save into
+	 */
 	public void save(String file) {
 		try {
 			File f = new File(file);
@@ -113,6 +125,12 @@ public class LinearDiscriminantAnalysisAlgorithms {
 		}
 	}
 
+	/**
+	 * Loads data needed for classification
+	 * 
+	 * @param file
+	 *            - name of the file
+	 */
 	public void load(String file) {
 		try {
 			File f = new File(file);
@@ -127,9 +145,9 @@ public class LinearDiscriminantAnalysisAlgorithms {
 			for (int i = 0; i < rows; i++) {
 				numbers = br.readLine().split(" ");
 				for (int j = 0; j < numbers.length; j++) {
-					if (numbers[j].equals("-∞")) {
+					if (numbers[j].equals("-â�ž")) {
 						matrix[currRow][currColumn] = -Double.MAX_VALUE;
-					} else if (numbers[j].equals("∞")) {
+					} else if (numbers[j].equals("â�ž")) {
 						matrix[currRow][currColumn] = Double.MAX_VALUE;
 					} else if (numbers[j].equals("")) {
 						continue;
@@ -375,8 +393,6 @@ public class LinearDiscriminantAnalysisAlgorithms {
 		temp3.arrayTimesEquals(groupMean.getMatrix(i, i, 0,
 				groupMean.getColumnDimension() - 1));
 		w.set(i, 0, temp3.get(0, 0) + Math.log(priorProb.get(i, 0)));
-		temp2.print(3, 21);
-		temp3.print(3, 21);
 		w.setMatrix(i, i, 1, w.getColumnDimension() - 1, temp2);
 	}
 

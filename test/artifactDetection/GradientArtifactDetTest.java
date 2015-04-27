@@ -38,7 +38,7 @@ public class GradientArtifactDetTest {
 
 	@Test
 	public void testDetectArtifact1() {
-		
+		a = new GradientArtifactDet(40);
 		assertEquals(null, a.detectArtifact(TestovaciData.eSpatna));
 	}
 	

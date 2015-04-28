@@ -32,64 +32,141 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 
+/**
+ * 
+ * @author Jaroslav Klaus
+ *
+ */
 @SuppressWarnings("serial")
 public class ChangeFeatureExtractionFrame extends JFrame {
 
+	/**
+	 * Reference to mainFrame
+	 */
 	private MainFrame mainFrame;
 
+	/**
+	 * Spinner for epoch size
+	 */
 	private JSpinner epochSpinner;
 
+	/**
+	 * Spinner model for epoch size that sets the bounds of input
+	 */
 	private final SpinnerNumberModel epochSnm = new SpinnerNumberModel(512, 1,
 			Const.POSTSTIMULUS_VALUES, 1);
 
+	/**
+	 * Spinner for subsampling number
+	 */
 	private JSpinner subsampleSpinner;
 
+	/**
+	 * Spinner model for subsampling number that sets the bounds of input
+	 */
 	private final SpinnerNumberModel subsampleSnm = new SpinnerNumberModel(1,
 			1, Const.POSTSTIMULUS_VALUES, 1);
 
+	/**
+	 * Spinner for number of skipped samples
+	 */
 	private JSpinner skipSpinner;
 
+	/**
+	 * Spinner model for nubmer of skipped samples that sets the bounds of input
+	 */
 	private final SpinnerNumberModel skipSnm = new SpinnerNumberModel(200, 1,
 			Const.POSTSTIMULUS_VALUES, 1);
 
+	/**
+	 * Combo box for wavelet names
+	 */
 	private JComboBox<String> waveletNameComboBox;
 
+	/**
+	 * Names of wavelets that can be used
+	 */
 	private String[] waveletNames = { "Coiflet 6", "Coiflet 12", "Coiflet 18",
 			"Coiflet 24", "Coiflet 30", "Daubechies 4", "Daubechies 6",
 			"Daubechies 8", "Daubechies 10", "Daubechies 12", "Daubechies 14",
 			"Daubechies 16", "Daubechies 18", "Daubechies 20", "Haar",
 			"Symmlet 4", "Symmlet 6", "Symmlet 8" };
-	
+
+	/**
+	 * Spinner for size of feature vector in WT
+	 */
 	private JSpinner wtFeatureSize;
 
+	/**
+	 * Spinner for size of sample window in HHT
+	 */
 	private JSpinner hhtSampleWindowSize;
 
+	/**
+	 * Spinner for shift of sample window in HHT
+	 */
 	private JSpinner hhtSampleWindowShift;
 
+	/**
+	 * Spinner for amplitude threshold in HHT
+	 */
 	private JSpinner hhtAmplitudeThreshold;
 
+	/**
+	 * Spinner for minimal frequency in HHT
+	 */
 	private JSpinner hhtMinFreq;
 
+	/**
+	 * Spinner for maximal frequency in HHT
+	 */
 	private JSpinner hhtMaxFreq;
 
+	/**
+	 * Combo box for type of features in HHT
+	 */
 	private JComboBox<String> hhtTypeOfFeatures;
 
+	/**
+	 * Types of features in HHT
+	 */
 	private String[] hhtFeatureTypes = { "Frequencies", "Amplitudes" };
 
+	/**
+	 * Radio button for selecting Filter And Subsampling Feature Extraction
+	 */
 	private JRadioButton fasBttn;
 
+	/**
+	 * Radio button for selecting Wavelet Transform Feature Extraction
+	 */
 	private JRadioButton wtBttn;
 
+	/**
+	 * Radio button for selecting Matching Pursuit Feature Extraction
+	 */
 	private JRadioButton mpBttn;
 
+	/**
+	 * Radio button for selecting Hilbert-Huang Transform Feature Extraction
+	 */
 	private JRadioButton hhtBttn;
-	
+
+	/**
+	 * Parameters for Feature Extraction
+	 */
 	private List<Integer> feParams;
 
+	/**
+	 * Constructor for creating this window and initializing its variables
+	 * 
+	 * @param mainFrame
+	 *            - reference to mainFrame
+	 */
 	public ChangeFeatureExtractionFrame(MainFrame mainFrame) {
 		super("Choose Feature Extractor and Its Parameters");
 		this.mainFrame = mainFrame;
-		this.getContentPane().add(createClassifierFrame());
+		this.getContentPane().add(createFeFrame());
 		this.setVisible(false);
 		this.pack();
 
@@ -102,6 +179,13 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		setEscListener(this);
 	}
 
+	/**
+	 * Sets listener to Esc key. After pressing Esc, this window closes and
+	 * nothing is changed
+	 * 
+	 * @param frame
+	 *            - this frame
+	 */
 	private void setEscListener(final ChangeFeatureExtractionFrame frame) {
 		ActionListener escListener = new ActionListener() {
 
@@ -116,7 +200,12 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
-	private JPanel createClassifierFrame() {
+	/**
+	 * Creates the main layout and panel
+	 * 
+	 * @return main panel
+	 */
+	private JPanel createFeFrame() {
 		GridLayout mainLayout = new GridLayout(1, 2);
 		JPanel contentJP = new JPanel(mainLayout);
 		contentJP.add(createRadioBttns());
@@ -125,6 +214,12 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return contentJP;
 	}
 
+	/**
+	 * Creates panel with radio buttons for selecting Feature Extraction method
+	 * and its actions
+	 * 
+	 * @return panel with radio buttons or selecting Feature Extraction method
+	 */
 	private JPanel createRadioBttns() {
 		fasBttn = new JRadioButton("Filter and Subsample");
 		fasBttn.setSelected(false);
@@ -215,6 +310,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return pane;
 	}
 
+	/**
+	 * Create panel with parameters for Feature Extraction methods
+	 * 
+	 * @return panel with parameters for Feature Extraction methods
+	 */
 	private JPanel createParameters() {
 		JPanel allPane = createAllPane();
 
@@ -246,6 +346,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return pane;
 	}
 
+	/**
+	 * Creates panel with parameters for all extraction methods
+	 * 
+	 * @return panel with parameters for all extraction methods
+	 */
 	private JPanel createAllPane() {
 		JPanel allPane = new JPanel();
 		allPane.setBorder(BorderFactory
@@ -276,6 +381,13 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return allPane;
 	}
 
+	/**
+	 * Creates panel with parameters for Filter And Subsampling Feature
+	 * Extraction
+	 * 
+	 * @return panel with parameters for Filter And Subsampling Feature
+	 *         Extraction
+	 */
 	private JPanel createFasPane() {
 		JPanel fasPane = new JPanel();
 		fasPane.setBorder(BorderFactory
@@ -288,6 +400,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return fasPane;
 	}
 
+	/**
+	 * Creates panel with parameters for Wavelet Transform Feature Extraction
+	 * 
+	 * @return panel with parameters for Wavelet Transform Feature Extraction
+	 */
 	private JPanel createWtPane() {
 		JPanel wtPane = new JPanel();
 		wtPane.setBorder(BorderFactory.createTitledBorder("Wavelet Transform"));
@@ -301,12 +418,13 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		waveletNameComboBox.setSelectedIndex(8);
 		waveletNameComboBox.setEnabled(false);
 		wtPane.add(waveletNameComboBox);
-		
+
 		// Wavelet Feature Size
 		JLabel wtFeatureSizeLabel = new JLabel("Feature Size");
 		wtPane.add(wtFeatureSizeLabel);
-		
-		SpinnerNumberModel wtFeatureSizeSnm = new SpinnerNumberModel(32, 1, 1024, 1);
+
+		SpinnerNumberModel wtFeatureSizeSnm = new SpinnerNumberModel(32, 1,
+				1024, 1);
 		wtFeatureSize = new JSpinner(wtFeatureSizeSnm);
 		wtFeatureSize.setEnabled(false);
 		wtPane.add(wtFeatureSize);
@@ -314,6 +432,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return wtPane;
 	}
 
+	/**
+	 * Creates panel with parameters for Matching Pursuit Feature Extraction
+	 * 
+	 * @return panel with parameters for Matching Pursuit Feature Extraction
+	 */
 	private JPanel createMpPane() {
 
 		JPanel mpPane = new JPanel();
@@ -323,6 +446,13 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return mpPane;
 	}
 
+	/**
+	 * Creates panel with parameters for Hilbert-Huang Transform Feature
+	 * Extraction
+	 * 
+	 * @return panel with parameters for Hilbert-Huang Transform Feature
+	 *         Extraction
+	 */
 	private JPanel createHhtPane() {
 		JPanel hhtPane = new JPanel();
 		hhtPane.setBorder(BorderFactory
@@ -391,6 +521,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return hhtPane;
 	}
 
+	/**
+	 * Creates panel with Next button
+	 * 
+	 * @return panel with Next button
+	 */
 	private JPanel createBttnPane() {
 		JPanel bttnPane = new JPanel();
 		JButton okBttn = new JButton("Next");
@@ -412,11 +547,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 							.setSkipSamples((int) skipSpinner.getValue());
 
 					c.dispose();
-					
+
 					feParams = new ArrayList<Integer>();
-					feParams.add((int)epochSpinner.getValue());
-					feParams.add((int)subsampleSpinner.getValue());
-					feParams.add((int)skipSpinner.getValue());
+					feParams.add((int) epochSpinner.getValue());
+					feParams.add((int) subsampleSpinner.getValue());
+					feParams.add((int) skipSpinner.getValue());
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
 							mainFrame, fe, feParams);
@@ -432,17 +567,18 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					((WaveletTransformFeatureExtraction) fe)
 							.setSkipSamples((int) skipSpinner.getValue());
 					((WaveletTransformFeatureExtraction) fe)
-							.setWaveletName(waveletNameComboBox.getSelectedIndex());
+							.setWaveletName(waveletNameComboBox
+									.getSelectedIndex());
 					((WaveletTransformFeatureExtraction) fe)
-							.setFeatureSize((int)wtFeatureSize.getValue());
+							.setFeatureSize((int) wtFeatureSize.getValue());
 
 					c.dispose();
-					
+
 					feParams = new ArrayList<Integer>();
-					feParams.add((int)epochSpinner.getValue());
-					feParams.add((int)skipSpinner.getValue());
+					feParams.add((int) epochSpinner.getValue());
+					feParams.add((int) skipSpinner.getValue());
 					feParams.add(waveletNameComboBox.getSelectedIndex());
-					feParams.add((int)wtFeatureSize.getValue());
+					feParams.add((int) wtFeatureSize.getValue());
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
 							mainFrame, fe, feParams);
@@ -456,11 +592,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					// TODO Set params
 
 					c.dispose();
-					
+
 					feParams = new ArrayList<Integer>();
-					feParams.add((int)epochSpinner.getValue());
-					feParams.add((int)subsampleSpinner.getValue());
-					feParams.add((int)skipSpinner.getValue());
+					feParams.add((int) epochSpinner.getValue());
+					feParams.add((int) subsampleSpinner.getValue());
+					feParams.add((int) skipSpinner.getValue());
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
 							mainFrame, fe, feParams);
@@ -489,16 +625,16 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 										.getSelectedIndex() + 1);
 
 						c.dispose();
-						
+
 						feParams = new ArrayList<Integer>();
-						feParams.add((int)epochSpinner.getValue());
-						feParams.add((int)subsampleSpinner.getValue());
-						feParams.add((int)skipSpinner.getValue());
-						feParams.add((int)hhtSampleWindowSize.getValue());
-						feParams.add((int)hhtSampleWindowShift.getValue());
-						feParams.add((int)hhtAmplitudeThreshold.getValue());
-						feParams.add((int)hhtMinFreq.getValue());
-						feParams.add((int)hhtMaxFreq.getValue());
+						feParams.add((int) epochSpinner.getValue());
+						feParams.add((int) subsampleSpinner.getValue());
+						feParams.add((int) skipSpinner.getValue());
+						feParams.add((int) hhtSampleWindowSize.getValue());
+						feParams.add((int) hhtSampleWindowShift.getValue());
+						feParams.add((int) hhtAmplitudeThreshold.getValue());
+						feParams.add((int) hhtMinFreq.getValue());
+						feParams.add((int) hhtMaxFreq.getValue());
 						feParams.add(hhtTypeOfFeatures.getSelectedIndex() + 1);
 
 						ChangeClassifierFrame cc = new ChangeClassifierFrame(
@@ -521,6 +657,12 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		return bttnPane;
 	}
 
+	/**
+	 * Checks parameters for HHT
+	 * 
+	 * @return <code>true</code> if all conditions are met;<code>false</code> if
+	 *         at least one condition is not met
+	 */
 	private boolean hhtConditions() {
 		if (((int) hhtSampleWindowShift.getValue()) > ((int) hhtSampleWindowSize
 				.getValue())) {

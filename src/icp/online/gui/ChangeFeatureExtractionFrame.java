@@ -13,6 +13,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -81,6 +83,8 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	private JRadioButton mpBttn;
 
 	private JRadioButton hhtBttn;
+	
+	private List<Integer> feParams;
 
 	public ChangeFeatureExtractionFrame(MainFrame mainFrame) {
 		super("Choose Feature Extractor and Its Parameters");
@@ -408,9 +412,14 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 							.setSkipSamples((int) skipSpinner.getValue());
 
 					c.dispose();
+					
+					feParams = new ArrayList<Integer>();
+					feParams.add((int)epochSpinner.getValue());
+					feParams.add((int)subsampleSpinner.getValue());
+					feParams.add((int)skipSpinner.getValue());
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
-							mainFrame, fe);
+							mainFrame, fe, feParams);
 					cc.setVisible(true);
 
 				} else if (wtBttn.isSelected()) {
@@ -428,9 +437,15 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 							.setFeatureSize((int)wtFeatureSize.getValue());
 
 					c.dispose();
+					
+					feParams = new ArrayList<Integer>();
+					feParams.add((int)epochSpinner.getValue());
+					feParams.add((int)skipSpinner.getValue());
+					feParams.add(waveletNameComboBox.getSelectedIndex());
+					feParams.add((int)wtFeatureSize.getValue());
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
-							mainFrame, fe);
+							mainFrame, fe, feParams);
 					cc.setVisible(true);
 
 				} else if (mpBttn.isSelected()) {
@@ -438,11 +453,17 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					mainFrame.setTrained(false);
 
 					IFeatureExtraction fe = new MatchingPursuitFeatureExtraction();
+					// TODO Set params
 
 					c.dispose();
+					
+					feParams = new ArrayList<Integer>();
+					feParams.add((int)epochSpinner.getValue());
+					feParams.add((int)subsampleSpinner.getValue());
+					feParams.add((int)skipSpinner.getValue());
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
-							mainFrame, fe);
+							mainFrame, fe, feParams);
 					cc.setVisible(true);
 
 				} else if (hhtBttn.isSelected()) {
@@ -468,9 +489,20 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 										.getSelectedIndex() + 1);
 
 						c.dispose();
+						
+						feParams = new ArrayList<Integer>();
+						feParams.add((int)epochSpinner.getValue());
+						feParams.add((int)subsampleSpinner.getValue());
+						feParams.add((int)skipSpinner.getValue());
+						feParams.add((int)hhtSampleWindowSize.getValue());
+						feParams.add((int)hhtSampleWindowShift.getValue());
+						feParams.add((int)hhtAmplitudeThreshold.getValue());
+						feParams.add((int)hhtMinFreq.getValue());
+						feParams.add((int)hhtMaxFreq.getValue());
+						feParams.add(hhtTypeOfFeatures.getSelectedIndex() + 1);
 
 						ChangeClassifierFrame cc = new ChangeClassifierFrame(
-								mainFrame, fe);
+								mainFrame, fe, feParams);
 
 						cc.setVisible(true);
 					}

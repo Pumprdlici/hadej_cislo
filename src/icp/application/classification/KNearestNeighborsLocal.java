@@ -61,7 +61,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	 * and class with less or equal to 0.0. If the class is greater, the matches variable is incremented.
 	 * Score is calculated as division of matches variable and number of relevant neighbors (k). 
 	 * @param featureVector element that will be classified
-	 * @return score of given element
+	 * @return score of given element (double)
 	 */
 	public double getScore(double[] featureVector) {
 		createDistances(featureVector);
@@ -114,7 +114,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	 * Method for calculating  the euclidian distance between two given vectors.
 	 * @param vector1 array of double values representing the vector
 	 * @param vector2 array of double values representing the vector
-	 * @return distance between two given vector
+	 * @return distance between two given vector (double)
 	 */
 	double calculateDistanceEuclidian(double[] vector1, double[] vector2) {
 		double distance = 0.0;
@@ -157,7 +157,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	
 	/**
 	 * Getter for returning the nearest neighbors count.
-	 * @return number of nearest neighbors
+	 * @return number of nearest neighbors (int)
 	 */
 	public int getK() {
 		return k;
@@ -173,7 +173,7 @@ public class KNearestNeighborsLocal implements Serializable {
 	
 	/**
 	 * Getter for returning the ArrayList with with all Neighbor instances (training data).
-	 * @return ArrayList with with all Neighbor instances
+	 * @return ArrayList with with all Neighbor instances (ArrayList<Neighbor>)
 	 */
 	public ArrayList<Neighbor> getNeighbors() {
 		return neighbors;

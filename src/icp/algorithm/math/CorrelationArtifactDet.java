@@ -1,5 +1,8 @@
 package icp.algorithm.math;
 
+import java.io.*;
+import java.util.*;
+
 import icp.online.app.EpochMessenger;
 
 /**
@@ -14,7 +17,7 @@ import icp.online.app.EpochMessenger;
  */
 public class CorrelationArtifactDet implements IArtifactDetection{
 	
-	private static final double DEFAULT_THRESHOLD = 0.86;
+	public static final double DEFAULT_THRESHOLD = 0.86;
 	private static final String EYE_ARTIFACT_FILE = "data/blink.txt";
 	private static final String DEFAULT_DELIMITER = " ";
 	
@@ -26,14 +29,14 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	/**
 	 * The maximum value of correlation coefficient allowed.
 	 */
-	private double threshold;
+	public double threshold;
 	
 	/**
 	 * Creates an instance of CorrelationArtifactDet with threshold set to {@link DEFAULT_THRESHOLD}.
 	 * The default pattern of eye blink is used.
 	 */
 	public CorrelationArtifactDet(){
-		this(readPatternFromFile(EYE_ARTIFACT_FILE, DEFAULT_DELIMITER),DEFAULT_THRESHOLD);
+		this.threshold = DEFAULT_THRESHOLD;
 	}
 	
 	/**
@@ -43,7 +46,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * @param threshold Threshold of correlation coefficient.
 	 */
 	public CorrelationArtifactDet(double threshold){
-		this(readPatternFromFile(EYE_ARTIFACT_FILE, DEFAULT_DELIMITER), threshold);
+		this.setThreshold(threshold);
 	}
 	
 	/**
@@ -138,7 +141,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * case returns null.
 	 */
 	public EpochMessenger detectArtifact(EpochMessenger epochMes){
-		epochMes = detectArtifacts(epochMes, this.pattern);
+		epochMes = detectArtifact(epochMes, this.pattern);
 		return epochMes;
 	}
 	
@@ -158,6 +161,8 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * case returns null.
 	 */
 	public EpochMessenger detectArtifact(EpochMessenger epochMes, double[] pattern){
+		if(pattern == null)return epochMes;
+		
 		double[][] epoch = epochMes.getEpoch();
 		double n = pattern.length;
 		for(int channel = 0; channel<epoch.length; channel++){

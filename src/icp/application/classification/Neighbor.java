@@ -40,18 +40,34 @@ public class Neighbor implements Serializable{
 		this.distance = Double.MAX_VALUE;
 	}
 	
+	/**
+	 * Getter for vector attribute.
+	 * @return vector (double[])
+	 */
 	public double[] getVector() {
 		return vector;
 	}
-
+	
+	/**
+	 * Getter for classValue attribute.
+	 * @return classValue (double)
+	 */
 	public double getClassValue() {
 		return classValue;
 	}
-
+	
+	/**
+	 * Getter for distance attribute.
+	 * @return distance (double)
+	 */
 	public double getDistance() {
 		return distance;
 	}
-
+	
+	/**
+	 * Setter for distance attribute.
+	 * @param distance
+	 */
 	public void setDistance(double distance) {
 		this.distance = distance;
 	}

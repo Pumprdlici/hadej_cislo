@@ -12,12 +12,12 @@ import icp.online.app.EpochMessenger;
  */
 public class AmplitudeArtifactDet implements IArtifactDetection{
 	
-	private static final double DEFAULT_THRESHOLD = 50;
+	public static final double DEFAULT_THRESHOLD = 100;
 	
 	/**
 	 * Maximum value allowed in the signal
 	 */
-	private double threshold;
+	public double threshold;
 	
 	/**
 	 * Parameterized constructor of this class.
@@ -50,12 +50,36 @@ public class AmplitudeArtifactDet implements IArtifactDetection{
 		for(int i = 0; i < values.length; i++) {
 			for(int j = 0; j < values[i].length; j++) {
 				if(Math.abs(values[i][j]) > threshold) {
+					System.out.println("Amplitude! "+(epoch.getStimulusIndex()+1));
 					return null;
 				}
 			}
 		}
-		
 		return epoch;
+	}
+	
+	/**
+	 * Returns the threshold.
+	 * 
+	 * @return threshold The threshold (maximal amplitude).
+	 */
+	public double getThreshold(){
+		return this.threshold;
+	}
+	
+	/**
+	 * Sets the threshold (maximal amplitude). If the given parameter 
+	 * is lower than 0, the threshold 
+	 * is set to default value of {@link #DEFAULT_THRESHOLD}.
+	 * 
+	 * @param threshold Maximal amplitude.
+	 */
+	public void setThreshold(double threshold){
+		if(threshold < 0){
+			this.threshold = DEFAULT_THRESHOLD;
+			return;
+		}
+		this.threshold = threshold;
 	}
 
 }

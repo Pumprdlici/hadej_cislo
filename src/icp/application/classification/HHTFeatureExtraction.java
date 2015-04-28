@@ -17,6 +17,9 @@ import hht.hilbertTransform.HilbertTransform;
  */
 public class HHTFeatureExtraction implements IFeatureExtraction {
 	
+	/**
+	 * array with numbers of epoch channels
+	 */
 	private static final int[] CHANNELS = {1, 2, 3};
 	
 	/**
@@ -79,7 +82,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * variable for storing maximal frequency of P3 component 
 	 */
 	private double maxFreq = 3.0;
-
+	
 	@Override
 	public double[] extractFeatures(double[][] epoch) {
 		
@@ -113,7 +116,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * and then selects suitable features from them by calling selectFeatures method.
 	 * In the case none Hilbert transform will be returned, method returns original signal for set epoch size.
 	 * @param epochSamples - array of input samples, which will by processed by HHT library 
-	 * @return array with processed features
+	 * @return array with processed features (double[])
 	 */
 	private double[] processFeatures(double[] epochSamples) {
 		
@@ -153,7 +156,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * one selected, we get the desired features.
 	 * @param hTransforms - {@link Vector} with HilbertTransform objects, which hold arrays with frequencies and amplitudes
 	 * of relevant IMFs
-	 * @return features from selected Hilbert transform
+	 * @return features from selected Hilbert transform (double[])
 	 */
 	private double[] selectFeatures(Vector<HilbertTransform> hTransforms) {
 		double[] selectedFeatures;
@@ -224,7 +227,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * for every frequency that isn't between those variables. More difference is between the frequency and
 	 * those numbers, the more will be the score decreased (by 1.0 should the frequency be Double.MAX_VALUE or Double.MIN_VALUE). 
 	 * @param avgWindowFrequencies - {@link ArrayList} with average frequencies gotten from sample window
-	 * @return final score for frequencies of current Hilbert transform
+	 * @return final score for frequencies of current Hilbert transform (double)
 	 */
 	double getWindowFrequencyScore(ArrayList<Double> avgWindowFrequencies) {
 		double score = 0.0;
@@ -252,7 +255,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * for every amplitude that is lesser than that variable. More difference is between the amplitude and
 	 * the variable, the more will be the score decreased (by 1.0 should the amplitude be Double.MIN_VALUE). 
 	 * @param avgWindowAmplitudes - {@link ArrayList} with average amplitudes gotten from sample window
-	 * @return final score for amplitudes of current Hilbert transform
+	 * @return final score for amplitudes of current Hilbert transform (double)
 	 */
 	double getWindowAmplitudeScore(ArrayList<Double> avgWindowAmplitudes) {
 		double score = 0.0;
@@ -275,7 +278,7 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	 * and the compares it with the last greatest score and sets the index.
 	 * @param htAmplitudesScore - array with scores for amplitudes of all transforms
 	 * @param htFrequenciesScore - array with scores for frequencies of all transforms
-	 * @return index (in {@link Vector}) of HilberTransform with greatest score
+	 * @return index (in {@link Vector}) of HilberTransform with greatest score (int)
 	 */
 	int selectIndexOfBestHT(double[] htAmplitudesScore, double[] htFrequenciesScore) {
 		int index = 0;
@@ -293,6 +296,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		return index;
 	}
 	
+	/**
+	 * Setter for skipSamples attribute. It requires value equal or greater than 0.
+	 * @param skipSamples
+	 * @throws IllegalArgumentException
+	 */
 	public void setSkipSamples(int skipSamples) {
 		if(skipSamples >= 0) {
 			this.skipSamples = skipSamples;
@@ -302,6 +310,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
+	/**
+	 * Setter for epochSize attribute. It requires value greater than 0.
+	 * @param epochSize
+	 * @throws IllegalArgumentException
+	 */
 	public void setEpochSize(int epochSize) {
 		if(epochSize > 0) {
 			this.epochSize = epochSize;
@@ -311,6 +324,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
+	/**
+	 * Setter for downSmplFactor attribute. It requires value equal or greater than 0.
+	 * @param downSmplFactor
+	 * @throws IllegalArgumentException
+	 */
 	public void setDownSmplFactor(int downSmplFactor) {
 		if(downSmplFactor >= 0) {
 			this.downSmplFactor = downSmplFactor;
@@ -319,15 +337,28 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 			throw new IllegalArgumentException("Wrong input value! You cannot set negative sub-sampling factor.");
 		}
 	}
-
+	
+	/**
+	 * Setter for typeOfFeatures attribute.
+	 * @param typeOfFeatures
+	 */
 	public void setTypeOfFeatures(int typeOfFeatures) {
 		this.typeOfFeatures = typeOfFeatures;
 	}
-
+	
+	/**
+	 * Setter for amplitudeThreshold attribute.
+	 * @param amplitudeThreshold
+	 */
 	public void setAmplitudeThreshold(double amplitudeThreshold) {
 		this.amplitudeThreshold = amplitudeThreshold;
 	}
 	
+	/**
+	 * Setter for minFreq attribute. It requires value greater than 0.0.
+	 * @param minFreq
+	 * @throws IllegalArgumentException
+	 */
 	public void setMinFreq(double minFreq) {
 		if(minFreq > 0.0) {
 			this.minFreq = minFreq;
@@ -337,6 +368,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
+	/**
+	 * Setter for maxFreq attribute. It requires value greater than 0.0.
+	 * @param maxFreq
+	 * @throws IllegalArgumentException
+	 */
 	public void setMaxFreq(double maxFreq) {
 		if(maxFreq > 0.0) {
 			this.maxFreq = maxFreq;
@@ -346,7 +382,12 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 		
 	}
-
+	
+	/**
+	 * Setter for sampleWindowSize attribute. It requires value greater than 0.
+	 * @param sampleWindowSize
+	 * @throws IllegalArgumentException
+	 */
 	public void setSampleWindowSize(int sampleWindowSize) {
 		if(sampleWindowSize > 0) {
 			this.sampleWindowSize = sampleWindowSize;
@@ -356,6 +397,11 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
+	/**
+	 * Setter for sampleWindowShift attribute. It requires value greater than 0.
+	 * @param sampleWindowShift
+	 * @throws IllegalArgumentException
+	 */
 	public void setSampleWindowShift(int sampleWindowShift) {
 		if(sampleWindowShift > 0) {
 			this.sampleWindowShift = sampleWindowShift;
@@ -365,38 +411,74 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 	
+	/**
+	 * Getter for skipSamples attribute.
+	 * @return skipSamples (int)
+	 */
 	public int getSkipSamples() {
 		return skipSamples;
 	}
 	
+	/**
+	 * Getter for epochSize attribute.
+	 * @return epochSize (int)
+	 */
 	public int getEpochSize() {
 		return epochSize;
 	}
 	
+	/**
+	 * Getter for downSmplFactor attribute.
+	 * @return downSmplFactor (int)
+	 */
 	public int getDownSmplFactor() {
 		return downSmplFactor;
 	}
 	
+	/**
+	 * Getter for typeOfFeatures attribute.
+	 * @return typeOfFeatures (int)
+	 */
 	public int getTypeOfFeatures() {
 		return typeOfFeatures;
 	}
-
+	
+	/**
+	 * Getter for sampleWindowSize attribute.
+	 * @return sampleWindowSize (int)
+	 */
 	public int getSampleWindowSize() {
 		return sampleWindowSize;
 	}
-
+	
+	/**
+	 * Getter for sampleWindowShift attribute.
+	 * @return sampleWindowShift (int)
+	 */
 	public int getSampleWindowShift() {
 		return sampleWindowShift;
 	}
-
+	
+	/**
+	 * Getter for amplitudeThreshold attribute.
+	 * @return amplitudeThreshold (double)
+	 */
 	public double getAmplitudeThreshold() {
 		return amplitudeThreshold;
 	}
-
+	
+	/**
+	 * Getter for minFreq attribute.
+	 * @return minFreq (double)
+	 */
 	public double getMinFreq() {
 		return minFreq;
 	}
-
+	
+	/**
+	 * Getter for maxFreq attribute.
+	 * @return maxFreq (double)
+	 */
 	public double getMaxFreq() {
 		return maxFreq;
 	}

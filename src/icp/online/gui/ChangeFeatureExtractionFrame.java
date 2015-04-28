@@ -540,11 +540,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 					IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
 					((FilterAndSubsamplingFeatureExtraction) fe)
-							.setEpochSize((int) epochSpinner.getValue());
+							.setEpochSize((Integer) epochSpinner.getValue());
 					((FilterAndSubsamplingFeatureExtraction) fe)
-							.setSubsampling((int) subsampleSpinner.getValue());
+							.setSubsampling((Integer) subsampleSpinner.getValue());
 					((FilterAndSubsamplingFeatureExtraction) fe)
-							.setSkipSamples((int) skipSpinner.getValue());
+							.setSkipSamples((Integer) skipSpinner.getValue());
 
 					c.dispose();
 
@@ -563,14 +563,14 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 					IFeatureExtraction fe = new WaveletTransformFeatureExtraction();
 					((WaveletTransformFeatureExtraction) fe)
-							.setEpochSize((int) epochSpinner.getValue());
+							.setEpochSize((Integer) epochSpinner.getValue());
 					((WaveletTransformFeatureExtraction) fe)
-							.setSkipSamples((int) skipSpinner.getValue());
+							.setSkipSamples((Integer) skipSpinner.getValue());
 					((WaveletTransformFeatureExtraction) fe)
 							.setWaveletName(waveletNameComboBox
 									.getSelectedIndex());
 					((WaveletTransformFeatureExtraction) fe)
-							.setFeatureSize((int) wtFeatureSize.getValue());
+							.setFeatureSize((Integer)wtFeatureSize.getValue());
 
 					c.dispose();
 
@@ -608,17 +608,17 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 						IFeatureExtraction fe = new HHTFeatureExtraction();
 						((HHTFeatureExtraction) fe)
-								.setSampleWindowSize((int) hhtSampleWindowSize
+								.setSampleWindowSize((Integer) hhtSampleWindowSize
 										.getValue());
 						((HHTFeatureExtraction) fe)
-								.setSampleWindowShift((int) hhtSampleWindowShift
+								.setSampleWindowShift((Integer) hhtSampleWindowShift
 										.getValue());
 						((HHTFeatureExtraction) fe)
-								.setAmplitudeThreshold((int) hhtAmplitudeThreshold
+								.setAmplitudeThreshold((Integer) hhtAmplitudeThreshold
 										.getValue());
-						((HHTFeatureExtraction) fe).setMinFreq((int) hhtMinFreq
+						((HHTFeatureExtraction) fe).setMinFreq((Integer) hhtMinFreq
 								.getValue());
-						((HHTFeatureExtraction) fe).setMaxFreq((int) hhtMaxFreq
+						((HHTFeatureExtraction) fe).setMaxFreq((Integer) hhtMaxFreq
 								.getValue());
 						((HHTFeatureExtraction) fe)
 								.setTypeOfFeatures(hhtTypeOfFeatures
@@ -664,13 +664,13 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	 *         at least one condition is not met
 	 */
 	private boolean hhtConditions() {
-		if (((int) hhtSampleWindowShift.getValue()) > ((int) hhtSampleWindowSize
+		if (((Integer) hhtSampleWindowShift.getValue()) > ((Integer) hhtSampleWindowSize
 				.getValue())) {
 			JOptionPane.showMessageDialog(null,
 					"Sample Window Shift must be <= Sample Window Size");
 			return false;
 		}
-		if (((int) hhtMinFreq.getValue()) > ((int) hhtMaxFreq.getValue())) {
+		if (((Integer) hhtMinFreq.getValue()) > ((Integer) hhtMaxFreq.getValue())) {
 			JOptionPane.showMessageDialog(null,
 					"Min Frequency must be <= Max Frequency");
 			return false;

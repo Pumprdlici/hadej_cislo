@@ -15,7 +15,7 @@ public class GradientArtifactDet implements IArtifactDetection{
 	/**
 	 * The default maximal difference.
 	 */
-	private static final double DEFAULT_MAXDIFF = 100;
+	public static final double DEFAULT_MAXDIFF = 100;
 	
 	/**
 	 * The maximal difference between average and value of a point 
@@ -83,6 +83,8 @@ public class GradientArtifactDet implements IArtifactDetection{
 	public void setMaxDiff(double maxDiff){
 		if(maxDiff < 0){
 			this.maxDiff = DEFAULT_MAXDIFF;
+		} else {
+			this.maxDiff = maxDiff;
 		}
 	}
 }

@@ -1,0 +1,10 @@
+*.eeg
+*.vhdr
+*.vmrk
+*.txt
+/bin/
+.project
+.classpath
+.settings/
+log/
+.gitignore

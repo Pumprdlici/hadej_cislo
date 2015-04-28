@@ -28,7 +28,7 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private static final int SKIP_SAMPLES = 300;
+	private static final int SKIP_SAMPLES = 200;
 	
 	/**
 	 * Private instance of singleton.
@@ -48,12 +48,17 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	public double[] extractFeatures(double[][] epoch) {
 		
 		int numberOfChannels = CHANNELS.length;
-		double[] signal = new double[EPOCH_SIZE * numberOfChannels / DOWN_SMPL_FACTOR];
+		double[] signal = new double[getFeatureDimension()];
+		double[] processingPart = new double[EPOCH_SIZE / DOWN_SMPL_FACTOR];
 		
 		int k = 0;
 		for(int i = 0; i < numberOfChannels; i++) {
-			for(int j = 0; j < (EPOCH_SIZE  / DOWN_SMPL_FACTOR - SKIP_SAMPLES); j++) {
-				signal[k] = epoch[i][j * DOWN_SMPL_FACTOR + SKIP_SAMPLES];
+			for(int j = 0; j < EPOCH_SIZE / DOWN_SMPL_FACTOR; j++) {
+				processingPart[j] = epoch[i][j * DOWN_SMPL_FACTOR + SKIP_SAMPLES];
+			}
+			processingPart = instance.processSignal(processingPart).getReconstruction();
+			for(int j = 0; j < processingPart.length; j++) {
+				signal[k] = processingPart[j];
 				k++;
 			}
 		}

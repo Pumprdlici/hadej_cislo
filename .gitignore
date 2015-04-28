@@ -5,3 +5,6 @@
 /bin/
 .project
 .classpath
+.settings/
+log/
+.gitignore

@@ -1,5 +1,6 @@
 package icp.online.gui;
 
+import icp.Const;
 import icp.application.classification.CorrelationClassifier;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -15,7 +16,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -39,11 +44,13 @@ public class ChangeClassifierFrame extends JFrame {
 
 	private IFeatureExtraction fe;
 
+	private List<Integer> feParams;
+
 	private JSpinner middleNeuronsSpinner;
 
 	private JSpinner neighborsNumberSpinner;
 
-	private JSpinner svmGamma;
+	private JSpinner svmCost;
 
 	private JRadioButton mlpBttn;
 
@@ -55,10 +62,12 @@ public class ChangeClassifierFrame extends JFrame {
 
 	private JRadioButton correlationBttn;
 
-	public ChangeClassifierFrame(MainFrame mainFrame, IFeatureExtraction fe) {
+	public ChangeClassifierFrame(MainFrame mainFrame, IFeatureExtraction fe,
+			List<Integer> feParams) {
 		super("Choose Classifier and its Parameters");
 		this.mainFrame = mainFrame;
 		this.fe = fe;
+		this.feParams = feParams;
 		this.getContentPane().add(createClassifierFrame());
 		this.setVisible(false);
 		this.pack();
@@ -104,7 +113,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(true);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -116,7 +125,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(true);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -128,7 +137,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -140,7 +149,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(true);
+				svmCost.setEnabled(true);
 			}
 		});
 
@@ -152,7 +161,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -259,14 +268,14 @@ public class ChangeClassifierFrame extends JFrame {
 		svmPane.setLayout(new GridLayout(0, 2));
 
 		// Gamma
-		JLabel svmGammeLabel = new JLabel("Gamma");
-		svmPane.add(svmGammeLabel);
+		JLabel svmCostLabel = new JLabel("Cost");
+		svmPane.add(svmCostLabel);
 
-		SpinnerNumberModel svmGammaSnm = new SpinnerNumberModel(0, 0, 15000,
+		SpinnerNumberModel svmCostSnm = new SpinnerNumberModel(0, 0, 15000,
 				0.001);
-		svmGamma = new JSpinner(svmGammaSnm);
-		svmGamma.setEnabled(false);
-		svmPane.add(svmGamma);
+		svmCost = new JSpinner(svmCostSnm);
+		svmCost.setEnabled(false);
+		svmPane.add(svmCost);
 
 		return svmPane;
 	}
@@ -307,7 +316,7 @@ public class ChangeClassifierFrame extends JFrame {
 					mainFrame.setClassifierStatus("Classifier: "
 							+ classifier.getClass().getSimpleName());
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, feParams, classifier, nnStructure);
 				} else if (knnBttn.isSelected()) {
 					int neighborsNumber = (Integer) neighborsNumberSpinner
 							.getValue();
@@ -322,8 +331,11 @@ public class ChangeClassifierFrame extends JFrame {
 							+ fe.getClass().getSimpleName());
 					mainFrame.setClassifierStatus("Classifier: "
 							+ classifier.getClass().getSimpleName());
+					
+					List<Integer> classifierParams = new ArrayList<Integer>();
+					classifierParams.add(neighborsNumber);
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, feParams, classifier, classifierParams);
 				} else if (ldaBttn.isSelected()) {
 					IERPClassifier classifier = new LinearDiscriminantAnalysisClassifier();
 					classifier.setFeatureExtraction(fe);
@@ -334,12 +346,15 @@ public class ChangeClassifierFrame extends JFrame {
 							+ fe.getClass().getSimpleName());
 					mainFrame.setClassifierStatus("Classifier: "
 							+ classifier.getClass().getSimpleName());
+					
+					List<Integer> classifierParams = new ArrayList<Integer>();
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, feParams, classifier, classifierParams);
 				} else if (svmBttn.isSelected()) {
 					IERPClassifier classifier;
 					try {
 						classifier = new SVMClassifier();
+						// TODO Set parameters
 						classifier.setFeatureExtraction(fe);
 
 						mainFrame.setFe(fe);
@@ -348,8 +363,11 @@ public class ChangeClassifierFrame extends JFrame {
 								+ fe.getClass().getSimpleName());
 						mainFrame.setClassifierStatus("Classifier: "
 								+ classifier.getClass().getSimpleName());
+						
+						List<Integer> classifierParams = new ArrayList<Integer>();
+						classifierParams.add((int)svmCost.getValue());
 
-						trainingDialog(c, classifier);
+						trainingDialog(c, feParams, classifier, classifierParams);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -364,7 +382,9 @@ public class ChangeClassifierFrame extends JFrame {
 					mainFrame.setClassifierStatus("Classifier: "
 							+ classifier.getClass().getSimpleName());
 
-					trainingDialog(c, classifier);
+					List<Integer> classifierParams = new ArrayList<Integer>();
+
+					trainingDialog(c, feParams, classifier, classifierParams);
 				} else {
 					JOptionPane
 							.showMessageDialog(null,
@@ -382,7 +402,8 @@ public class ChangeClassifierFrame extends JFrame {
 	}
 
 	private void trainingDialog(ChangeClassifierFrame c,
-			IERPClassifier classifier) {
+			List<Integer> feParams, IERPClassifier classifier,
+			List<Integer> classifierParams) {
 		if (mainFrame.isTrained() == false) {
 			int dialogResult = JOptionPane
 					.showConfirmDialog(
@@ -393,13 +414,35 @@ public class ChangeClassifierFrame extends JFrame {
 			if (dialogResult == JOptionPane.YES_OPTION) {
 				c.dispose();
 
-				// training
-				new TrainUsingOfflineProvider(c.fe, classifier);
+				// TODO training
+				// new TrainUsingOfflineProvider(c.fe, classifier);
+				writeLastTrainedClassifier(fe.getClass().getSimpleName(), feParams,
+						classifier.getClass().getSimpleName(),
+						classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);
 			} else {
 				c.dispose();
 			}
 		} else {
 			c.dispose();
+		}
+	}
+
+	private void writeLastTrainedClassifier(String feName, List<Integer> feParams,
+			String classifierName, List<Integer> classifierParams, String file) {
+		try {
+			File f = new File(file);
+			FileWriter fw = new FileWriter(f);
+			fw.write(feName + "\n");
+			for (int param : feParams) {
+				fw.write(param + "\n");
+			}
+			fw.write(classifierName + "\n");
+			for (int param : classifierParams) {
+				fw.write(param + "\n");
+			}
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

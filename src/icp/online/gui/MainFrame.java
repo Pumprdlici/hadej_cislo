@@ -1,10 +1,17 @@
 package icp.online.gui;
 
 import icp.Const;
+import icp.application.classification.CorrelationClassifier;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
+import icp.application.classification.HHTFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
+import icp.application.classification.KNNClassifier;
+import icp.application.classification.LinearDiscriminantAnalysisClassifier;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.MatchingPursuitFeatureExtraction;
+import icp.application.classification.SVMClassifier;
+import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.application.classification.test.TrainUsingOfflineProvider;
 import icp.online.app.IDataProvider;
 import icp.online.app.OffLineDataProvider;
@@ -20,7 +27,12 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Observable;
@@ -54,7 +66,6 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 @SuppressWarnings("serial")
-
 public class MainFrame extends JFrame implements Observer {
 
 	private AbstractTableModel data;
@@ -80,9 +91,9 @@ public class MainFrame extends JFrame implements Observer {
 	private final ShowChart epochCharts;
 
 	private boolean trained = false;
-	
+
 	private JLabel feStatus;
-	
+
 	private JLabel classifierStatus;
 
 	public MainFrame() {
@@ -97,7 +108,7 @@ public class MainFrame extends JFrame implements Observer {
 
 		this.setLayout(new BorderLayout());
 		getContentPane().add(createContentJP(), BorderLayout.CENTER);
-		
+
 		this.setJMenuBar(createMenu());
 
 		this.setVisible(true);
@@ -109,33 +120,120 @@ public class MainFrame extends JFrame implements Observer {
 		this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		classifier = new MLPClassifier();
-		classifier.load(Const.TRAINING_FILE_NAME);
-		fe = new FilterAndSubsamplingFeatureExtraction();
-		classifier.setFeatureExtraction(fe);
+		File lastTrained = new File(Const.LAST_TRAINED_SETTINGS_FILE_NAME);
+		if (lastTrained.exists()) {
+			readLastTrainedClassifier(lastTrained);
+		} else {
+			classifier = new MLPClassifier();
+			classifier.load(Const.TRAINING_FILE_NAME);
+			fe = new FilterAndSubsamplingFeatureExtraction();
+			classifier.setFeatureExtraction(fe);
+		}
 
 		getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
 	}
-	
+
+	private void readLastTrainedClassifier(File f) {
+		try {
+			FileReader fr = new FileReader(f);
+			BufferedReader br = new BufferedReader(fr);
+			String radka = br.readLine();
+			switch (radka) {
+			case "FilterAndSubsamplingFeatureExtraction":
+				fe = new FilterAndSubsamplingFeatureExtraction();
+				((FilterAndSubsamplingFeatureExtraction) fe)
+						.setEpochSize(Integer.parseInt(br.readLine()));
+				((FilterAndSubsamplingFeatureExtraction) fe)
+						.setSubsampling(Integer.parseInt(br.readLine()));
+				((FilterAndSubsamplingFeatureExtraction) fe)
+						.setSkipSamples(Integer.parseInt(br.readLine()));
+				break;
+			case "WaveletTransformFeatureExtraction":
+				fe = new WaveletTransformFeatureExtraction();
+				((WaveletTransformFeatureExtraction) fe).setEpochSize(Integer
+						.parseInt(br.readLine()));
+				((WaveletTransformFeatureExtraction) fe).setSkipSamples(Integer
+						.parseInt(br.readLine()));
+				((WaveletTransformFeatureExtraction) fe).setWaveletName(Integer
+						.parseInt(br.readLine()));
+				((WaveletTransformFeatureExtraction) fe).setFeatureSize(Integer
+						.parseInt(br.readLine()));
+				break;
+			case "MatchingPursuitFeatureExtraction":
+				fe = new MatchingPursuitFeatureExtraction();
+				// TODO Set params
+				break;
+			case "HHTFeatureExtraction":
+				fe = new HHTFeatureExtraction();
+				((HHTFeatureExtraction) fe).setSampleWindowSize(Integer
+						.parseInt(br.readLine()));
+				((HHTFeatureExtraction) fe).setSampleWindowShift(Integer
+						.parseInt(br.readLine()));
+				((HHTFeatureExtraction) fe).setAmplitudeThreshold(Integer
+						.parseInt(br.readLine()));
+				((HHTFeatureExtraction) fe).setMinFreq(Integer.parseInt(br
+						.readLine()));
+				((HHTFeatureExtraction) fe).setMaxFreq(Integer.parseInt(br
+						.readLine()));
+				((HHTFeatureExtraction) fe).setTypeOfFeatures(Integer
+						.parseInt(br.readLine()));
+				break;
+			}
+			radka = br.readLine();
+			switch (radka) {
+			case "MLPClassifier":
+				ArrayList<Integer> nnStructure = new ArrayList<Integer>();
+				nnStructure.add(Integer.parseInt(br.readLine()));
+				nnStructure.add(Integer.parseInt(br.readLine()));
+				nnStructure.add(Integer.parseInt(br.readLine()));
+				classifier = new MLPClassifier(nnStructure);
+				break;
+			case "KNNClassifier":
+				classifier = new KNNClassifier(Integer.parseInt(br.readLine()));
+				break;
+			case "LinearDiscriminantAnalysisClassifier":
+				classifier = new LinearDiscriminantAnalysisClassifier();
+				break;
+			case "SVMClassifier":
+				try {
+					classifier = new SVMClassifier();
+					// TODO Set parameters
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				break;
+			case "CorrelationClassifier":
+				classifier = new CorrelationClassifier();
+				// TODO Set params
+				break;
+			}
+			br.close();
+			fr.close();
+			classifier.setFeatureExtraction(fe);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private JPanel createStatusBar() {
 		JPanel statusBar = new JPanel();
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.LINE_AXIS));
-		statusBar.setBorder(BorderFactory
-				.createLoweredBevelBorder());
-		
-		feStatus = new JLabel("Feature Extraction: " + this.fe.getClass().getSimpleName());
+		statusBar.setBorder(BorderFactory.createLoweredBevelBorder());
+
+		feStatus = new JLabel("Feature Extraction: "
+				+ this.fe.getClass().getSimpleName());
 		statusBar.add(feStatus);
-		
+
 		statusBar.add(Box.createHorizontalStrut(5));
 		JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
 		separator.setMaximumSize(new Dimension(1, Integer.MAX_VALUE));
-        statusBar.add(separator);
-        statusBar.add(Box.createHorizontalStrut(5));
-		
+		statusBar.add(separator);
+		statusBar.add(Box.createHorizontalStrut(5));
+
 		classifierStatus = new JLabel("Classifier: "
 				+ this.classifier.getClass().getSimpleName());
 		statusBar.add(classifierStatus);
-		
+
 		return statusBar;
 	}
 
@@ -160,11 +258,11 @@ public class MainFrame extends JFrame implements Observer {
 		});
 		final MainFrame mf = this;
 		JMenu settingsMenu = new JMenu("Settings");
-		JMenuItem featureMenuItem = new JMenuItem("Feature Extraction and Classifier");
+		JMenuItem featureMenuItem = new JMenuItem(
+				"Feature Extraction and Classifier");
 		featureMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
 				ActionEvent.CTRL_MASK));
 		featureMenuItem.addActionListener(new ActionListener() {
-
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -177,7 +275,7 @@ public class MainFrame extends JFrame implements Observer {
 		trainMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,
 				ActionEvent.CTRL_MASK));
 		trainMenuItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO training
@@ -195,17 +293,19 @@ public class MainFrame extends JFrame implements Observer {
 
 		menuBar.add(settingsMenu);
 		settingsMenu.add(featureMenuItem);
+		settingsMenu.add(trainMenuItem);
 
 		return menuBar;
 	}
 
-	private JPanel createContentJP() {		
+	private JPanel createContentJP() {
 		GridLayout mainLayout = new GridLayout(0, 2);
 		JPanel contentJP = new JPanel(mainLayout);
 		contentJP.add(createStimuliJT());
 		contentJP.add(createWinnerJTA());
 		return contentJP;
 	}
+
 	private JTextPane createWinnerJTA() {
 		winnerJTA = new JTextPane();
 		Font font = new Font(Const.RESULT_FONT_NAME, Const.RESULT_FONT_STYLE,
@@ -314,7 +414,7 @@ public class MainFrame extends JFrame implements Observer {
 	public void setFeStatus(String feStatus) {
 		this.feStatus.setText(feStatus);
 	}
-	
+
 	public void setClassifierStatus(String classifierStatus) {
 		this.classifierStatus.setText(classifierStatus);
 	}

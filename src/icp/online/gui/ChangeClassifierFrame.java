@@ -520,22 +520,18 @@ public class ChangeClassifierFrame extends JFrame {
 			List<Integer> feParams, IERPClassifier classifier,
 			List<Integer> classifierParams) {
 		if (mainFrame.isTrained() == false) {
-			int dialogResult = JOptionPane
-					.showConfirmDialog(
-							null,
-							"You have to train the classifier in order to use it\nWould you like to train it now?",
-							"Classifier is not trained",
-							JOptionPane.YES_NO_OPTION);
-			if (dialogResult == JOptionPane.YES_OPTION) {
+			int dialogResult = JOptionPane.showConfirmDialog(null,
+					"You have to train the classifier in order to use it",
+					"Classifier is not trained", JOptionPane.OK_CANCEL_OPTION);
+			if (dialogResult == JOptionPane.OK_OPTION) {
 				c.dispose();
 
 				// TODO training
-				// new TrainUsingOfflineProvider(c.fe, classifier);
+				// TrainUsingOfflineProvider train = new
+				// TrainUsingOfflineProvider(c.fe, classifier);
 				writeLastTrainedClassifier(fe.getClass().getSimpleName(),
 						feParams, classifier.getClass().getSimpleName(),
 						classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);
-			} else {
-				c.dispose();
 			}
 		} else {
 			c.dispose();

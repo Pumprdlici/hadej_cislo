@@ -209,6 +209,7 @@ public class MainFrame extends JFrame implements Observer {
 			}
 			br.close();
 			fr.close();
+			classifier.load(Const.TRAINING_FILE_NAME);
 			classifier.setFeatureExtraction(fe);
 		} catch (IOException e) {
 			e.printStackTrace();

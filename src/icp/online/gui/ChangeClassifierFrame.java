@@ -58,7 +58,7 @@ public class ChangeClassifierFrame extends JFrame {
 	/**
 	 * Parameters for Feature Extraction method
 	 */
-	private List<Integer> feParams;
+	private List<String> feParams;
 
 	/**
 	 * Spinner for MLP's middle neurons
@@ -111,7 +111,7 @@ public class ChangeClassifierFrame extends JFrame {
 	 *            - parameters for Feature Extraction method
 	 */
 	public ChangeClassifierFrame(MainFrame mainFrame, IFeatureExtraction fe,
-			List<Integer> feParams) {
+			List<String> feParams) {
 		super("Choose Classifier and its Parameters");
 		this.mainFrame = mainFrame;
 		this.fe = fe;
@@ -410,7 +410,12 @@ public class ChangeClassifierFrame extends JFrame {
 					IERPClassifier classifier = new MLPClassifier(nnStructure);
 					classifier.setFeatureExtraction(fe);
 
-					trainingDialog(c, mainFrame, classifier, nnStructure);
+					List<String> classifierParams = new ArrayList<String>();
+					for (int p : nnStructure) {
+						classifierParams.add(p + "");
+					}
+
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (knnBttn.isSelected()) {
 					int neighborsNumber = (Integer) neighborsNumberSpinner
 							.getValue();
@@ -419,15 +424,15 @@ public class ChangeClassifierFrame extends JFrame {
 							neighborsNumber);
 					classifier.setFeatureExtraction(fe);
 
-					List<Integer> classifierParams = new ArrayList<Integer>();
-					classifierParams.add(neighborsNumber);
+					List<String> classifierParams = new ArrayList<String>();
+					classifierParams.add(neighborsNumber + "");
 
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (ldaBttn.isSelected()) {
 					IERPClassifier classifier = new LinearDiscriminantAnalysisClassifier();
 					classifier.setFeatureExtraction(fe);
 
-					List<Integer> classifierParams = new ArrayList<Integer>();
+					List<String> classifierParams = new ArrayList<String>();
 
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (svmBttn.isSelected()) {
@@ -437,8 +442,8 @@ public class ChangeClassifierFrame extends JFrame {
 						// TODO Set parameters
 						classifier.setFeatureExtraction(fe);
 
-						List<Integer> classifierParams = new ArrayList<Integer>();
-						classifierParams.add((int) svmCost.getValue());
+						List<String> classifierParams = new ArrayList<String>();
+						classifierParams.add((int) svmCost.getValue() + "");
 
 						trainingDialog(c, mainFrame, classifier,
 								classifierParams);
@@ -449,7 +454,7 @@ public class ChangeClassifierFrame extends JFrame {
 					IERPClassifier classifier = new CorrelationClassifier();
 					classifier.setFeatureExtraction(fe);
 
-					List<Integer> classifierParams = new ArrayList<Integer>();
+					List<String> classifierParams = new ArrayList<String>();
 
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else {
@@ -482,7 +487,7 @@ public class ChangeClassifierFrame extends JFrame {
 	 *            - parameters for classifier
 	 */
 	private void trainingDialog(ChangeClassifierFrame c, MainFrame mainFrame,
-			IERPClassifier classifier, List<Integer> classifierParams) {
+			IERPClassifier classifier, List<String> classifierParams) {
 		if (mainFrame.isTrained() == false) {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
 					"You have to train the classifier in order to use it",
@@ -500,7 +505,6 @@ public class ChangeClassifierFrame extends JFrame {
 				mainFrame.setClassifierStatus("Classifier: "
 						+ classifier.getClass().getSimpleName());
 
-				
 				writeLastTrainedClassifier(fe.getClass().getSimpleName(),
 						feParams, classifier.getClass().getSimpleName(),
 						classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);
@@ -525,17 +529,17 @@ public class ChangeClassifierFrame extends JFrame {
 	 *            - name of the file to write into
 	 */
 	private void writeLastTrainedClassifier(String feName,
-			List<Integer> feParams, String classifierName,
-			List<Integer> classifierParams, String file) {
+			List<String> feParams, String classifierName,
+			List<String> classifierParams, String file) {
 		try {
 			File f = new File(file);
 			FileWriter fw = new FileWriter(f);
 			fw.write(feName + "\n");
-			for (int param : feParams) {
+			for (String param : feParams) {
 				fw.write(param + "\n");
 			}
 			fw.write(classifierName + "\n");
-			for (int param : classifierParams) {
+			for (String param : classifierParams) {
 				fw.write(param + "\n");
 			}
 			fw.close();

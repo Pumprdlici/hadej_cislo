@@ -410,14 +410,7 @@ public class ChangeClassifierFrame extends JFrame {
 					IERPClassifier classifier = new MLPClassifier(nnStructure);
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
-
-					trainingDialog(c, feParams, classifier, nnStructure);
+					trainingDialog(c, mainFrame, classifier, nnStructure);
 				} else if (knnBttn.isSelected()) {
 					int neighborsNumber = (Integer) neighborsNumberSpinner
 							.getValue();
@@ -426,31 +419,17 @@ public class ChangeClassifierFrame extends JFrame {
 							neighborsNumber);
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
-
 					List<Integer> classifierParams = new ArrayList<Integer>();
 					classifierParams.add(neighborsNumber);
 
-					trainingDialog(c, feParams, classifier, classifierParams);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (ldaBttn.isSelected()) {
 					IERPClassifier classifier = new LinearDiscriminantAnalysisClassifier();
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
-
 					List<Integer> classifierParams = new ArrayList<Integer>();
 
-					trainingDialog(c, feParams, classifier, classifierParams);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (svmBttn.isSelected()) {
 					IERPClassifier classifier;
 					try {
@@ -458,17 +437,10 @@ public class ChangeClassifierFrame extends JFrame {
 						// TODO Set parameters
 						classifier.setFeatureExtraction(fe);
 
-						mainFrame.setFe(fe);
-						mainFrame.setClassifier(classifier);
-						mainFrame.setFeStatus("Feature Extraction: "
-								+ fe.getClass().getSimpleName());
-						mainFrame.setClassifierStatus("Classifier: "
-								+ classifier.getClass().getSimpleName());
-
 						List<Integer> classifierParams = new ArrayList<Integer>();
 						classifierParams.add((int) svmCost.getValue());
 
-						trainingDialog(c, feParams, classifier,
+						trainingDialog(c, mainFrame, classifier,
 								classifierParams);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -477,16 +449,9 @@ public class ChangeClassifierFrame extends JFrame {
 					IERPClassifier classifier = new CorrelationClassifier();
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
-
 					List<Integer> classifierParams = new ArrayList<Integer>();
 
-					trainingDialog(c, feParams, classifier, classifierParams);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else {
 					JOptionPane
 							.showMessageDialog(null,
@@ -509,16 +474,15 @@ public class ChangeClassifierFrame extends JFrame {
 	 * 
 	 * @param c
 	 *            - this frame
-	 * @param feParams
-	 *            - parameters for Feature Extraction method
+	 * @param mainFrame
+	 *            - reference to mainFrame
 	 * @param classifier
 	 *            - created Classifier
 	 * @param classifierParams
-	 *            - parameters for created Classifier
+	 *            - parameters for classifier
 	 */
-	private void trainingDialog(ChangeClassifierFrame c,
-			List<Integer> feParams, IERPClassifier classifier,
-			List<Integer> classifierParams) {
+	private void trainingDialog(ChangeClassifierFrame c, MainFrame mainFrame,
+			IERPClassifier classifier, List<Integer> classifierParams) {
 		if (mainFrame.isTrained() == false) {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
 					"You have to train the classifier in order to use it",
@@ -529,6 +493,14 @@ public class ChangeClassifierFrame extends JFrame {
 				// TODO training
 				// TrainUsingOfflineProvider train = new
 				// TrainUsingOfflineProvider(c.fe, classifier);
+				mainFrame.setFe(fe);
+				mainFrame.setClassifier(classifier);
+				mainFrame.setFeStatus("Feature Extraction: "
+						+ fe.getClass().getSimpleName());
+				mainFrame.setClassifierStatus("Classifier: "
+						+ classifier.getClass().getSimpleName());
+
+				
 				writeLastTrainedClassifier(fe.getClass().getSimpleName(),
 						feParams, classifier.getClass().getSimpleName(),
 						classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);

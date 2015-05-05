@@ -1,6 +1,5 @@
 package icp.online.gui;
 
-import icp.Const;
 import icp.application.classification.CorrelationClassifier;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -8,6 +7,7 @@ import icp.application.classification.KNNClassifier;
 import icp.application.classification.LinearDiscriminantAnalysisClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.SVMClassifier;
+import icp.application.classification.test.TrainUsingOfflineProvider;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -27,6 +27,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,6 +36,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Window for changing classifier and its parameters
@@ -438,12 +440,12 @@ public class ChangeClassifierFrame extends JFrame {
 				} else if (svmBttn.isSelected()) {
 					IERPClassifier classifier;
 					try {
-						classifier = new SVMClassifier();
-						// TODO Set parameters
+						classifier = new SVMClassifier((Double) svmCost
+								.getValue());
 						classifier.setFeatureExtraction(fe);
 
 						List<String> classifierParams = new ArrayList<String>();
-						classifierParams.add((int) svmCost.getValue() + "");
+						classifierParams.add((Double) svmCost.getValue() + "");
 
 						trainingDialog(c, mainFrame, classifier,
 								classifierParams);
@@ -493,21 +495,34 @@ public class ChangeClassifierFrame extends JFrame {
 					"You have to train the classifier in order to use it",
 					"Classifier is not trained", JOptionPane.OK_CANCEL_OPTION);
 			if (dialogResult == JOptionPane.OK_OPTION) {
-				c.dispose();
+				JFileChooser save = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"TXT files .txt", "TXT", "txt");
+				save.addChoosableFileFilter(filter);
+				save.setFileFilter(filter);
+				save.setCurrentDirectory(new File(System
+						.getProperty("user.dir")));
+				int saveResult = save.showSaveDialog(c);
+				String file = "";
+				if (saveResult == JFileChooser.APPROVE_OPTION) {
+					file = save.getSelectedFile().getPath();
+					file += ".txt";
 
-				// TODO training
-				// TrainUsingOfflineProvider train = new
-				// TrainUsingOfflineProvider(c.fe, classifier);
-				mainFrame.setFe(fe);
-				mainFrame.setClassifier(classifier);
-				mainFrame.setFeStatus("Feature Extraction: "
-						+ fe.getClass().getSimpleName());
-				mainFrame.setClassifierStatus("Classifier: "
-						+ classifier.getClass().getSimpleName());
+					c.dispose();
 
-				writeLastTrainedClassifier(fe.getClass().getSimpleName(),
-						feParams, classifier.getClass().getSimpleName(),
-						classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);
+					new TrainUsingOfflineProvider(c.fe, classifier, file);
+					mainFrame.setFe(fe);
+					mainFrame.setClassifier(classifier);
+					mainFrame.setFeStatus("Feature Extraction: "
+							+ fe.getClass().getSimpleName());
+					mainFrame.setClassifierStatus("Classifier: "
+							+ classifier.getClass().getSimpleName());
+
+					writeLastTrainedClassifier(fe.getClass().getSimpleName(),
+							feParams, classifier.getClass().getSimpleName(),
+							classifierParams, file);
+					mainFrame.setTrained(true);
+				}
 			}
 		} else {
 			c.dispose();

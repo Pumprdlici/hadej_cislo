@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -125,9 +126,9 @@ public class MainFrame extends JFrame implements Observer {
 			readLastTrainedClassifier(lastTrained);
 		} else {
 			classifier = new MLPClassifier();
-			classifier.load(Const.TRAINING_FILE_NAME);
 			fe = new FilterAndSubsamplingFeatureExtraction();
 			classifier.setFeatureExtraction(fe);
+			setTrained(false);
 		}
 
 		getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
@@ -161,7 +162,6 @@ public class MainFrame extends JFrame implements Observer {
 				break;
 			case "MatchingPursuitFeatureExtraction":
 				fe = new MatchingPursuitFeatureExtraction();
-				// TODO Set params
 				break;
 			case "HHTFeatureExtraction":
 				fe = new HHTFeatureExtraction();
@@ -169,11 +169,11 @@ public class MainFrame extends JFrame implements Observer {
 						.parseInt(br.readLine()));
 				((HHTFeatureExtraction) fe).setSampleWindowShift(Integer
 						.parseInt(br.readLine()));
-				((HHTFeatureExtraction) fe).setAmplitudeThreshold(Integer
-						.parseInt(br.readLine()));
-				((HHTFeatureExtraction) fe).setMinFreq(Integer.parseInt(br
+				((HHTFeatureExtraction) fe).setAmplitudeThreshold(Double
+						.parseDouble(br.readLine()));
+				((HHTFeatureExtraction) fe).setMinFreq(Double.parseDouble(br
 						.readLine()));
-				((HHTFeatureExtraction) fe).setMaxFreq(Integer.parseInt(br
+				((HHTFeatureExtraction) fe).setMaxFreq(Double.parseDouble(br
 						.readLine()));
 				((HHTFeatureExtraction) fe).setTypeOfFeatures(Integer
 						.parseInt(br.readLine()));
@@ -196,23 +196,39 @@ public class MainFrame extends JFrame implements Observer {
 				break;
 			case "SVMClassifier":
 				try {
-					classifier = new SVMClassifier();
-					// TODO Set parameters
+					classifier = new SVMClassifier(Double.parseDouble(br
+							.readLine()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				break;
 			case "CorrelationClassifier":
 				classifier = new CorrelationClassifier();
-				// TODO Set params
 				break;
 			}
 			br.close();
 			fr.close();
-			classifier.load(Const.TRAINING_FILE_NAME);
+			loadClassifier();
 			classifier.setFeatureExtraction(fe);
+			setTrained(true);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void loadClassifier() {
+		JFileChooser open = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"TXT files .txt", "TXT", "txt");
+		open.addChoosableFileFilter(filter);
+		open.setFileFilter(filter);
+		open.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		int openResult = open.showOpenDialog(this);
+		String file = "";
+		if (openResult == JFileChooser.APPROVE_OPTION) {
+			file = open.getSelectedFile().getPath();
+			file += ".txt";
+			classifier.load(file);
 		}
 	}
 
@@ -280,8 +296,21 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO training
-				new TrainUsingOfflineProvider(fe, classifier);
-				setTrained(true);
+				JFileChooser save = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"TXT files .txt", "TXT", "txt");
+				save.addChoosableFileFilter(filter);
+				save.setFileFilter(filter);
+				save.setCurrentDirectory(new File(System
+						.getProperty("user.dir")));
+				int saveResult = save.showSaveDialog(mf);
+				String file = "";
+				if (saveResult == JFileChooser.APPROVE_OPTION) {
+					file = save.getSelectedFile().getPath();
+					file += ".txt";
+					new TrainUsingOfflineProvider(fe, classifier, file);
+					setTrained(true);
+				}
 			}
 		});
 
@@ -420,31 +449,66 @@ public class MainFrame extends JFrame implements Observer {
 		this.classifierStatus.setText(classifierStatus);
 	}
 
+	private void trainingDialog() {
+		if (isTrained() == false) {
+			int dialogResult = JOptionPane.showConfirmDialog(null,
+					"You have to train the classifier in order to use it",
+					"Classifier is not trained", JOptionPane.OK_CANCEL_OPTION);
+			if (dialogResult == JOptionPane.OK_OPTION) {
+				JFileChooser save = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"TXT files .txt", "TXT", "txt");
+				save.addChoosableFileFilter(filter);
+				save.setFileFilter(filter);
+				save.setCurrentDirectory(new File(System
+						.getProperty("user.dir")));
+				int saveResult = save.showSaveDialog(this);
+				String file = "";
+				if (saveResult == JFileChooser.APPROVE_OPTION) {
+					file = save.getSelectedFile().getPath();
+					file += ".txt";
+					new TrainUsingOfflineProvider(fe, classifier, file);
+					setTrained(true);
+				}
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"You have to train the classifier first", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
 	public class LoadOfflineData extends AbstractAction {
 		MainFrame mainFrame;
 
 		@Override
 		public void actionPerformed(ActionEvent actionevent) {
-			initGui();
-			chooser = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter(
-					"EEG files .eeg", "EEG", "eeg");
-			chooser.addChoosableFileFilter(filter);
-			chooser.setFileFilter(filter);
-			chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-			int i = chooser.showDialog(mainFrame, "Open");
-			if (i == 0) {
-				eegFile = chooser.getSelectedFile();
-				detection = new OnlineDetection(classifier, mainFrame);
-				stopRunningThread();
+			if (!isTrained()) {
+				trainingDialog();
+			} else {
+				initGui();
+				chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"EEG files .eeg", "EEG", "eeg");
+				chooser.addChoosableFileFilter(filter);
+				chooser.setFileFilter(filter);
+				chooser.setCurrentDirectory(new File(System
+						.getProperty("user.dir")));
+				int i = chooser.showDialog(mainFrame, "Open");
+				if (i == 0) {
+					eegFile = chooser.getSelectedFile();
+					detection = new OnlineDetection(classifier, mainFrame);
+					stopRunningThread();
 
-				try {
-					dp = new OffLineDataProvider(eegFile, detection);
-					dataProvider = new Thread((OffLineDataProvider) dp);
-					dataProvider.start();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(mainFrame, ex.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+					try {
+						dp = new OffLineDataProvider(eegFile, detection);
+						dataProvider = new Thread((OffLineDataProvider) dp);
+						dataProvider.start();
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(mainFrame,
+								ex.getMessage(), "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		}
@@ -463,53 +527,57 @@ public class MainFrame extends JFrame implements Observer {
 
 		@Override
 		public void actionPerformed(ActionEvent actionevent) {
-			initGui();
+			if (!isTrained()) {
+				trainingDialog();
+			} else {
+				initGui();
 
-			SetupDialogContent content = new SetupDialogContent();
-			int result;
-			boolean isOk = false;
-			String recorderIPAddress = null;
-			int port = -1;
-			while (!isOk) {
-				result = JOptionPane
-						.showConfirmDialog(null, content,
-								"Guess the Number: Setup",
-								JOptionPane.OK_CANCEL_OPTION,
-								JOptionPane.PLAIN_MESSAGE);
-				if (result == JOptionPane.CANCEL_OPTION) {
-					return;
+				SetupDialogContent content = new SetupDialogContent();
+				int result;
+				boolean isOk = false;
+				String recorderIPAddress = null;
+				int port = -1;
+				while (!isOk) {
+					result = JOptionPane.showConfirmDialog(null, content,
+							"Guess the Number: Setup",
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.PLAIN_MESSAGE);
+					if (result == JOptionPane.CANCEL_OPTION) {
+						return;
+					}
+
+					recorderIPAddress = content.getIP();
+					port = content.getPort();
+					if (port != -1 && recorderIPAddress != null) {
+						isOk = true;
+					} else {
+						if (port == -1) {
+							JOptionPane.showMessageDialog(null,
+									"Invalid port number!", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						if (recorderIPAddress == null) {
+							JOptionPane.showMessageDialog(null,
+									"Invalid IP address!", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
 				}
 
-				recorderIPAddress = content.getIP();
-				port = content.getPort();
-				if (port != -1 && recorderIPAddress != null) {
-					isOk = true;
-				} else {
-					if (port == -1) {
-						JOptionPane.showMessageDialog(null,
-								"Invalid port number!", "Error",
+				if (isOk) {
+					stopRunningThread();
+
+					detection = new OnlineDetection(classifier, mainFrame);
+					try {
+						dp = new OnLineDataProvider(recorderIPAddress, port,
+								detection);
+						dataProvider = new Thread((OnLineDataProvider) dp);
+						dataProvider.start();
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(mainFrame,
+								ex.getMessage(), "Connection Error",
 								JOptionPane.ERROR_MESSAGE);
 					}
-					if (recorderIPAddress == null) {
-						JOptionPane.showMessageDialog(null,
-								"Invalid IP address!", "Error",
-								JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-
-			if (isOk) {
-				stopRunningThread();
-
-				detection = new OnlineDetection(classifier, mainFrame);
-				try {
-					dp = new OnLineDataProvider(recorderIPAddress, port,
-							detection);
-					dataProvider = new Thread((OnLineDataProvider) dp);
-					dataProvider.start();
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(mainFrame, ex.getMessage(),
-							"Connection Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

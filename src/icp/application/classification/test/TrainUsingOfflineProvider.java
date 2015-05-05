@@ -26,10 +26,13 @@ public class TrainUsingOfflineProvider implements Observer {
 	private int middleNeurons;
 	private static IFeatureExtraction fe;
 	private static IERPClassifier classifier;
+	private static String file;
 
-	public TrainUsingOfflineProvider(IFeatureExtraction fe, IERPClassifier classifier) {
+	public TrainUsingOfflineProvider(IFeatureExtraction fe,
+			IERPClassifier classifier, String file) {
 		this.fe = fe;
 		this.classifier = classifier;
+		this.file = file;
 
 		epochs = new ArrayList<double[][]>();
 		targets = new ArrayList<Double>();
@@ -38,7 +41,8 @@ public class TrainUsingOfflineProvider implements Observer {
 		this.iters = 2000;
 		this.middleNeurons = 0;
 
-		OffLineDataProvider offLineData = new OffLineDataProvider(new File(
+		OffLineDataProvider offLineData;
+		offLineData = new OffLineDataProvider(new File(
 				Const.TRAINING_RAW_DATA_FILE_NAME), this);
 		Thread t = new Thread(offLineData);
 		t.start();
@@ -76,7 +80,8 @@ public class TrainUsingOfflineProvider implements Observer {
 			TrainUsingOfflineProvider train = new TrainUsingOfflineProvider(
 					2000, 8);
 		} else {
-			TrainUsingOfflineProvider train = new TrainUsingOfflineProvider(fe, classifier);
+			TrainUsingOfflineProvider train = new TrainUsingOfflineProvider(fe,
+					classifier, file);
 		}
 	}
 
@@ -125,7 +130,11 @@ public class TrainUsingOfflineProvider implements Observer {
 		// training
 		System.out.println("Training started.");
 		classifier.train(this.epochs, this.targets, this.iters, fe);
-		classifier.save(Const.TRAINING_FILE_NAME);
+		if (file == null || file.equals("")) {
+			classifier.save(Const.TRAINING_FILE_NAME);
+		} else {
+			classifier.save(file);
+		}
 		System.out.println("Training finished.");
 	}
 

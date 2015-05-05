@@ -484,7 +484,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		hhtPane.add(amplitudeThresholdLabel);
 
 		SpinnerNumberModel amplitudeThresholdSnn = new SpinnerNumberModel(0, 0,
-				Double.MAX_VALUE, 1);
+				Double.MAX_VALUE, 0.001);
 		hhtAmplitudeThreshold = new JSpinner(amplitudeThresholdSnn);
 		hhtAmplitudeThreshold.setEnabled(false);
 		hhtPane.add(hhtAmplitudeThreshold);
@@ -494,7 +494,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		hhtPane.add(minFreqLabel);
 
 		SpinnerNumberModel minFreqSnn = new SpinnerNumberModel(1, 1,
-				Double.MAX_VALUE, 1);
+				Double.MAX_VALUE, 0.001);
 		hhtMinFreq = new JSpinner(minFreqSnn);
 		hhtMinFreq.setEnabled(false);
 		hhtPane.add(hhtMinFreq);
@@ -504,7 +504,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		hhtPane.add(maxFreqLabel);
 
 		SpinnerNumberModel maxFreqSnn = new SpinnerNumberModel(1, 1,
-				Double.MAX_VALUE, 1);
+				Double.MAX_VALUE, 0.001);
 		hhtMaxFreq = new JSpinner(maxFreqSnn);
 		hhtMaxFreq.setEnabled(false);
 		hhtPane.add(hhtMaxFreq);
@@ -615,12 +615,12 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 								.setSampleWindowShift((Integer) hhtSampleWindowShift
 										.getValue());
 						((HHTFeatureExtraction) fe)
-								.setAmplitudeThreshold((Integer) hhtAmplitudeThreshold
+								.setAmplitudeThreshold((Double) hhtAmplitudeThreshold
 										.getValue());
 						((HHTFeatureExtraction) fe)
-								.setMinFreq((Integer) hhtMinFreq.getValue());
+								.setMinFreq((Double) hhtMinFreq.getValue());
 						((HHTFeatureExtraction) fe)
-								.setMaxFreq((Integer) hhtMaxFreq.getValue());
+								.setMaxFreq((Double) hhtMaxFreq.getValue());
 						((HHTFeatureExtraction) fe)
 								.setTypeOfFeatures(hhtTypeOfFeatures
 										.getSelectedIndex() + 1);
@@ -633,10 +633,10 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 						feParams.add((int) skipSpinner.getValue() + "");
 						feParams.add((int) hhtSampleWindowSize.getValue() + "");
 						feParams.add((int) hhtSampleWindowShift.getValue() + "");
-						feParams.add((int) hhtAmplitudeThreshold.getValue()
+						feParams.add((Double) hhtAmplitudeThreshold.getValue()
 								+ "");
-						feParams.add((int) hhtMinFreq.getValue() + "");
-						feParams.add((int) hhtMaxFreq.getValue() + "");
+						feParams.add((Double) hhtMinFreq.getValue() + "");
+						feParams.add((Double) hhtMaxFreq.getValue() + "");
 						feParams.add((hhtTypeOfFeatures.getSelectedIndex() + 1)
 								+ "");
 

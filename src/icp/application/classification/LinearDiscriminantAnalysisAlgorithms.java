@@ -82,7 +82,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 */
 	public void train(List<double[][]> input, List<Double> targets,
 			IFeatureExtraction fe) {
-		/* createInputAndTargetMatrix(input, targets, fe); */
+		createInputAndTargetMatrix(input, targets, fe);
 		sizeOfInput = determineSizeOfInput();
 		classes = determineClasses();
 		classCount = determineClassCount();

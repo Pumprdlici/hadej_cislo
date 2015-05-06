@@ -37,7 +37,6 @@ public class Const {
     //------------------------Classifier training-----------------------
     public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/set2.eeg";
     public static final String TRAINING_FILE_NAME = "data/best_class_2_650.txt";
-    public static final String LAST_TRAINED_SETTINGS_FILE_NAME = "data/last_trained.txt";
 
     //----------------------Epoch------------------------
     public static final int PREESTIMULUS_VALUES = 100;

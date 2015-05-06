@@ -94,6 +94,8 @@ public class MainFrame extends JFrame implements Observer {
 	private JLabel feStatus;
 
 	private JLabel classifierStatus;
+	
+	private String configurationFile;
 
 	public MainFrame() {
 		super(Const.APP_NAME);
@@ -118,10 +120,14 @@ public class MainFrame extends JFrame implements Observer {
 				/ 2 - this.getSize().height / 2);
 		this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		File lastTrained = new File(Const.LAST_TRAINED_SETTINGS_FILE_NAME);
-		if (lastTrained.exists()) {
-			readLastTrainedClassifier(lastTrained);
+		
+		loadConfiguration();
+		File config = new File(configurationFile);
+		if (config.exists()) {
+			readConfiguration(config);
+			loadClassifier();
+			classifier.setFeatureExtraction(fe);
+			setTrained(true);
 		} else {
 			classifier = new MLPClassifier();
 			fe = new FilterAndSubsamplingFeatureExtraction();
@@ -132,7 +138,7 @@ public class MainFrame extends JFrame implements Observer {
 		getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
 	}
 
-	private void readLastTrainedClassifier(File f) {
+	private void readConfiguration(File f) {
 		try {
 			FileReader fr = new FileReader(f);
 			BufferedReader br = new BufferedReader(fr);
@@ -196,18 +202,32 @@ public class MainFrame extends JFrame implements Observer {
 			}
 			br.close();
 			fr.close();
-			loadClassifier();
-			classifier.setFeatureExtraction(fe);
-			setTrained(true);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void loadConfiguration() {
+		JFileChooser open = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"TXT files .txt", "TXT", "txt");
+		open.addChoosableFileFilter(filter);
+		open.setFileFilter(filter);
+		open.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		int openResult = open.showOpenDialog(this);
+		if (openResult == JFileChooser.APPROVE_OPTION) {
+			configurationFile = open.getSelectedFile().getPath();
+		}
+		else {
+			configurationFile = "";
 		}
 	}
 
 	private void loadClassifier() {
 		JFileChooser open = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"TXT files .txt", "TXT", "txt");
+				"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
 		open.addChoosableFileFilter(filter);
 		open.setFileFilter(filter);
 		open.setCurrentDirectory(new File(System.getProperty("user.dir")));
@@ -218,7 +238,7 @@ public class MainFrame extends JFrame implements Observer {
 			classifier.load(file);
 		}
 	}
-
+	
 	private JPanel createStatusBar() {
 		JPanel statusBar = new JPanel();
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.LINE_AXIS));
@@ -248,6 +268,7 @@ public class MainFrame extends JFrame implements Observer {
 		offlineMenuItem.setAction((new LoadOfflineData()));
 		JMenuItem onlineMenuItem = new JMenuItem();
 		onlineMenuItem.setAction(new LoadOnlineData());
+		JMenuItem loadConfigAndClassifierItem = new JMenuItem("Load configuration and classifier files");
 		JMenuItem chartMenuItem = new JMenuItem();
 		chartMenuItem.setAction(this.epochCharts);
 		JMenuItem endMenuItem = new JMenuItem("Close");
@@ -260,6 +281,27 @@ public class MainFrame extends JFrame implements Observer {
 				System.exit(0);
 			}
 		});
+		
+		loadConfigAndClassifierItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loadConfiguration();
+				File conf = new File(configurationFile);
+				if(conf.exists()) {
+					readConfiguration(conf);
+					loadClassifier();
+					classifier.setFeatureExtraction(fe);
+					setTrained(true);
+					
+					setFeStatus("Feature Extraction: "
+							+ fe.getClass().getSimpleName());
+					setClassifierStatus("Classifier: "
+							+ classifier.getClass().getSimpleName());
+				}
+			}
+		});
+		
 		final MainFrame mf = this;
 		JMenu settingsMenu = new JMenu("Settings");
 		JMenuItem featureMenuItem = new JMenuItem(
@@ -285,7 +327,7 @@ public class MainFrame extends JFrame implements Observer {
 				// TODO training
 				JFileChooser save = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"TXT files .txt", "TXT", "txt");
+						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
 				save.addChoosableFileFilter(filter);
 				save.setFileFilter(filter);
 				save.setCurrentDirectory(new File(System
@@ -294,7 +336,7 @@ public class MainFrame extends JFrame implements Observer {
 				String file = "";
 				if (saveResult == JFileChooser.APPROVE_OPTION) {
 					file = save.getSelectedFile().getPath();
-					file += ".txt";
+					file += ".classifier";
 					new TrainUsingOfflineProvider(fe, classifier, file);
 					setTrained(true);
 				}
@@ -304,6 +346,7 @@ public class MainFrame extends JFrame implements Observer {
 		menuBar.add(fileMenu);
 		fileMenu.add(onlineMenuItem);
 		fileMenu.add(offlineMenuItem);
+		fileMenu.add(loadConfigAndClassifierItem);
 		fileMenu.add(chartMenuItem);
 		fileMenu.addSeparator();
 		fileMenu.add(endMenuItem);
@@ -444,7 +487,7 @@ public class MainFrame extends JFrame implements Observer {
 			if (dialogResult == JOptionPane.OK_OPTION) {
 				JFileChooser save = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"TXT files .txt", "TXT", "txt");
+						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
 				save.addChoosableFileFilter(filter);
 				save.setFileFilter(filter);
 				save.setCurrentDirectory(new File(System
@@ -453,7 +496,7 @@ public class MainFrame extends JFrame implements Observer {
 				String file = "";
 				if (saveResult == JFileChooser.APPROVE_OPTION) {
 					file = save.getSelectedFile().getPath();
-					file += ".txt";
+					file += ".classifier";
 					new TrainUsingOfflineProvider(fe, classifier, file);
 					setTrained(true);
 				}

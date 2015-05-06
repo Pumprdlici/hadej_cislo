@@ -1,6 +1,5 @@
 package icp.online.gui;
 
-import icp.Const;
 import icp.application.classification.CorrelationClassifier;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -498,7 +497,7 @@ public class ChangeClassifierFrame extends JFrame {
 			if (dialogResult == JOptionPane.OK_OPTION) {
 				JFileChooser save = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"TXT files .txt", "TXT", "txt");
+						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
 				save.addChoosableFileFilter(filter);
 				save.setFileFilter(filter);
 				save.setCurrentDirectory(new File(System
@@ -507,11 +506,12 @@ public class ChangeClassifierFrame extends JFrame {
 				String file = "";
 				if (saveResult == JFileChooser.APPROVE_OPTION) {
 					file = save.getSelectedFile().getPath();
-					file += ".txt";
+					String configurationFile = file + ".txt";
+					String classifierFile = file + ".classifier";
 
 					c.dispose();
 
-					new TrainUsingOfflineProvider(c.fe, classifier, file);
+					new TrainUsingOfflineProvider(c.fe, classifier, classifierFile);
 					mainFrame.setFe(fe);
 					mainFrame.setClassifier(classifier);
 					mainFrame.setFeStatus("Feature Extraction: "
@@ -521,7 +521,7 @@ public class ChangeClassifierFrame extends JFrame {
 
 					writeLastTrainedClassifier(fe.getClass().getSimpleName(),
 							feParams, classifier.getClass().getSimpleName(),
-							classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);
+							classifierParams, configurationFile);
 					mainFrame.setTrained(true);
 				}
 			}

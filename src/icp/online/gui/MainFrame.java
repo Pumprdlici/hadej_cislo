@@ -453,6 +453,7 @@ public class MainFrame extends JFrame implements Observer {
 				String file = "";
 				if (saveResult == JFileChooser.APPROVE_OPTION) {
 					file = save.getSelectedFile().getPath();
+					file += ".txt";
 					new TrainUsingOfflineProvider(fe, classifier, file);
 					setTrained(true);
 				}

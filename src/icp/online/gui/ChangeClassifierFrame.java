@@ -1,5 +1,6 @@
 package icp.online.gui;
 
+import icp.Const;
 import icp.application.classification.CorrelationClassifier;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -506,6 +507,7 @@ public class ChangeClassifierFrame extends JFrame {
 				String file = "";
 				if (saveResult == JFileChooser.APPROVE_OPTION) {
 					file = save.getSelectedFile().getPath();
+					file += ".txt";
 
 					c.dispose();
 
@@ -519,7 +521,7 @@ public class ChangeClassifierFrame extends JFrame {
 
 					writeLastTrainedClassifier(fe.getClass().getSimpleName(),
 							feParams, classifier.getClass().getSimpleName(),
-							classifierParams, file);
+							classifierParams, Const.LAST_TRAINED_SETTINGS_FILE_NAME);
 					mainFrame.setTrained(true);
 				}
 			}

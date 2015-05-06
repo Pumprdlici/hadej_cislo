@@ -506,7 +506,6 @@ public class ChangeClassifierFrame extends JFrame {
 				String file = "";
 				if (saveResult == JFileChooser.APPROVE_OPTION) {
 					file = save.getSelectedFile().getPath();
-					file += ".txt";
 
 					c.dispose();
 

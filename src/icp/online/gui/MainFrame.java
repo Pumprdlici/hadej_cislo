@@ -29,13 +29,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -139,8 +137,7 @@ public class MainFrame extends JFrame implements Observer {
 			FileReader fr = new FileReader(f);
 			BufferedReader br = new BufferedReader(fr);
 			String radka = br.readLine();
-			switch (radka) {
-			case "FilterAndSubsamplingFeatureExtraction":
+			if (radka.equals("FilterAndSubsamplingFeatureExtraction")) {
 				fe = new FilterAndSubsamplingFeatureExtraction();
 				((FilterAndSubsamplingFeatureExtraction) fe)
 						.setEpochSize(Integer.parseInt(br.readLine()));
@@ -148,8 +145,8 @@ public class MainFrame extends JFrame implements Observer {
 						.setSubsampling(Integer.parseInt(br.readLine()));
 				((FilterAndSubsamplingFeatureExtraction) fe)
 						.setSkipSamples(Integer.parseInt(br.readLine()));
-				break;
-			case "WaveletTransformFeatureExtraction":
+			} else if (radka
+					.equalsIgnoreCase("WaveletTransformFeatureExtraction")) {
 				fe = new WaveletTransformFeatureExtraction();
 				((WaveletTransformFeatureExtraction) fe).setEpochSize(Integer
 						.parseInt(br.readLine()));
@@ -159,11 +156,9 @@ public class MainFrame extends JFrame implements Observer {
 						.parseInt(br.readLine()));
 				((WaveletTransformFeatureExtraction) fe).setFeatureSize(Integer
 						.parseInt(br.readLine()));
-				break;
-			case "MatchingPursuitFeatureExtraction":
+			} else if (radka.equals("MatchingPursuitFeatureExtraction")) {
 				fe = new MatchingPursuitFeatureExtraction();
-				break;
-			case "HHTFeatureExtraction":
+			} else if (radka.equals("HHTFeatureExtraction")) {
 				fe = new HHTFeatureExtraction();
 				((HHTFeatureExtraction) fe).setSampleWindowSize(Integer
 						.parseInt(br.readLine()));
@@ -177,34 +172,27 @@ public class MainFrame extends JFrame implements Observer {
 						.readLine()));
 				((HHTFeatureExtraction) fe).setTypeOfFeatures(Integer
 						.parseInt(br.readLine()));
-				break;
 			}
 			radka = br.readLine();
-			switch (radka) {
-			case "MLPClassifier":
+			if (radka.equals("MLPClassifier")) {
 				ArrayList<Integer> nnStructure = new ArrayList<Integer>();
 				nnStructure.add(Integer.parseInt(br.readLine()));
 				nnStructure.add(Integer.parseInt(br.readLine()));
 				nnStructure.add(Integer.parseInt(br.readLine()));
 				classifier = new MLPClassifier(nnStructure);
-				break;
-			case "KNNClassifier":
+			} else if (radka.equals("KNNClassifier")) {
 				classifier = new KNNClassifier(Integer.parseInt(br.readLine()));
-				break;
-			case "LinearDiscriminantAnalysisClassifier":
+			} else if (radka.equals("LinearDiscriminantAnalysisClassifier")) {
 				classifier = new LinearDiscriminantAnalysisClassifier();
-				break;
-			case "SVMClassifier":
+			} else if (radka.equals("SVMClassifier")) {
 				try {
 					classifier = new SVMClassifier(Double.parseDouble(br
 							.readLine()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				break;
-			case "CorrelationClassifier":
+			} else if (radka.equals("CorrelationClassifier")) {
 				classifier = new CorrelationClassifier();
-				break;
 			}
 			br.close();
 			fr.close();

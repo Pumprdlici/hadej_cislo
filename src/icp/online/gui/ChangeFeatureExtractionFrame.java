@@ -81,7 +81,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	/**
 	 * Combo box for wavelet names
 	 */
-	private JComboBox<String> waveletNameComboBox;
+	private JComboBox waveletNameComboBox;
 
 	/**
 	 * Names of wavelets that can be used
@@ -125,7 +125,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	/**
 	 * Combo box for type of features in HHT
 	 */
-	private JComboBox<String> hhtTypeOfFeatures;
+	private JComboBox hhtTypeOfFeatures;
 
 	/**
 	 * Types of features in HHT
@@ -414,7 +414,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		JLabel waveletNameLabel = new JLabel("Wavelet Name");
 		wtPane.add(waveletNameLabel);
 
-		waveletNameComboBox = new JComboBox<String>(waveletNames);
+		waveletNameComboBox = new JComboBox(waveletNames);
 		waveletNameComboBox.setSelectedIndex(8);
 		waveletNameComboBox.setEnabled(false);
 		wtPane.add(waveletNameComboBox);
@@ -513,7 +513,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		JLabel typeOfFeatures = new JLabel("Type of Features");
 		hhtPane.add(typeOfFeatures);
 
-		hhtTypeOfFeatures = new JComboBox<String>(hhtFeatureTypes);
+		hhtTypeOfFeatures = new JComboBox(hhtFeatureTypes);
 		hhtTypeOfFeatures.setSelectedIndex(0);
 		hhtTypeOfFeatures.setEnabled(false);
 		hhtPane.add(hhtTypeOfFeatures);
@@ -550,9 +550,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					c.dispose();
 
 					feParams = new ArrayList<String>();
-					feParams.add((int) epochSpinner.getValue() + "");
-					feParams.add((int) subsampleSpinner.getValue() + "");
-					feParams.add((int) skipSpinner.getValue() + "");
+					feParams.add((Integer) epochSpinner.getValue() + "");
+					feParams.add((Integer) subsampleSpinner.getValue() + "");
+					feParams.add((Integer) skipSpinner.getValue() + "");
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
 							mainFrame, fe, feParams);
@@ -576,10 +576,10 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					c.dispose();
 
 					feParams = new ArrayList<String>();
-					feParams.add((int) epochSpinner.getValue() + "");
-					feParams.add((int) skipSpinner.getValue() + "");
+					feParams.add((Integer) epochSpinner.getValue() + "");
+					feParams.add((Integer) skipSpinner.getValue() + "");
 					feParams.add(waveletNameComboBox.getSelectedIndex() + "");
-					feParams.add((int) wtFeatureSize.getValue() + "");
+					feParams.add((Integer) wtFeatureSize.getValue() + "");
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
 							mainFrame, fe, feParams);
@@ -595,9 +595,9 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					c.dispose();
 
 					feParams = new ArrayList<String>();
-					feParams.add((int) epochSpinner.getValue() + "");
-					feParams.add((int) subsampleSpinner.getValue() + "");
-					feParams.add((int) skipSpinner.getValue() + "");
+					feParams.add((Integer) epochSpinner.getValue() + "");
+					feParams.add((Integer) subsampleSpinner.getValue() + "");
+					feParams.add((Integer) skipSpinner.getValue() + "");
 
 					ChangeClassifierFrame cc = new ChangeClassifierFrame(
 							mainFrame, fe, feParams);
@@ -628,11 +628,11 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 						c.dispose();
 
 						feParams = new ArrayList<String>();
-						feParams.add((int) epochSpinner.getValue() + "");
-						feParams.add((int) subsampleSpinner.getValue() + "");
-						feParams.add((int) skipSpinner.getValue() + "");
-						feParams.add((int) hhtSampleWindowSize.getValue() + "");
-						feParams.add((int) hhtSampleWindowShift.getValue() + "");
+						feParams.add((Integer) epochSpinner.getValue() + "");
+						feParams.add((Integer) subsampleSpinner.getValue() + "");
+						feParams.add((Integer) skipSpinner.getValue() + "");
+						feParams.add((Integer) hhtSampleWindowSize.getValue() + "");
+						feParams.add((Integer) hhtSampleWindowShift.getValue() + "");
 						feParams.add((Double) hhtAmplitudeThreshold.getValue()
 								+ "");
 						feParams.add((Double) hhtMinFreq.getValue() + "");

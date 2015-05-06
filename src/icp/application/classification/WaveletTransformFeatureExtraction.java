@@ -123,6 +123,12 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 		return FEATURE_SIZE * CHANNELS.length / DOWN_SMPL_FACTOR;
 	}
 
+	/**
+	 * Sets wavelet name
+	 * 
+	 * @param name
+	 *            - number that indicates the wavelet name
+	 */
 	public void setWaveletName(int name) {
 		if (name >= 0 && name <= 17) {
 			this.NAME = name;
@@ -131,6 +137,12 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 					"Wavelet Name must be >= 0 and <= 17");
 	}
 
+	/**
+	 * Sets size of epoch to use for feature extraction
+	 * 
+	 * @param epochSize
+	 *            - size of epoch to use
+	 */
 	public void setEpochSize(int epochSize) {
 		if (epochSize > 0 && epochSize <= Const.POSTSTIMULUS_VALUES) {
 			this.EPOCH_SIZE = epochSize;
@@ -140,6 +152,12 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 
+	/**
+	 * Sets how many initiate samples of epoch to skip
+	 * 
+	 * @param skipSamples
+	 *            - number of samples to skip
+	 */
 	public void setSkipSamples(int skipSamples) {
 		if (skipSamples > 0 && skipSamples <= Const.POSTSTIMULUS_VALUES) {
 			this.SKIP_SAMPLES = skipSamples;
@@ -150,6 +168,12 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 		}
 	}
 
+	/**
+	 * Sets how many coeficients will be used after extracting the feature
+	 * 
+	 * @param featureSize
+	 *            - size of feature
+	 */
 	public void setFeatureSize(int featureSize) {
 		if (featureSize > 0 && featureSize <= 1024) {
 			this.FEATURE_SIZE = featureSize;

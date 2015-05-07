@@ -306,6 +306,7 @@ public class ChangeClassifierFrame extends JFrame {
 				1);
 		middleNeuronsSpinner = new JSpinner(middleNeuronsSnm);
 		middleNeuronsSpinner.setEnabled(false);
+		middleNeuronsSpinner.setToolTipText("Select number of neurons for middle layer of neural network.");
 		mlpPane.add(middleNeuronsSpinner);
 
 		return mlpPane;
@@ -329,6 +330,7 @@ public class ChangeClassifierFrame extends JFrame {
 				750, 1);
 		neighborsNumberSpinner = new JSpinner(neighborsNumberSnm);
 		neighborsNumberSpinner.setEnabled(false);
+		neighborsNumberSpinner.setToolTipText("Select number of nearest neighbors that will be used for classification.");
 		knnPane.add(neighborsNumberSpinner);
 
 		return knnPane;
@@ -368,6 +370,7 @@ public class ChangeClassifierFrame extends JFrame {
 				0.001);
 		svmCost = new JSpinner(svmCostSnm);
 		svmCost.setEnabled(false);
+		svmCost.setToolTipText("Select cost for SVM classification.");
 		svmPane.add(svmCost);
 
 		return svmPane;

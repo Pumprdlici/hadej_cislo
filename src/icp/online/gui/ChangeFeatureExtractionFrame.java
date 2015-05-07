@@ -362,6 +362,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 		epochSpinner = new JSpinner(epochSnm);
 		epochSpinner.setEnabled(true);
+		epochSpinner.setToolTipText("Select the number of samples that will be used from input epochs to be processed.");
 		allPane.add(epochSpinner);
 
 		JLabel allSubsampleLable = new JLabel("Subsampling Factor");
@@ -369,6 +370,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 		subsampleSpinner = new JSpinner(subsampleSnm);
 		subsampleSpinner.setEnabled(true);
+		subsampleSpinner.setToolTipText("Select the factor of subsampling that will be applied to processed signal.");
 		allPane.add(subsampleSpinner);
 
 		JLabel allSkipLabel = new JLabel("Skip Samples");
@@ -376,6 +378,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 
 		skipSpinner = new JSpinner(skipSnm);
 		skipSpinner.setEnabled(true);
+		skipSpinner.setToolTipText("Select the number of samples from unput epochs that will be skiped.");
 		allPane.add(skipSpinner);
 
 		return allPane;
@@ -417,6 +420,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		waveletNameComboBox = new JComboBox(waveletNames);
 		waveletNameComboBox.setSelectedIndex(8);
 		waveletNameComboBox.setEnabled(false);
+		waveletNameComboBox.setToolTipText("Select the wavelet that will be used for signal processing.");
 		wtPane.add(waveletNameComboBox);
 
 		// Wavelet Feature Size
@@ -427,6 +431,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 				1024, 1);
 		wtFeatureSize = new JSpinner(wtFeatureSizeSnm);
 		wtFeatureSize.setEnabled(false);
+		wtFeatureSize.setToolTipText("Select the number of features that will be used from processed signal starting at first sample. Value shouldn't be greater than Epoch size parameter.");
 		wtPane.add(wtFeatureSize);
 
 		return wtPane;
@@ -463,50 +468,55 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		JLabel sampleWindowSizeLabel = new JLabel("Sample Window Size");
 		hhtPane.add(sampleWindowSizeLabel);
 
-		SpinnerNumberModel sampleWindowSizeSnn = new SpinnerNumberModel(1, 1,
+		SpinnerNumberModel sampleWindowSizeSnn = new SpinnerNumberModel(256, 1,
 				Const.POSTSTIMULUS_VALUES, 1);
 		hhtSampleWindowSize = new JSpinner(sampleWindowSizeSnn);
 		hhtSampleWindowSize.setEnabled(false);
+		hhtSampleWindowSize.setToolTipText("Select the size of the window, in which will be properties of processed signal evaluated. Value shouldn't be greater than Epoch size parameter.");
 		hhtPane.add(hhtSampleWindowSize);
 
 		// Sample Window Shift
 		JLabel sampleWindowsShiftLabel = new JLabel("Sample Window Shift");
 		hhtPane.add(sampleWindowsShiftLabel);
 
-		SpinnerNumberModel sampleWindowShiftSnn = new SpinnerNumberModel(1, 1,
+		SpinnerNumberModel sampleWindowShiftSnn = new SpinnerNumberModel(8, 1,
 				Const.POSTSTIMULUS_VALUES, 1);
 		hhtSampleWindowShift = new JSpinner(sampleWindowShiftSnn);
 		hhtSampleWindowShift.setEnabled(false);
+		hhtSampleWindowShift.setToolTipText("Select the number of samples, for which will be window shifted after each evaluating iteration. Value shouldn't be greater than Sample Window Size parameter.");
 		hhtPane.add(hhtSampleWindowShift);
 
 		// Amplitude Threshold
 		JLabel amplitudeThresholdLabel = new JLabel("Amplitude Threshold");
 		hhtPane.add(amplitudeThresholdLabel);
 
-		SpinnerNumberModel amplitudeThresholdSnn = new SpinnerNumberModel(0, 0,
+		SpinnerNumberModel amplitudeThresholdSnn = new SpinnerNumberModel(3.0, 0,
 				Double.MAX_VALUE, 0.001);
 		hhtAmplitudeThreshold = new JSpinner(amplitudeThresholdSnn);
 		hhtAmplitudeThreshold.setEnabled(false);
+		hhtAmplitudeThreshold.setToolTipText("Select the expected bottom amplitude threshold of P3 wave.");
 		hhtPane.add(hhtAmplitudeThreshold);
 
 		// Min Frequency
 		JLabel minFreqLabel = new JLabel("Min Frequency");
 		hhtPane.add(minFreqLabel);
 
-		SpinnerNumberModel minFreqSnn = new SpinnerNumberModel(1, 1,
+		SpinnerNumberModel minFreqSnn = new SpinnerNumberModel(0.2, 0,
 				Double.MAX_VALUE, 0.001);
 		hhtMinFreq = new JSpinner(minFreqSnn);
 		hhtMinFreq.setEnabled(false);
+		hhtMinFreq.setToolTipText("Select the expected minimal frequency of P3 wave. Value shouldn't be greater than Max Frequency parameter.");
 		hhtPane.add(hhtMinFreq);
 
 		// Max Frequency
 		JLabel maxFreqLabel = new JLabel("Max Frequency");
 		hhtPane.add(maxFreqLabel);
 
-		SpinnerNumberModel maxFreqSnn = new SpinnerNumberModel(1, 1,
+		SpinnerNumberModel maxFreqSnn = new SpinnerNumberModel(3.0, 0,
 				Double.MAX_VALUE, 0.001);
 		hhtMaxFreq = new JSpinner(maxFreqSnn);
 		hhtMaxFreq.setEnabled(false);
+		hhtMaxFreq.setToolTipText("Select the expected maximal frequency of P3 wave. Value should be equal or greater than Min Frequency parameter.");
 		hhtPane.add(hhtMaxFreq);
 
 		// Type of Features
@@ -516,6 +526,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 		hhtTypeOfFeatures = new JComboBox(hhtFeatureTypes);
 		hhtTypeOfFeatures.setSelectedIndex(0);
 		hhtTypeOfFeatures.setEnabled(false);
+		hhtTypeOfFeatures.setToolTipText("Select the type of features, which will be used from HHT processing of the signal.");
 		hhtPane.add(hhtTypeOfFeatures);
 
 		return hhtPane;
@@ -673,7 +684,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 					"Sample Window Shift must be <= Sample Window Size");
 			return false;
 		}
-		if (((Integer) hhtMinFreq.getValue()) > ((Integer) hhtMaxFreq
+		if (((Double) hhtMinFreq.getValue()) > ((Double) hhtMaxFreq
 				.getValue())) {
 			JOptionPane.showMessageDialog(null,
 					"Min Frequency must be <= Max Frequency");

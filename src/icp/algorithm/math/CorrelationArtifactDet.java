@@ -62,7 +62,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	}
 	
 	/**
-	 * Generates gaussian curve and returns its values as an array of double. 
+	 * Generates negative gaussian curve and returns its values as an array of double. 
 	 * The gaussian function is given as: y = a*e^(-((x-mu)^2)/(2*sigma^2).
 	 * Only the "hill" of the curve is generated. That is done by computing the width of 
 	 * the curve, and then converting that width into nPoints.
@@ -79,7 +79,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 		width*=1.1;
 		for(int i = 0; i < nPoints; i++){
 			double x = width*((double)i/(double)nPoints) - width/2;
-			curve[i] = Math.pow(a*Math.E,-(x-mu)*(x-mu)/(2*sigma*sigma));
+			curve[i] = -Math.pow(a*Math.E,-(x-mu)*(x-mu)/(2*sigma*sigma));
 		}
 		return curve;
 	}
@@ -129,7 +129,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	
 	/**
 	 * Shifts the pattern against the epoch and with each shift calculates the correlation 
-	 * coefficient. If the correlation coefficient is higher than the threshold, than the part of 
+	 * coefficient. If the correlation coefficient is higher than the threshold, then the part of 
 	 * the epoch is similar to the pattern (contains artifact) and the epoch is removed.
 	 * The correlation coefficient can have the values from -1 (not similar at all) to 1 
 	 * (exactly the same) and is calculated using the Pearson's correlation equation: 

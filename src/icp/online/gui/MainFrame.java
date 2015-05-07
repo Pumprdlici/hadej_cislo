@@ -94,7 +94,7 @@ public class MainFrame extends JFrame implements Observer {
 	private JLabel feStatus;
 
 	private JLabel classifierStatus;
-	
+
 	private String configurationFile;
 
 	public MainFrame() {
@@ -120,7 +120,7 @@ public class MainFrame extends JFrame implements Observer {
 				/ 2 - this.getSize().height / 2);
 		this.setSize(Const.MAIN_WINDOW_WIDTH, Const.MAIN_WINDOW_HEIGHT);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 		loadConfiguration();
 		File config = new File(configurationFile);
 		if (config.exists()) {
@@ -138,6 +138,13 @@ public class MainFrame extends JFrame implements Observer {
 		getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Reads configuratin file of feature extraction and classifier and creates
+	 * them with parameters specified in the file
+	 * 
+	 * @param f
+	 *            - configuratin file
+	 */
 	private void readConfiguration(File f) {
 		try {
 			FileReader fr = new FileReader(f);
@@ -202,12 +209,15 @@ public class MainFrame extends JFrame implements Observer {
 			}
 			br.close();
 			fr.close();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Opens FileChooser and allow user to specify configuration file to be
+	 * opened
+	 */
 	private void loadConfiguration() {
 		JFileChooser open = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -218,8 +228,7 @@ public class MainFrame extends JFrame implements Observer {
 		int openResult = open.showOpenDialog(this);
 		if (openResult == JFileChooser.APPROVE_OPTION) {
 			configurationFile = open.getSelectedFile().getPath();
-		}
-		else {
+		} else {
 			configurationFile = "";
 		}
 	}
@@ -238,7 +247,12 @@ public class MainFrame extends JFrame implements Observer {
 			classifier.load(file);
 		}
 	}
-	
+
+	/**
+	 * Creates status bar with selected feature extraction and classsifier
+	 * 
+	 * @return panel with status bar
+	 */
 	private JPanel createStatusBar() {
 		JPanel statusBar = new JPanel();
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.LINE_AXIS));
@@ -268,7 +282,8 @@ public class MainFrame extends JFrame implements Observer {
 		offlineMenuItem.setAction((new LoadOfflineData()));
 		JMenuItem onlineMenuItem = new JMenuItem();
 		onlineMenuItem.setAction(new LoadOnlineData());
-		JMenuItem loadConfigAndClassifierItem = new JMenuItem("Load configuration and classifier files");
+		JMenuItem loadConfigAndClassifierItem = new JMenuItem(
+				"Load configuration and classifier files");
 		JMenuItem chartMenuItem = new JMenuItem();
 		chartMenuItem.setAction(this.epochCharts);
 		JMenuItem endMenuItem = new JMenuItem("Close");
@@ -281,19 +296,19 @@ public class MainFrame extends JFrame implements Observer {
 				System.exit(0);
 			}
 		});
-		
+
 		loadConfigAndClassifierItem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				loadConfiguration();
 				File conf = new File(configurationFile);
-				if(conf.exists()) {
+				if (conf.exists()) {
 					readConfiguration(conf);
 					loadClassifier();
 					classifier.setFeatureExtraction(fe);
 					setTrained(true);
-					
+
 					setFeStatus("Feature Extraction: "
 							+ fe.getClass().getSimpleName());
 					setClassifierStatus("Classifier: "
@@ -301,7 +316,7 @@ public class MainFrame extends JFrame implements Observer {
 				}
 			}
 		});
-		
+
 		final MainFrame mf = this;
 		JMenu settingsMenu = new JMenu("Settings");
 		JMenuItem featureMenuItem = new JMenuItem(
@@ -327,7 +342,8 @@ public class MainFrame extends JFrame implements Observer {
 				// TODO training
 				JFileChooser save = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
+						"CLASSIFIER files .classifier", "CLASSIFIER",
+						"classifier");
 				save.addChoosableFileFilter(filter);
 				save.setFileFilter(filter);
 				save.setCurrentDirectory(new File(System
@@ -447,38 +463,91 @@ public class MainFrame extends JFrame implements Observer {
 		}
 	}
 
+	/**
+	 * Getter for classifier
+	 * 
+	 * @return classifier
+	 */
 	public IERPClassifier getClassifier() {
 		return classifier;
 	}
 
+	/**
+	 * Setter for classifier
+	 * 
+	 * @param classifier
+	 *            - classifier to be set
+	 */
 	public void setClassifier(IERPClassifier classifier) {
 		this.classifier = classifier;
 	}
 
+	/**
+	 * Getter for feature extraction
+	 * 
+	 * @return feature extraction
+	 */
 	public IFeatureExtraction getFe() {
 		return fe;
 	}
 
+	/**
+	 * Setter for feature extraction
+	 * 
+	 * @param fe
+	 *            - feature extraction to be set
+	 */
 	public void setFe(IFeatureExtraction fe) {
 		this.fe = fe;
 	}
 
+	/**
+	 * Checks if the classifier is trained
+	 * 
+	 * @return <code>true</code> if classifier is trained;<code>false</code> if
+	 *         it is not trained
+	 */
 	public boolean isTrained() {
 		return trained;
 	}
 
+	/**
+	 * Setter for trained parameter
+	 * 
+	 * @param trained
+	 *            - <code>true</code> if classifier is trained;
+	 *            <code>false</code> if it is not trained
+	 */
 	public void setTrained(boolean trained) {
 		this.trained = trained;
 	}
 
+	/**
+	 * Setter for feature extraction status in the status bar
+	 * 
+	 * @param feStatus
+	 *            - feature extraction status, e.g. "FeatureExtraction" +
+	 *            fe.getClass().getSimpleName()
+	 */
 	public void setFeStatus(String feStatus) {
 		this.feStatus.setText(feStatus);
 	}
 
+	/**
+	 * Setter for classifier status in the status bar
+	 * 
+	 * @param classifierStatus
+	 *            - classifier status, e.g. "Classifier" +
+	 *            classifier.getClass().getSimpleName()
+	 */
 	public void setClassifierStatus(String classifierStatus) {
 		this.classifierStatus.setText(classifierStatus);
 	}
 
+	/**
+	 * Opens dialog that points out that classifier is not trained and prompts
+	 * the user to train it
+	 */
 	private void trainingDialog() {
 		if (isTrained() == false) {
 			int dialogResult = JOptionPane.showConfirmDialog(null,
@@ -487,7 +556,8 @@ public class MainFrame extends JFrame implements Observer {
 			if (dialogResult == JOptionPane.OK_OPTION) {
 				JFileChooser save = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
+						"CLASSIFIER files .classifier", "CLASSIFIER",
+						"classifier");
 				save.addChoosableFileFilter(filter);
 				save.setFileFilter(filter);
 				save.setCurrentDirectory(new File(System

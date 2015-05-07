@@ -501,6 +501,7 @@ public class ChangeClassifierFrame extends JFrame {
 				JFileChooser save = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
 						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
+				save.setDialogTitle("Save file with trained classifier and file with configuration");
 				save.addChoosableFileFilter(filter);
 				save.setFileFilter(filter);
 				save.setCurrentDirectory(new File(System

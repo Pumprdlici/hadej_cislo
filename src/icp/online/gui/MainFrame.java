@@ -220,6 +220,7 @@ public class MainFrame extends JFrame implements Observer {
 	 */
 	private void loadConfiguration() {
 		JFileChooser open = new JFileChooser();
+		open.setDialogTitle("Select file with saved configuration");
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"TXT files .txt", "TXT", "txt");
 		open.addChoosableFileFilter(filter);
@@ -235,6 +236,7 @@ public class MainFrame extends JFrame implements Observer {
 
 	private void loadClassifier() {
 		JFileChooser open = new JFileChooser();
+		open.setDialogTitle("Select file with trained classifier");
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
 		open.addChoosableFileFilter(filter);
@@ -341,6 +343,7 @@ public class MainFrame extends JFrame implements Observer {
 			public void actionPerformed(ActionEvent e) {
 				// TODO training
 				JFileChooser save = new JFileChooser();
+				save.setDialogTitle("Save file with trained classifier");
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
 						"CLASSIFIER files .classifier", "CLASSIFIER",
 						"classifier");
@@ -555,6 +558,7 @@ public class MainFrame extends JFrame implements Observer {
 					"Classifier is not trained", JOptionPane.OK_CANCEL_OPTION);
 			if (dialogResult == JOptionPane.OK_OPTION) {
 				JFileChooser save = new JFileChooser();
+				save.setDialogTitle("Save file with trained classifier");
 				FileNameExtensionFilter filter = new FileNameExtensionFilter(
 						"CLASSIFIER files .classifier", "CLASSIFIER",
 						"classifier");

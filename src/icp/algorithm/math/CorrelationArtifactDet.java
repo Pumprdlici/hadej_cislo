@@ -73,7 +73,7 @@ public class CorrelationArtifactDet implements IArtifactDetection{
 	 * @param sigma The width of the "hill" of the curve.
 	 * @return Array of double values representing the "hill" of the gaussian curve.
 	 */
-	public double[] generateGaussianPattern(int nPoints, double a, double mu, double sigma){
+	public static double[] generateGaussianPattern(int nPoints, double a, double mu, double sigma){
 		double[] curve = new double[nPoints];
 		double width = 2*Math.sqrt(2*Math.log(10))*sigma;
 		width*=1.1;

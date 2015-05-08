@@ -1,7 +1,5 @@
 package icp.algorithm.math;
 
-import java.util.Arrays;
-
 /**
  * Taken from http://ptolemy.eecs.berkeley.edu/eecs20/week12/implementation.html
  *
@@ -27,8 +25,8 @@ public class FirFilter implements IFilter {
      * @param M Lenght of impulse response
      * @param Att Attenuation of VisionRecorder
      */
-    public FirFilter(double Fa, double Fb, int sampleRate, int M, int Att) {
-        impulseResponse = calculateImpResponce(Fa, Fb, sampleRate, M, Att);
+    public FirFilter(double Fa, double Fb, int sampleRate, int M, int ripple) {
+        impulseResponse = setupFilter(Fa, Fb, sampleRate, M, ripple);
         length = impulseResponse.length;
         delayLine = new double[length];
     }
@@ -37,20 +35,13 @@ public class FirFilter implements IFilter {
      * Default constructor with default parameters.
      */
     public FirFilter() {
-        this(0.1, 30, 1000, 19, 60);
+        this(0.1, 8, 1024, 30, 0);
     }
     
-    /**
-     * Simple constructor with parameters.
-     * 
-     * @param Fa Lower frequency
-     * @param Fb Upper frequency
-     * @param sampleRate Sampling rate of VisionRecorder
-     */
-    public FirFilter(int Fa, int Fb, int sampleRate) {
-        this(Fa, Fb, sampleRate, 19, 60);
+    private double[] setupFilter(double Fa, double Fb, int Fs, int M, int ripple) {
+    	return calculateImpulseResponce(Fa, Fb, Fs, M, ripple);
     }
-    
+      
     @Override
     /**
      * Method for filtering signal. Gets input sample and filters it
@@ -71,7 +62,6 @@ public class FirFilter implements IFilter {
         if (++count >= length) {
             count = 0;
         }
-        System.out.println("FIR: filtruju -> " + result);
         return result;
     }
     
@@ -82,10 +72,10 @@ public class FirFilter implements IFilter {
      * @param Fb Upper frequency
      * @param sampleRate Sampling rate of VisionRecorder
      * @param M Lenght of impulse response
-     * @param Att Attenuation of VisionRecorder
+     * @param ripple Attenuation of VisionRecorder
      * @return H Array with impulse response
      */
-    private double[] calculateImpResponce(double Fa, double Fb, int Fs, int M, int Att) {
+    public static double[] calculateImpulseResponce(double Fa, double Fb, int Fs, int M, int ripple) {
     	int Np = (M - 1)/2;
     	double[] H = new double[M];
     	double[] A = new double[Np + 1];
@@ -97,14 +87,14 @@ public class FirFilter implements IFilter {
 		  A[j] = (Math.sin(2*j*pi*Fb/Fs)-Math.sin(2*j*pi*Fa/Fs))/(j*pi);
 		}
 		
-		if (Att<21) {
+		if (ripple<21) {
 		  Alpha = 0;
 		}
-		else if (Att>50) {
-		  Alpha = 0.1102*(Att-8.7);
+		else if (ripple>50) {
+		  Alpha = 0.1102*(ripple-8.7);
 		}
 		else {
-		  Alpha = 0.5842*Math.pow((Att-21), 0.4)+0.07886*(Att-21);
+		  Alpha = 0.5842*Math.pow((ripple-21), 0.4)+0.07886*(ripple-21);
 		}
 
 		I0Alpha = BesselValue(Alpha);
@@ -116,7 +106,6 @@ public class FirFilter implements IFilter {
 			H[j] = H[M-1-j];
 		}
 		
-		System.out.println(Arrays.toString(H));
     	return H;
     }
     
@@ -125,7 +114,7 @@ public class FirFilter implements IFilter {
      * @param x Given x for bessel function
      * @return result of Bessel for x
      */
-    private double BesselValue(double x) {
+    private static double BesselValue(double x) {
 		double d = 0, ds = 1, result = 1;
 
 		do {

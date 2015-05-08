@@ -21,4 +21,21 @@ public class HighPassFilter implements IFilter{
 		System.out.println("HIGHPASS: filtruju -> " + result);
 		return result;
 	}
+	
+	public double getAlpha() {
+		return alpha;
+	}
+	
+	public double getTimeDelay() {
+		return timeDelay;
+	}
+	
+	public double getPreviousOutput() {
+		return previousOutput;
+	}
+	
+	public double getPreviousInput() {
+		return previousInput;
+	}
+
 }

@@ -1,6 +1,8 @@
 package icp.online.gui;
 
 import icp.Const;
+import icp.algorithm.math.ButterWorthFilter;
+import icp.algorithm.math.IArtifactDetection;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -30,6 +32,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -84,6 +87,8 @@ public class MainFrame extends JFrame implements Observer {
 	private JLabel feStatus;
 	
 	private JLabel classifierStatus;
+	
+	public IArtifactDetection artifactDetection;
 
 	public MainFrame() {
 		super(Const.APP_NAME);

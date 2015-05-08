@@ -16,8 +16,18 @@ public class LowPassFilter implements IFilter{
 		double result = previousOutput;
 		result = alpha * currentInput + (1-alpha) * previousOutput;
 		previousOutput = result;
-		System.out.println("LOWPASS: filtruju -> " + result);
 		return result;
 	}
-
+	
+	public double getAlpha() {
+		return alpha;
+	}
+	
+	public double getTimeDelay() {
+		return timeDelay;
+	}
+	
+	public double getPreviousOutput() {
+		return previousOutput;
+	}
 }

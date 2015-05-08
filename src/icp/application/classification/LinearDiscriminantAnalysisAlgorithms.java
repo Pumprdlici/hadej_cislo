@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math.stat.correlation.Covariance;
+
 import Jama.Matrix;
 
 public class LinearDiscriminantAnalysisAlgorithms {
@@ -17,51 +20,51 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	/**
 	 * Discovered linear coefficients
 	 */
-	private Matrix w;
+	public Matrix w;
 	/**
 	 * Linear scores for training data
 	 */
-	private Matrix l;
+	public Matrix l;
 	/**
 	 * Probabilities for classification
 	 */
-	private Matrix p;
+	public Matrix p;
 	/**
 	 * Training data matrix
 	 */
-	private Matrix input;
+	public Matrix input;
 	/**
 	 * Training targets vector
 	 */
-	private Matrix targets;
+	public Matrix targets;
 	/**
 	 * Size of training data matrix
 	 */
-	private int[] sizeOfInput;
+	public int[] sizeOfInput;
 	/**
 	 * Unique target classes
 	 */
-	private double[] classes;
+	public double[] classes;
 	/**
 	 * Number of unique target classes
 	 */
-	private int classCount;
+	public int classCount;
 	/**
 	 * Group counts
 	 */
-	private Matrix nGroup;
+	public Matrix nGroup;
 	/**
 	 * Group sample means
 	 */
-	private Matrix groupMean;
+	public Matrix groupMean;
 	/**
 	 * Pooled covariance
 	 */
-	private Matrix pooledCovariance;
+	public Matrix pooledCovariance;
 	/**
 	 * Prior probabilities
 	 */
-	private Matrix priorProb;
+	public Matrix priorProb;
 
 	public LinearDiscriminantAnalysisAlgorithms() {
 
@@ -177,7 +180,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	/**
 	 * Initialization of variables
 	 */
-	private void init() {
+	public void init() {
 		nGroup = new Matrix(classCount, 1, Double.NaN);
 		groupMean = new Matrix(classCount, sizeOfInput[1], Double.NaN);
 		pooledCovariance = new Matrix(sizeOfInput[1], sizeOfInput[1], 0);
@@ -190,7 +193,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * 
 	 * @return size of input matrix
 	 */
-	private int[] determineSizeOfInput() {
+	public int[] determineSizeOfInput() {
 		int[] size = new int[2];
 		size[0] = input.getRowDimension();
 		size[1] = input.getColumnDimension();
@@ -207,7 +210,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * @param fe
 	 *            - method for feature extraction
 	 */
-	private void createInputAndTargetMatrix(List<double[][]> input,
+	public void createInputAndTargetMatrix(List<double[][]> input,
 			List<Double> targets, IFeatureExtraction fe) {
 		double[][] features = new double[input.size()][fe.getFeatureDimension()];
 		double[][] target = new double[targets.size()][1];
@@ -225,7 +228,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * 
 	 * @return unique and sorted classes
 	 */
-	private double[] determineClasses() {
+	public double[] determineClasses() {
 		List<Double> classesList = new ArrayList<Double>();
 		for (int i = 0; i < targets.getRowDimension(); i++) {
 			if (classesList.contains(targets.get(i, 0))) {
@@ -248,14 +251,14 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * 
 	 * @return number of unique target classes
 	 */
-	private int determineClassCount() {
+	public int determineClassCount() {
 		return classes.length;
 	}
 
 	/**
 	 * Calculates matrix W
 	 */
-	private void calculateW() {
+	public void calculateW() {
 		// Find out which vectors belongs to which class
 		Matrix group = new Matrix(targets.getRowDimension(), 1);
 		for (int i = 0; i < classCount; i++) {
@@ -269,17 +272,18 @@ public class LinearDiscriminantAnalysisAlgorithms {
 				groupMean.set(i, j, calculateMean(group, i, j));
 			}
 
-			// For each column, calculate covariance
-			Matrix cov = new Matrix(sizeOfInput[1], sizeOfInput[1]);
-			for (int j = 0, k = 0; j < cov.getRowDimension(); j++, k++) {
-				cov.set(j, k, calculateCovariance(group, i, k));
+			// Calculate covariance matrix
+			double[][] covData = getMatrixForCovariance(group);
+			if (covData.length == 1) {
+				double[][] data = { covData[0], covData[0] };
+				covData = data;
 			}
+			RealMatrix covMatrix = new Covariance(covData)
+					.getCovarianceMatrix();
+			Matrix cov = new Matrix(covMatrix.getData());
 
 			// For each column, accumulate pooled covariance
-			for (int j = 0; j < pooledCovariance.getColumnDimension(); j++) {
-				pooledCovariance = pooledCovariance.plus(cov.times((nGroup.get(
-						i, 0) - 1) / (sizeOfInput[0] - classCount)));
-			}
+			calculatePooledCovariance(cov, i);
 		}
 		// Calculate prior probabilities
 		for (int i = 0; i < priorProb.getRowDimension(); i++) {
@@ -302,7 +306,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 *            - currently processed column of matrix GroupMean
 	 * @return average of vector
 	 */
-	private double calculateMean(Matrix group, int i, int j) {
+	public double calculateMean(Matrix group, int i, int j) {
 		double avg = 0;
 		int count = 0;
 		for (int k = 0; k < input.getRowDimension(); k++) {
@@ -316,28 +320,36 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	}
 
 	/**
-	 * Calculates covariance of column
+	 * Selects submatrix of input with vector that belong to currently processed
+	 * class
 	 * 
 	 * @param group
-	 *            - vector, that has 1 where index match class
-	 * @param i
-	 *            - currently processed class
-	 * @param j
-	 *            - currently processed column of matrix GroupMean
-	 * @return covariance of vector
+	 *            - group matrix
+	 * @return submatrix to calculate covariance matrix from
 	 */
-	private double calculateCovariance(Matrix group, int i, int j) {
-		double cov = 0;
-		int count = 0;
-		for (int k = 0; k < input.getRowDimension(); k++) {
-			if (group.get(k, 0) == 1) {
-				double temp = input.get(k, j) - groupMean.get(i, j);
-				cov += (temp * temp);
-				count++;
+	public double[][] getMatrixForCovariance(Matrix group) {
+		int rows = 0;
+		for (int i = 0; i < group.getRowDimension(); i++) {
+			if (group.get(i, 0) == 1) {
+				rows++;
 			}
 		}
-		cov /= (count - 1);
+		double[][] cov = new double[rows][sizeOfInput[1]];
+		for (int i = 0, j = 0; i < input.getRowDimension(); i++) {
+			if (group.get(i, 0) == 1) {
+				for (int k = 0; k < sizeOfInput[1]; k++) {
+					cov[j][k] = input.get(i, k);
+				}
+				j++;
+			}
+		}
 		return cov;
+	}
+
+	public void calculatePooledCovariance(Matrix cov, int i) {
+		pooledCovariance = pooledCovariance
+				.plus(cov.times((nGroup.get(i, 0) - 1)
+						/ (sizeOfInput[0] - classCount)));
 	}
 
 	/**
@@ -349,7 +361,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 *            - currently processed class
 	 * @return group matrix with newly filled column
 	 */
-	private Matrix calculateGroup(Matrix group, int i) {
+	public Matrix calculateGroup(Matrix group, int i) {
 		for (int j = 0; j < targets.getRowDimension(); j++) {
 			if (targets.get(j, 0) == classes[i]) {
 				group.set(j, 0, 1);
@@ -368,7 +380,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * @param i
 	 *            - currently processed class
 	 */
-	private void calculateNGroup(Matrix group, int i) {
+	public void calculateNGroup(Matrix group, int i) {
 		double sum = 0;
 		for (int j = 0; j < group.getRowDimension(); j++) {
 			sum += group.get(j, 0);
@@ -384,16 +396,18 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * @param i
 	 *            - currently processed class
 	 */
-	private void createW(int i) {
-		Matrix temp2 = new Matrix(1, groupMean.getColumnDimension());
-		temp2 = multiplyVectorWithMatrix(groupMean.getMatrix(i, i, 0,
+	public void createW(int i) {
+		Matrix temp = new Matrix(1, groupMean.getColumnDimension());
+		temp = multiplyVectorWithMatrix(groupMean.getMatrix(i, i, 0,
 				groupMean.getColumnDimension() - 1), pooledCovariance.inverse());
-		Matrix temp3 = temp2.copy();
-		temp3.timesEquals(-0.5);
-		temp3.arrayTimesEquals(groupMean.getMatrix(i, i, 0,
-				groupMean.getColumnDimension() - 1));
-		w.set(i, 0, temp3.get(0, 0) + Math.log(priorProb.get(i, 0)));
-		w.setMatrix(i, i, 1, w.getColumnDimension() - 1, temp2);
+		Matrix temp2 = temp.copy();
+		double temp2Number = multiplyTwoVectors(temp2,
+				groupMean
+						.getMatrix(i, i, 0, groupMean.getColumnDimension() - 1)
+						.transpose());
+		temp2Number *= -0.5;
+		w.set(i, 0, temp2Number + Math.log(priorProb.get(i, 0)));
+		w.setMatrix(i, i, 1, w.getColumnDimension() - 1, temp);
 	}
 
 	/**
@@ -405,7 +419,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 *            - matrix
 	 * @return matrix with one row (vector), the result of multiplication
 	 */
-	private Matrix multiplyVectorWithMatrix(Matrix v, Matrix m) {
+	public Matrix multiplyVectorWithMatrix(Matrix v, Matrix m) {
 		Matrix ans = new Matrix(1, v.getColumnDimension());
 		for (int i = 0; i < v.getColumnDimension(); i++) {
 			double sum = 0;
@@ -418,9 +432,26 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	}
 
 	/**
+	 * Multiplies two vectors
+	 * 
+	 * @param v
+	 *            - vector with one row
+	 * @param w
+	 *            - vector with one column
+	 * @return result of multiplication
+	 */
+	public double multiplyTwoVectors(Matrix v, Matrix w) {
+		double ans = 0;
+		for (int i = 0; i < v.getColumnDimension(); i++) {
+			ans += v.get(0, i) * w.get(i, 0);
+		}
+		return ans;
+	}
+
+	/**
 	 * Calculates matrix L
 	 */
-	private void calculateL() {
+	public void calculateL() {
 		l = new Matrix(input.getRowDimension(), input.getColumnDimension() + 1,
 				1);
 		l.setMatrix(0, l.getRowDimension() - 1, 1, l.getColumnDimension() - 1,
@@ -431,7 +462,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	/**
 	 * Calculates matrix P
 	 */
-	private void calculateP() {
+	public void calculateP() {
 		Matrix expL = createExpL();
 		Matrix sumL = new Matrix(expL.getRowDimension(), 1);
 		createSumL(expL, sumL);
@@ -446,7 +477,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * 
 	 * @return expL matrix
 	 */
-	private Matrix createExpL() {
+	public Matrix createExpL() {
 		Matrix expL = l.copy();
 		for (int i = 0; i < expL.getRowDimension(); i++) {
 			for (int j = 0; j < expL.getColumnDimension(); j++) {
@@ -465,7 +496,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * @param sumL
 	 *            - sumL matrix
 	 */
-	private void createSumL(Matrix expL, Matrix sumL) {
+	public void createSumL(Matrix expL, Matrix sumL) {
 		for (int i = 0; i < expL.getRowDimension(); i++) {
 			double sum = 0;
 			for (int j = 0; j < expL.getColumnDimension(); j++) {
@@ -484,7 +515,7 @@ public class LinearDiscriminantAnalysisAlgorithms {
 	 * @param sumL
 	 *            - sumL matrix
 	 */
-	private void createRepmatL(Matrix repmatL, Matrix sumL) {
+	public void createRepmatL(Matrix repmatL, Matrix sumL) {
 		for (int i = 0; i < repmatL.getColumnDimension(); i++) {
 			repmatL.setMatrix(0, repmatL.getRowDimension() - 1, i, i, sumL);
 		}

@@ -15,7 +15,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,6 +27,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,34 +36,88 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+/**
+ * Window for changing classifier and its parameters
+ * 
+ * @author Jaroslav Klaus
+ *
+ */
 @SuppressWarnings("serial")
 public class ChangeClassifierFrame extends JFrame {
 
+	/**
+	 * Reference to mainFrame
+	 */
 	private MainFrame mainFrame;
 
+	/**
+	 * Feature Extraction method
+	 */
 	private IFeatureExtraction fe;
 
+	/**
+	 * Parameters for Feature Extraction method
+	 */
+	private List<String> feParams;
+
+	/**
+	 * Spinner for MLP's middle neurons
+	 */
 	private JSpinner middleNeuronsSpinner;
 
+	/**
+	 * Spinner for KNN's number of neighbors
+	 */
 	private JSpinner neighborsNumberSpinner;
 
-	private JSpinner svmGamma;
+	/**
+	 * Spinner for SVM's cost
+	 */
+	private JSpinner svmCost;
 
+	/**
+	 * Radio button for selecting MLP classifier
+	 */
 	private JRadioButton mlpBttn;
 
+	/**
+	 * Radio button for selecting KNN classifier
+	 */
 	private JRadioButton knnBttn;
 
+	/**
+	 * Radio button for selecting LDA classifier
+	 */
 	private JRadioButton ldaBttn;
 
+	/**
+	 * Radio button for selecting SVM classifier
+	 */
 	private JRadioButton svmBttn;
 
+	/**
+	 * Radio button for selecting Correlation classifier
+	 */
 	private JRadioButton correlationBttn;
 
-	public ChangeClassifierFrame(MainFrame mainFrame, IFeatureExtraction fe) {
+	/**
+	 * Constructor for creating this window and creating its variables
+	 * 
+	 * @param mainFrame
+	 *            - reference to mainFrame
+	 * @param fe
+	 *            - Feature Extraction method
+	 * @param feParams
+	 *            - parameters for Feature Extraction method
+	 */
+	public ChangeClassifierFrame(MainFrame mainFrame, IFeatureExtraction fe,
+			List<String> feParams) {
 		super("Choose Classifier and its Parameters");
 		this.mainFrame = mainFrame;
 		this.fe = fe;
+		this.feParams = feParams;
 		this.getContentPane().add(createClassifierFrame());
 		this.setVisible(false);
 		this.pack();
@@ -72,6 +131,13 @@ public class ChangeClassifierFrame extends JFrame {
 		setEscListener(this);
 	}
 
+	/**
+	 * Sets listener to Esc key. After pressing Esc, this window closes and
+	 * nothing is changed
+	 * 
+	 * @param frame
+	 *            - this frame
+	 */
 	private void setEscListener(final ChangeClassifierFrame frame) {
 		ActionListener escListener = new ActionListener() {
 
@@ -86,6 +152,11 @@ public class ChangeClassifierFrame extends JFrame {
 				JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
+	/**
+	 * Creates the main layout and panel
+	 * 
+	 * @return main panel
+	 */
 	private JPanel createClassifierFrame() {
 		GridLayout mainLayout = new GridLayout(1, 2);
 		JPanel contentJP = new JPanel(mainLayout);
@@ -95,6 +166,12 @@ public class ChangeClassifierFrame extends JFrame {
 		return contentJP;
 	}
 
+	/**
+	 * Creates panel with radio buttons for selecting classifier and its actions
+	 * when selected
+	 * 
+	 * @return panel with radio buttons or selecting classifier
+	 */
 	private JPanel createRadioBttns() {
 		mlpBttn = new JRadioButton("MLP");
 		mlpBttn.setSelected(false);
@@ -104,7 +181,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(true);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -116,7 +193,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(true);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -128,7 +205,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -140,7 +217,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(true);
+				svmCost.setEnabled(true);
 			}
 		});
 
@@ -152,7 +229,7 @@ public class ChangeClassifierFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
-				svmGamma.setEnabled(false);
+				svmCost.setEnabled(false);
 			}
 		});
 
@@ -175,6 +252,11 @@ public class ChangeClassifierFrame extends JFrame {
 		return pane;
 	}
 
+	/**
+	 * Create panel with parameters for classifiers
+	 * 
+	 * @return panel with parameters for classifiers
+	 */
 	private JPanel createParameters() {
 		// MLP
 		JPanel mlpPane = createMlpPane();
@@ -207,6 +289,11 @@ public class ChangeClassifierFrame extends JFrame {
 		return pane;
 	}
 
+	/**
+	 * Creates panel with parameters for MLP
+	 * 
+	 * @return panel with parameters for MLP
+	 */
 	private JPanel createMlpPane() {
 		JPanel mlpPane = new JPanel();
 		mlpPane.setBorder(BorderFactory.createTitledBorder("MLP"));
@@ -219,11 +306,17 @@ public class ChangeClassifierFrame extends JFrame {
 				1);
 		middleNeuronsSpinner = new JSpinner(middleNeuronsSnm);
 		middleNeuronsSpinner.setEnabled(false);
+		middleNeuronsSpinner.setToolTipText("Select number of neurons for middle layer of neural network.");
 		mlpPane.add(middleNeuronsSpinner);
 
 		return mlpPane;
 	}
 
+	/**
+	 * Creates panel with parameters for KNN
+	 * 
+	 * @return panel with parameters for KNN
+	 */
 	private JPanel createKnnPane() {
 		JPanel knnPane = new JPanel();
 		knnPane.setBorder(BorderFactory
@@ -237,11 +330,17 @@ public class ChangeClassifierFrame extends JFrame {
 				750, 1);
 		neighborsNumberSpinner = new JSpinner(neighborsNumberSnm);
 		neighborsNumberSpinner.setEnabled(false);
+		neighborsNumberSpinner.setToolTipText("Select number of nearest neighbors that will be used for classification.");
 		knnPane.add(neighborsNumberSpinner);
 
 		return knnPane;
 	}
 
+	/**
+	 * Creates panel with parameters for LDA
+	 * 
+	 * @return panel with parameters for LDA
+	 */
 	private JPanel createLdaPane() {
 		JPanel ldaPane = new JPanel();
 		ldaPane.setBorder(BorderFactory
@@ -252,6 +351,11 @@ public class ChangeClassifierFrame extends JFrame {
 		return ldaPane;
 	}
 
+	/**
+	 * Creates panel with parameters for SVM
+	 * 
+	 * @return panel with parameters for SVM
+	 */
 	private JPanel createSvmPane() {
 		JPanel svmPane = new JPanel();
 		svmPane.setBorder(BorderFactory
@@ -259,18 +363,24 @@ public class ChangeClassifierFrame extends JFrame {
 		svmPane.setLayout(new GridLayout(0, 2));
 
 		// Gamma
-		JLabel svmGammeLabel = new JLabel("Gamma");
-		svmPane.add(svmGammeLabel);
+		JLabel svmCostLabel = new JLabel("Cost");
+		svmPane.add(svmCostLabel);
 
-		SpinnerNumberModel svmGammaSnm = new SpinnerNumberModel(0, 0, 15000,
+		SpinnerNumberModel svmCostSnm = new SpinnerNumberModel(0, 0, 15000,
 				0.001);
-		svmGamma = new JSpinner(svmGammaSnm);
-		svmGamma.setEnabled(false);
-		svmPane.add(svmGamma);
+		svmCost = new JSpinner(svmCostSnm);
+		svmCost.setEnabled(false);
+		svmCost.setToolTipText("Select cost for SVM classification.");
+		svmPane.add(svmCost);
 
 		return svmPane;
 	}
 
+	/**
+	 * Creates panel with parameters for Correlation
+	 * 
+	 * @return panel with parameters for Correlation
+	 */
 	private JPanel createCorrelationPane() {
 		JPanel correlationPane = new JPanel();
 		correlationPane.setBorder(BorderFactory
@@ -279,6 +389,11 @@ public class ChangeClassifierFrame extends JFrame {
 		return correlationPane;
 	}
 
+	/**
+	 * Creates panel with OK button
+	 * 
+	 * @return panel with OK button
+	 */
 	private JPanel createBttnPane() {
 		JPanel bttnPane = new JPanel();
 
@@ -300,14 +415,12 @@ public class ChangeClassifierFrame extends JFrame {
 					IERPClassifier classifier = new MLPClassifier(nnStructure);
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
+					List<String> classifierParams = new ArrayList<String>();
+					for (int p : nnStructure) {
+						classifierParams.add(p + "");
+					}
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (knnBttn.isSelected()) {
 					int neighborsNumber = (Integer) neighborsNumberSpinner
 							.getValue();
@@ -316,40 +429,29 @@ public class ChangeClassifierFrame extends JFrame {
 							neighborsNumber);
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
+					List<String> classifierParams = new ArrayList<String>();
+					classifierParams.add(neighborsNumber + "");
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (ldaBttn.isSelected()) {
 					IERPClassifier classifier = new LinearDiscriminantAnalysisClassifier();
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
+					List<String> classifierParams = new ArrayList<String>();
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else if (svmBttn.isSelected()) {
 					IERPClassifier classifier;
 					try {
-						classifier = new SVMClassifier();
+						classifier = new SVMClassifier((Double) svmCost
+								.getValue());
 						classifier.setFeatureExtraction(fe);
 
-						mainFrame.setFe(fe);
-						mainFrame.setClassifier(classifier);
-						mainFrame.setFeStatus("Feature Extraction: "
-								+ fe.getClass().getSimpleName());
-						mainFrame.setClassifierStatus("Classifier: "
-								+ classifier.getClass().getSimpleName());
+						List<String> classifierParams = new ArrayList<String>();
+						classifierParams.add((Double) svmCost.getValue() + "");
 
-						trainingDialog(c, classifier);
+						trainingDialog(c, mainFrame, classifier,
+								classifierParams);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -357,14 +459,9 @@ public class ChangeClassifierFrame extends JFrame {
 					IERPClassifier classifier = new CorrelationClassifier();
 					classifier.setFeatureExtraction(fe);
 
-					mainFrame.setFe(fe);
-					mainFrame.setClassifier(classifier);
-					mainFrame.setFeStatus("Feature Extraction: "
-							+ fe.getClass().getSimpleName());
-					mainFrame.setClassifierStatus("Classifier: "
-							+ classifier.getClass().getSimpleName());
+					List<String> classifierParams = new ArrayList<String>();
 
-					trainingDialog(c, classifier);
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				} else {
 					JOptionPane
 							.showMessageDialog(null,
@@ -381,25 +478,93 @@ public class ChangeClassifierFrame extends JFrame {
 
 	}
 
-	private void trainingDialog(ChangeClassifierFrame c,
-			IERPClassifier classifier) {
+	/**
+	 * Creates training dialog that appears after choosing Classifier and
+	 * clicking OK button
+	 * 
+	 * @param c
+	 *            - this frame
+	 * @param mainFrame
+	 *            - reference to mainFrame
+	 * @param classifier
+	 *            - created Classifier
+	 * @param classifierParams
+	 *            - parameters for classifier
+	 */
+	private void trainingDialog(ChangeClassifierFrame c, MainFrame mainFrame,
+			IERPClassifier classifier, List<String> classifierParams) {
 		if (mainFrame.isTrained() == false) {
-			int dialogResult = JOptionPane
-					.showConfirmDialog(
-							null,
-							"You have to train the classifier in order to use it\nWould you like to train it now?",
-							"Classifier is not trained",
-							JOptionPane.YES_NO_OPTION);
-			if (dialogResult == JOptionPane.YES_OPTION) {
-				c.dispose();
+			int dialogResult = JOptionPane.showConfirmDialog(null,
+					"You have to train the classifier in order to use it",
+					"Classifier is not trained", JOptionPane.OK_CANCEL_OPTION);
+			if (dialogResult == JOptionPane.OK_OPTION) {
+				JFileChooser save = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter(
+						"CLASSIFIER files .classifier", "CLASSIFIER", "classifier");
+				save.setDialogTitle("Save file with trained classifier and file with configuration");
+				save.addChoosableFileFilter(filter);
+				save.setFileFilter(filter);
+				save.setCurrentDirectory(new File(System
+						.getProperty("user.dir")));
+				int saveResult = save.showSaveDialog(c);
+				String file = "";
+				if (saveResult == JFileChooser.APPROVE_OPTION) {
+					file = save.getSelectedFile().getPath();
+					String configurationFile = file + ".txt";
+					String classifierFile = file + ".classifier";
 
-				// training
-				new TrainUsingOfflineProvider(c.fe, classifier);
-			} else {
-				c.dispose();
+					c.dispose();
+
+					new TrainUsingOfflineProvider(c.fe, classifier, classifierFile);
+					mainFrame.setFe(fe);
+					mainFrame.setClassifier(classifier);
+					mainFrame.setFeStatus("Feature Extraction: "
+							+ fe.getClass().getSimpleName());
+					mainFrame.setClassifierStatus("Classifier: "
+							+ classifier.getClass().getSimpleName());
+
+					writeLastTrainedClassifier(fe.getClass().getSimpleName(),
+							feParams, classifier.getClass().getSimpleName(),
+							classifierParams, configurationFile);
+					mainFrame.setTrained(true);
+				}
 			}
 		} else {
 			c.dispose();
+		}
+	}
+
+	/**
+	 * Writes last trained Feature Extraction method and Classifier to a file
+	 * 
+	 * @param feName
+	 *            - simple class name of Feature Extraction method
+	 * @param feParams
+	 *            - parameters for Feature Extraction method
+	 * @param classifierName
+	 *            - simple class name of Classifier
+	 * @param classifierParams
+	 *            - parameters for Classifier
+	 * @param file
+	 *            - name of the file to write into
+	 */
+	private void writeLastTrainedClassifier(String feName,
+			List<String> feParams, String classifierName,
+			List<String> classifierParams, String file) {
+		try {
+			File f = new File(file);
+			FileWriter fw = new FileWriter(f);
+			fw.write(feName + "\n");
+			for (String param : feParams) {
+				fw.write(param + "\n");
+			}
+			fw.write(classifierName + "\n");
+			for (String param : classifierParams) {
+				fw.write(param + "\n");
+			}
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

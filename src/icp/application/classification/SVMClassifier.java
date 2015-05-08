@@ -48,25 +48,55 @@ public class SVMClassifier extends ERPClassifierAdapter {
 
 	private Classifier classifier; /* classifier from WEKA */
 
-	private IFeatureExtraction fe; /*
-									 * feature extraction used to decompose each
-									 * epoch
-									 */
+	private IFeatureExtraction fe; /* feature extraction used to decompose each epoch */
 
 	private Instances instances; /* dataset WEKA */
 	
 	private final String ARFF_DATASET = "dataset.arff"; /* file name for WEKA dataset */
 
 	/**
-	 * Constructor for settings of SVM and disable output to console
+	 * Constructor for settings of SVM and disable output to console.
+	 * 
+	 * 
 	 * 
 	 * @throws Exception
 	 */
 	public SVMClassifier() throws Exception {
 
 		this.classifier = new LibSVM();
-		String[] options = weka.core.Utils
-				.splitOptions("-S 0 -K 2 -G 0.0625 -C 0.33 -M 40.0 -seed 1 -W 1");//  -S(SVMType) 0(C-SVC) -K(kernel) 2(RBF) -G(gamma) 0.0625 -C(cost) 0.33
+		/*String[] options = weka.core.Utils
+				.splitOptions("-S 0 -K 0 -C 242 -M 40.0 -seed 1 -W 1");//  -S(SVMType) 0(C-SVC) -K(kernel) 2(RBF) -G(gamma) 0.0625 -C(cost) 0.33*/
+		double cost = 0.03125;
+		 String[] options = new String[10];
+		 options[0] = "-S";
+		 options[1] = "0";
+		 options[2] = "-K";
+		 options[3] = "0";
+		 options[4] = "-C";
+		 options[5] = Double.toString(cost);
+		 options[6] = "-G";
+		 options[7] = "0.125";
+		 options[8] = "-W";
+		 options[9] = "1";
+		this.classifier.setOptions(options);
+		svm.svm_set_print_string_function(new libsvm.svm_print_interface(){
+		    @Override public void print(String s) {} // Disables svm output
+		});
+
+	}
+	
+	public SVMClassifier(double cost) throws Exception {
+
+		this.classifier = new LibSVM();
+		 String[] options = new String[8];
+		 options[0] = "-S";
+		 options[1] = "0";
+		 options[2] = "-K";
+		 options[3] = "0";
+		 options[4] = "-C";
+		 options[5] = Double.toString(cost);
+		 options[6] = "-W";
+		 options[7] = "1";
 		this.classifier.setOptions(options);
 		svm.svm_set_print_string_function(new libsvm.svm_print_interface(){
 		    @Override public void print(String s) {} // Disables svm output

@@ -50,7 +50,6 @@ public class AmplitudeArtifactDet implements IArtifactDetection{
 		for(int i = 0; i < values.length; i++) {
 			for(int j = 0; j < values[i].length; j++) {
 				if(Math.abs(values[i][j]) > threshold) {
-					System.out.println("Amplitude! "+(epoch.getStimulusIndex()+1));
 					return null;
 				}
 			}
@@ -81,5 +80,4 @@ public class AmplitudeArtifactDet implements IArtifactDetection{
 		}
 		this.threshold = threshold;
 	}
-
 }

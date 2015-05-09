@@ -4,6 +4,7 @@ import icp.Const;
 import icp.algorithm.math.FirFilter;
 import icp.algorithm.math.IFilter;
 import icp.algorithm.math.SignalProcessing;
+import icp.online.gui.MainFrame;
 
 /**
  *
@@ -22,12 +23,8 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
 	 private int DOWN_SMPL_FACTOR = 2;  /* subsampling factor */
 
 	 private int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
-
-	    /* low pass 0 - 8 Hz, M = 19  */
-	 private static final double[] lowPassCoeffs = {0.000308, 0.001094, 0.002410,
-	        0.004271, 0.006582, 0.009132, 0.011624, 0.013726, 0.015131, 0.015625,
-	        0.015131, 0.013726, 0.011624, 0.009132, 0.006582, 0.004271, 0.002410,
-	        0.001094, 0.000308};
+	 
+	 private IFilter filter = null;
 
     @Override
     public double[] extractFeatures(double[][] epoch) {
@@ -37,11 +34,14 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
         int i = 0;
 
         // filter the data
-        IFilter lowPassFilter = new FirFilter();
+        filter = MainFrame.dataFilter;
         for (int channel : CHANNELS) {
             double[] currChannelData = epoch[channel - 1];
             for (int j = 0; j < EPOCH_SIZE; j++) {
-                features[i * EPOCH_SIZE + j] = lowPassFilter.getOutputSample(currChannelData[j + SKIP_SAMPLES]);
+            	if(filter == null)
+            		features[i * EPOCH_SIZE + j] = currChannelData[j + SKIP_SAMPLES];
+            	else
+            		features[i * EPOCH_SIZE + j] = filter.getOutputSample(currChannelData[j + SKIP_SAMPLES]);
             }
             i++;
         }

@@ -25,7 +25,7 @@ public class FirFilter implements IFilter {
      * @param M Lenght of impulse response
      * @param Att Attenuation of VisionRecorder
      */
-    public FirFilter(double Fa, double Fb, int sampleRate, int M, int ripple) {
+    public FirFilter(double Fa, double Fb, int sampleRate, int M, double ripple) {
         impulseResponse = setupFilter(Fa, Fb, sampleRate, M, ripple);
         length = impulseResponse.length;
         delayLine = new double[length];
@@ -38,7 +38,7 @@ public class FirFilter implements IFilter {
         this(0.1, 8, 1024, 30, 0);
     }
     
-    private double[] setupFilter(double Fa, double Fb, int Fs, int M, int ripple) {
+    private double[] setupFilter(double Fa, double Fb, int Fs, int M, double ripple) {
     	return calculateImpulseResponce(Fa, Fb, Fs, M, ripple);
     }
       
@@ -75,7 +75,7 @@ public class FirFilter implements IFilter {
      * @param ripple Attenuation of VisionRecorder
      * @return H Array with impulse response
      */
-    public static double[] calculateImpulseResponce(double Fa, double Fb, int Fs, int M, int ripple) {
+    public static double[] calculateImpulseResponce(double Fa, double Fb, int Fs, int M, double ripple) {
     	int Np = (M - 1)/2;
     	double[] H = new double[M];
     	double[] A = new double[Np + 1];

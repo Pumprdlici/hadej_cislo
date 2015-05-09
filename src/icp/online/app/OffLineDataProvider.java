@@ -1,6 +1,8 @@
 package icp.online.app;
 
 import icp.algorithm.math.Baseline;
+import icp.algorithm.math.IArtifactDetection;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,6 +18,7 @@ import cz.zcu.kiv.signal.EEGMarker;
 import icp.Const;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
+import icp.online.gui.MainFrame;
 
 public class OffLineDataProvider extends Observable implements Runnable, IDataProvider {
 
@@ -25,6 +28,8 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     private int FZIndex;
     private int CZIndex;
     private int PZIndex;
+    
+    private IArtifactDetection artifactDetector;
 
     private boolean running;
 
@@ -113,6 +118,10 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                 em.setFZ(ffzChannel, 100);
                 em.setCZ(fczChannel, 100);
                 em.setPZ(fpzChannel, 100);
+                
+                artifactDetector = MainFrame.artifactDetection;
+                if(artifactDetector != null)
+                	em = artifactDetector.detectArtifact(em);
 
                 this.setChanged();
                 this.notifyObservers(em);

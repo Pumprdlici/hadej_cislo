@@ -304,7 +304,7 @@ public class CorrDetDialog extends JDialog {
 				if(nPoints<0){
 					JOptionPane.showMessageDialog(CorrDetDialog.this,"Poèet bodù musí vìtší než jedna.","Neèíselná hodnota", JOptionPane.ERROR_MESSAGE);
 				} else {
-					CorrDetDialog.this.pattern = CorrelationArtifactDet.generateGaussianPattern(nPoints, a, mu, sigma);
+					//CorrDetDialog.this.pattern = CorrelationArtifactDet.generateGaussianPattern(nPoints, a, mu, sigma);
 					okBT.setEnabled(true);
 					for(int i = 0; i<pattern.length; i++){
 						gaussTA.append(i + ": " + pattern[i]+"\r\n");
@@ -330,7 +330,7 @@ public class CorrDetDialog extends JDialog {
 					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota max. korelaèního \r\n" +
 							"koeficientu musí být èíselná a \r\n" + "v rozsahu <-1,1>.", "Špatná hranièní hodnota kor. koef.", JOptionPane.ERROR_MESSAGE);
 				} else {
-					mainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
+					//mainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
 					CorrDetDialog.this.dispose();
 				}
 			}

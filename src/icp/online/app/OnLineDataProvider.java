@@ -1,6 +1,8 @@
 package icp.online.app;
 
 import icp.Const;
+import icp.algorithm.math.IArtifactDetection;
+import icp.online.gui.MainFrame;
 import icp.online.tcpip.DataTokenizer;
 import icp.online.tcpip.TCPIPClient;
 import icp.online.tcpip.objects.RDA_Marker;
@@ -27,6 +29,8 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
     private final DataTokenizer dtk;
     private final Observer obs;
     private boolean isRunning;
+    
+    private IArtifactDetection artifactDetector;
 
     /**
      * Konstruktor, který vytvoøí instanci této øídící tøídy.
@@ -91,6 +95,10 @@ public class OnLineDataProvider extends Observable implements IDataProvider, Run
                     em.setFZ(data.getFzValues(), 0);
                     em.setCZ(data.getCzValues(), 0);
                     em.setPZ(data.getPzValues(), 0);
+                    
+                    artifactDetector = MainFrame.artifactDetection;
+                    if(artifactDetector != null)
+                    	em = artifactDetector.detectArtifact(em);
 
                     this.setChanged();
                     this.notifyObservers(em);

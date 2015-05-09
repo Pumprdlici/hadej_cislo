@@ -1,12 +1,12 @@
 package icp.online.gui;
 
 import icp.Const;
-<<<<<<< HEAD
-import icp.algorithm.math.ButterWorthFilter;
+//<<<<<<< HEAD
 import icp.algorithm.math.IArtifactDetection;
-=======
+import icp.algorithm.math.IFilter;
+//=======
 import icp.application.classification.CorrelationClassifier;
->>>>>>> origin/ZSWI
+//>>>>>>> origin/ZSWI
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.HHTFeatureExtraction;
 import icp.application.classification.IERPClassifier;
@@ -46,7 +46,6 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -101,7 +100,9 @@ public class MainFrame extends JFrame implements Observer {
 
 	private JLabel classifierStatus;
 	
-	public IArtifactDetection artifactDetection;
+	public static IArtifactDetection artifactDetection = null;
+	
+	public static IFilter dataFilter = null;
 
 	private String configurationFile;
 
@@ -342,6 +343,7 @@ public class MainFrame extends JFrame implements Observer {
 				f.setVisible(true);
 			}
 		});
+		
 		JMenuItem trainMenuItem = new JMenuItem("Train");
 		trainMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,
 				ActionEvent.CTRL_MASK));
@@ -369,6 +371,74 @@ public class MainFrame extends JFrame implements Observer {
 				}
 			}
 		});
+		
+		JMenu artifactDetectionAndFiltering = new JMenu(
+				"Filtering and Artifact detection");
+		
+		JMenuItem amplitude = new JMenuItem(
+				"Amplitude and Gradient artifact detection");
+		amplitude.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
+				ActionEvent.CTRL_MASK));
+		amplitude.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new AmplDetDialog(mf);
+				//f.setVisible(true);
+			}
+		});
+		
+		JMenuItem LHpassFilter = new JMenuItem(
+				"Low/High pass filter");
+		LHpassFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
+				ActionEvent.CTRL_MASK));
+		LHpassFilter.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new LHPassFilterDialog(mf);
+				//f.setVisible(true);
+			}
+		});
+		
+		JMenuItem firFilter = new JMenuItem(
+				"FIR filter");
+		firFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
+				ActionEvent.CTRL_MASK));
+		firFilter.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new FirFilterDialog(mf);
+				//f.setVisible(true);
+			}
+		});
+		
+		JMenuItem buttFilter = new JMenuItem(
+				"ButterWorth filter");
+		buttFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B,
+				ActionEvent.CTRL_MASK));
+		buttFilter.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ButterWorthFilterDialog(mf);
+				//f.setVisible(true);
+			}
+		});
+		
+		JMenuItem corrArtifact = new JMenuItem(
+				"Correlation artifact detection");
+		corrArtifact.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				ActionEvent.CTRL_MASK));
+		corrArtifact.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CorrDetDialog(mf);
+				//f.setVisible(true);
+			}
+		});
 
 		menuBar.add(fileMenu);
 		fileMenu.add(onlineMenuItem);
@@ -377,11 +447,18 @@ public class MainFrame extends JFrame implements Observer {
 		fileMenu.add(chartMenuItem);
 		fileMenu.addSeparator();
 		fileMenu.add(endMenuItem);
+		
+		artifactDetectionAndFiltering.add(buttFilter);
+		artifactDetectionAndFiltering.add(firFilter);
+		artifactDetectionAndFiltering.add(LHpassFilter);
+		artifactDetectionAndFiltering.add(corrArtifact);
+		artifactDetectionAndFiltering.add(amplitude);
+		settingsMenu.add(artifactDetectionAndFiltering);
 
 		menuBar.add(settingsMenu);
 		settingsMenu.add(featureMenuItem);
 		settingsMenu.add(trainMenuItem);
-
+		
 		return menuBar;
 	}
 

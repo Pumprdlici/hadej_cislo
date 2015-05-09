@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 	/**
 	 * Class providing the GUI dialog for the creation of the FIR filter.
 	 * @author Anezka Jachymova
-	 * @version 1.00
+	 * @version 1.01
 	 */
 	public class FirFilterDialog extends JDialog {
 
@@ -34,7 +34,7 @@ import javax.swing.JTextField;
 		private MainFrame mainFrame;
 		
 		/*
-		 * These atributes are here only because of 
+		 * These attributes are here only because of 
 		 * referencing from inner classes.
 		 * They have no other use here.
 		 */
@@ -172,7 +172,7 @@ import javax.swing.JTextField;
 					
 					if(checkValues(lower, upper, sampleRate, nSample, ripple)) {
 						impulsTA.setText(null);
-						String temp = Arrays.toString(FirFilter.calculateImpulseResponce(lower, upper, sampleRate, nSample, ripple));
+						String temp = Arrays.toString(FirFilter.calculateImpulseResponse(lower, upper, sampleRate, nSample, ripple));
 						String[] pole = temp.substring(1, temp.length() - 1).split(",");
 						impulsTA.append("Impulzní odezva\r\npro hodnoty: " + lower + " " + upper + " " + sampleRate + " " + nSample + " " + ripple);
 						for(String cislo : pole)

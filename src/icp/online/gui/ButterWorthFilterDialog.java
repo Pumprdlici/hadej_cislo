@@ -1,6 +1,5 @@
-	package icp.online.gui;
-	import icp.algorithm.math.ButterWorthFilter;
-import icp.algorithm.math.FirFilter;
+package icp.online.gui;
+import icp.algorithm.math.ButterWorthFilter;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -24,7 +23,7 @@ import javax.swing.JTextField;
 	/**
 	 * Class providing the GUI dialog for the creation of the butter worth filter.
 	 * @author Anezka Jachymova
-	 * @version 1.00
+	 * @version 1.01
 	 */
 	public class ButterWorthFilterDialog extends JDialog {
 
@@ -35,7 +34,7 @@ import javax.swing.JTextField;
 		private MainFrame mainFrame;
 		
 		/*
-		 * These atributes are here only because of 
+		 * These attributes are here only because of 
 		 * referencing from inner classes.
 		 * They have no other use here.
 		 */
@@ -139,7 +138,7 @@ import javax.swing.JTextField;
 					
 					if(checkValues(lower, upper, sampleRate)) {
 						impulsTA.setText(null);
-						String temp = Arrays.toString(ButterWorthFilter.calculateImpulseResponce(lower, upper, sampleRate));
+						String temp = Arrays.toString(ButterWorthFilter.calculateImpulseResponse(lower, upper, sampleRate));
 						String[] pole = temp.substring(1, temp.length() - 1).split(",");
 						impulsTA.append("Impulzní odezva\r\npro hodnoty: " + lower + " " + upper + " " + sampleRate);
 						for(String cislo : pole)

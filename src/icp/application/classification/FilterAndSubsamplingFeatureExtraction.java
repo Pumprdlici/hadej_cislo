@@ -1,7 +1,6 @@
 package icp.application.classification;
 
 import icp.Const;
-import icp.algorithm.math.FirFilter;
 import icp.algorithm.math.IFilter;
 import icp.algorithm.math.SignalProcessing;
 import icp.online.gui.MainFrame;
@@ -24,7 +23,7 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
 
 	 private int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
 	 
-	 private IFilter filter = null;
+	 private IFilter filter = null; /* used filter, if no filter is selected -> will be null */
 
     @Override
     public double[] extractFeatures(double[][] epoch) {

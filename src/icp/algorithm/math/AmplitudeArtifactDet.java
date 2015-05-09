@@ -8,11 +8,11 @@ import icp.online.app.EpochMessenger;
  * threshold, it will be removed from the signal.
  * 
  * @author Jan Vampol
- * @version 1.00
+ * @version 1.01
  */
 public class AmplitudeArtifactDet implements IArtifactDetection{
 	
-	public static final double DEFAULT_THRESHOLD = 100;
+	public static final double DEFAULT_THRESHOLD = 75;
 	
 	/**
 	 * Maximum value allowed in the signal

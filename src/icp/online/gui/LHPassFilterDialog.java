@@ -1,7 +1,5 @@
 package icp.online.gui;
 
-import icp.algorithm.math.AmplitudeArtifactDet;
-import icp.algorithm.math.GradientArtifactDet;
 import icp.algorithm.math.HighPassFilter;
 import icp.algorithm.math.LowPassFilter;
 
@@ -13,7 +11,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,7 +21,7 @@ import javax.swing.JTextField;
 /**
  * Class providing the GUI dialog for the creation of the low/high pass filter.
  * @author Anezka Jachymova
- * @version 1.00
+ * @version 1.01
  */
 public class LHPassFilterDialog extends JDialog{
 	
@@ -35,14 +32,13 @@ public class LHPassFilterDialog extends JDialog{
 	private MainFrame mainFrame;
 	
 	/*
-	 * These atributes are here only because of 
+	 * These attributes are here only because of 
 	 * referencing from inner classes.
 	 * They have no other use here.
 	 */
 	private JPanel mainPN;
 	private JTextField borderTF;
 	private JTextField sampleRateTF;
-	private JButton okBT;
 	
 	/**
 	 * Creates the dialog and sets its owner.

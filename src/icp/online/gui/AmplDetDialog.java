@@ -3,8 +3,6 @@ package icp.online.gui;
 import icp.algorithm.math.AmplitudeArtifactDet;
 import icp.algorithm.math.GradientArtifactDet;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -23,7 +21,7 @@ import javax.swing.JTextField;
 /**
  * Class providing the GUI dialog for the creation of the amplitude artifact detection.
  * @author Anezka Jachymova
- * @version 1.00
+ * @version 1.01
  */
 public class AmplDetDialog extends JDialog{
 	
@@ -34,13 +32,12 @@ public class AmplDetDialog extends JDialog{
 	private MainFrame mainFrame;
 	
 	/*
-	 * These atributes are here only because of 
+	 * These attributes are here only because of 
 	 * referencing from inner classes.
 	 * They have no other use here.
 	 */
 	private JPanel mainPN;
 	private JTextField borderTF;
-	private JButton okBT;
 	
 	/**
 	 * Creates the dialog and sets its owner.

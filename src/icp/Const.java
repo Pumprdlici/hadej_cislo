@@ -50,9 +50,9 @@ public class Const {
     //----------------------Main window------------------
     public static final String APP_NAME = "Guess the number";
 
-    public static final int MAIN_WINDOW_WIDTH = 640;
+    public static final int MAIN_WINDOW_WIDTH = 960;
 
-    public static final int MAIN_WINDOW_HEIGHT = 320;
+    public static final int MAIN_WINDOW_HEIGHT = 380;
 
     public static final String UNKNOWN_RESULT = "?";
 

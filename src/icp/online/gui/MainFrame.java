@@ -95,10 +95,16 @@ public class MainFrame extends JFrame implements Observer {
 	private final ShowChart epochCharts;
 
 	private boolean trained = false;
+	
+	private JPanel statusBar;
 
 	private JLabel feStatus;
 
 	private JLabel classifierStatus;
+	
+	private JLabel artDetectionStatus;
+	
+	private JLabel filterStatus;
 	
 	public static IArtifactDetection artifactDetection = null;
 	
@@ -145,6 +151,7 @@ public class MainFrame extends JFrame implements Observer {
 		}
 
 		getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+		revalidate();
 	}
 
 	/**
@@ -265,12 +272,14 @@ public class MainFrame extends JFrame implements Observer {
 	 * @return panel with status bar
 	 */
 	private JPanel createStatusBar() {
-		JPanel statusBar = new JPanel();
+		if(statusBar != null)
+			getContentPane().remove(statusBar);
+		statusBar = new JPanel();
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.LINE_AXIS));
 		statusBar.setBorder(BorderFactory.createLoweredBevelBorder());
 
 		feStatus = new JLabel("Feature Extraction: "
-				+ this.fe.getClass().getSimpleName());
+				+ this.fe.getClass().getSimpleName() + " ");
 		statusBar.add(feStatus);
 
 		statusBar.add(Box.createHorizontalStrut(5));
@@ -280,8 +289,30 @@ public class MainFrame extends JFrame implements Observer {
 		statusBar.add(Box.createHorizontalStrut(5));
 
 		classifierStatus = new JLabel("Classifier: "
-				+ this.classifier.getClass().getSimpleName());
+				+ this.classifier.getClass().getSimpleName() + " ");
 		statusBar.add(classifierStatus);
+		
+		if(artifactDetection != null) {
+			separator = new JSeparator(SwingConstants.VERTICAL);
+			separator.setMaximumSize(new Dimension(1, Integer.MAX_VALUE));
+			statusBar.add(separator);
+			statusBar.add(Box.createHorizontalStrut(5));
+		
+			artDetectionStatus = new JLabel("Artifact Detection: "
+					+ this.artifactDetection.getClass().getSimpleName() + " ");
+			statusBar.add(artDetectionStatus);
+		}
+		
+		if(dataFilter != null) {
+			separator = new JSeparator(SwingConstants.VERTICAL);
+			separator.setMaximumSize(new Dimension(1, Integer.MAX_VALUE));
+			statusBar.add(separator);
+			statusBar.add(Box.createHorizontalStrut(5));
+	
+			filterStatus = new JLabel("Filter: "
+					+ this.dataFilter.getClass().getSimpleName() + " ");
+			statusBar.add(filterStatus);
+		}
 
 		return statusBar;
 	}
@@ -384,6 +415,8 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new AmplDetDialog(mf);
+				mf.getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+				revalidate();
 				//f.setVisible(true);
 			}
 		});
@@ -397,6 +430,8 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new LHPassFilterDialog(mf);
+				mf.getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+				revalidate();
 				//f.setVisible(true);
 			}
 		});
@@ -410,6 +445,8 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new FirFilterDialog(mf);
+				mf.getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+				revalidate();
 				//f.setVisible(true);
 			}
 		});
@@ -423,6 +460,8 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ButterWorthFilterDialog(mf);
+				mf.getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+				revalidate();
 				//f.setVisible(true);
 			}
 		});
@@ -436,6 +475,8 @@ public class MainFrame extends JFrame implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new CorrDetDialog(mf);
+				mf.getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+				revalidate();
 				//f.setVisible(true);
 			}
 		});

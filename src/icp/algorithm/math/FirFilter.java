@@ -63,6 +63,7 @@ public class FirFilter implements IFilter {
      * using calculated impulse response.
      * 
      * @param inputSample Input data
+     * @return double Output data
      */
     public double getOutputSample(double inputSample) {
         delayLine[count] = inputSample;

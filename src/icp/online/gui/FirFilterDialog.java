@@ -67,7 +67,7 @@ import javax.swing.JTextField;
 		
 		
 		/**
-		 * Creates the JPanel of the Generovani tab.
+		 * Creates the JPanel of the Generate tab.
 		 * @return JPanel with all needed components.
 		 */
 		public JPanel createGeneratePanel(){
@@ -78,55 +78,55 @@ import javax.swing.JTextField;
 			
 			lowerTF = new JTextField(12);
 			lowerTF.setText("0.1");
-			lowerTF.setToolTipText("Interval: 0 - horní hranice");
+			lowerTF.setToolTipText("Interval: 0 - Higher frequency");
 			upperTF = new JTextField(12);
 			upperTF.setText("8");
-			upperTF.setToolTipText("Interval: 0 - vzorkovací frekvence/2");
+			upperTF.setToolTipText("Interval: 0 - Sample rate/2");
 			sampleRateTF = new JTextField(12);
 			sampleRateTF.setText("1024");
 			sampleRateTF.setToolTipText("Interval: > 0");
 			nSampleTF = new JTextField(12);
 			nSampleTF.setText("30");
-			nSampleTF.setToolTipText("Interval: 2 - 100 (100 je maximální doporuèená hodnota. Vìtší poèet vzorkù mùže zmìnit funkci filtru!)");
+			nSampleTF.setToolTipText("Interval: 2 - 100 (100 is maximal recomended value. Greater number of samples can alter the function of the filter!)");
 			sumTF = new JTextField(12);
 			sumTF.setText("0");
 			sumTF.setToolTipText("Interval: > 0");
 			
 			c.insets = new Insets(5,12,5,12);
 			c.fill = GridBagConstraints.HORIZONTAL;
-			paramPN.add(new JLabel("Dolní hranice: *"),c);
+			paramPN.add(new JLabel("Lower frequency: *"),c);
 			c.gridx = 1;
 			paramPN.add(lowerTF,c);
 			c.gridx = 0;
 			c.gridy = 1;
-			paramPN.add(new JLabel("Horní hranice: *"),c);
+			paramPN.add(new JLabel("Higher frequency: *"),c);
 			c.gridx = 1;
 			paramPN.add(upperTF,c);
 			c.gridx = 0;
 			c.gridy = 2;
-			paramPN.add(new JLabel("Vzorkovací frekvence: *"),c);
+			paramPN.add(new JLabel("Sample rate: *"),c);
 			c.gridx = 1;
 			paramPN.add(sampleRateTF,c);
 			c.gridx = 0;
 			c.gridy = 3;
-			paramPN.add(new JLabel("Poèet vzorkù:"),c);
+			paramPN.add(new JLabel("Number of samples:"),c);
 			c.gridx = 1;
 			paramPN.add(nSampleTF,c);
 			c.gridx = 0;
 			c.gridy = 4;
-			paramPN.add(new JLabel("Šum:"),c);
+			paramPN.add(new JLabel("Ripple:"),c);
 			c.gridx = 1;
 			paramPN.add(sumTF,c);
 			genPN.add(paramPN, BorderLayout.CENTER);
 			
 			impulsTA = new JTextArea(12,20);
-			impulsTA.setText("Impulzní odezva\r\n");
+			impulsTA.setText("Impulse response\r\n");
 			impulsTA.setEditable(false);
 			impulsTA.setFont(new Font("Calibri",12,12));
 			JScrollPane jsc = new JScrollPane(impulsTA);
 			genPN.add(jsc, BorderLayout.EAST);
 			
-			JButton genBT = new JButton("Generuj");
+			JButton genBT = new JButton("Generate");
 			genBT.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -135,20 +135,20 @@ import javax.swing.JTextField;
 					try {
 						lower = Double.parseDouble(lowerTF.getText());
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Dolní hranice musí být reálná èíslo.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Lower threshold must be a real number greater than 0.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
 						upper = Double.parseDouble(upperTF.getText());
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Horní hranice musí být reálné èíslo vìtší než 0\r\n"
-							+ "a menší než polovina vzorkovací frekvence!","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Higher threshold must be a real number greater than 0\r\n"
+							+ "and lesser than half of sample rate!","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
 						sampleRate = Integer.parseInt(sampleRateTF.getText());
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Vzorkovací frekvence musí být celoèíselná hodnota.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Sample rate must be an integer number.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
@@ -157,7 +157,7 @@ import javax.swing.JTextField;
 							nSample = Integer.parseInt(nS);
 						}
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Poèet vzorkù musí být celoèíselná hodnota.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Number of samples must be an integer number.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
@@ -166,7 +166,7 @@ import javax.swing.JTextField;
 							ripple = Double.parseDouble(s);
 						}
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Hodnota šumu  musí reálné èíslo.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Ripple value must be a real number.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
@@ -174,14 +174,14 @@ import javax.swing.JTextField;
 						impulsTA.setText(null);
 						String temp = Arrays.toString(FirFilter.calculateImpulseResponse(lower, upper, sampleRate, nSample, ripple));
 						String[] pole = temp.substring(1, temp.length() - 1).split(",");
-						impulsTA.append("Impulzní odezva\r\npro hodnoty: " + lower + " " + upper + " " + sampleRate + " " + nSample + " " + ripple);
+						impulsTA.append("Impulse response\r\nfor values: " + lower + " " + upper + " " + sampleRate + " " + nSample + " " + ripple);
 						for(String cislo : pole)
 							impulsTA.append("\r\n"+cislo);
 					}
 					else {
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Nìkterá z hodnot je zadána mimo povolený interval!\r\n"
-								+ "Informace o intervalech naleznete v tooltipech parametrù."
-								,"Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Some of the values are outside the interval!\r\n"
+								+ "You can find info about intervals in the tooltips of parametres."
+								,"Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
@@ -197,20 +197,20 @@ import javax.swing.JTextField;
 					try {
 						lower = Double.parseDouble(lowerTF.getText());
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Dolní hranice musí být reálná èíslo.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Lower threshold must be a real number greater than 0.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
 						upper = Double.parseDouble(upperTF.getText());
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Horní hranice musí být reálné èíslo vìtší než 0\r\n"
-							+ "a menší než polovina vzorkovací frekvence!","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Higher threshold must be a real number greater than 0\r\n"
+							+ "and lesser than half of sample rate!","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
 						sampleRate = Integer.parseInt(sampleRateTF.getText());
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Vzorkovací frekvence musí být celoèíselná hodnota.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Sample rate must be an integer number.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
@@ -219,7 +219,7 @@ import javax.swing.JTextField;
 							nSample = Integer.parseInt(nS);
 						}
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Poèet vzorkù musí být celoèíselná hodnota.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Number of samples must be an integer number.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					try {
@@ -228,16 +228,16 @@ import javax.swing.JTextField;
 							ripple = Double.parseDouble(s);
 						}
 					} catch (NumberFormatException e){
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Hodnota šumu musí reálné èíslo.","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Ripple value must be a real number.","Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
 					if(checkValues(lower, upper, sampleRate, nSample, ripple))
 						mainFrame.dataFilter = new FirFilter(lower, upper, sampleRate, nSample, ripple);
 					else {
-						JOptionPane.showMessageDialog(FirFilterDialog.this,"Nìkterá z hodnot je zadána mimo povolený interval!\r\n"
-								+ "Informace o intervalech naleznete v tooltipech parametrù."
-								,"Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FirFilterDialog.this,"Some of the values are outside the interval!\r\n"
+								+ "You can find info about intervals in the tooltips of parametres."
+								,"Wrong value", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					
@@ -252,8 +252,8 @@ import javax.swing.JTextField;
 		}
 		
 		/**
-		 * Creates JPanel of the tab Napoveda.
-		 * @return JPanel - the panel with Napoveda
+		 * Creates JPanel of the tab Help.
+		 * @return JPanel - the panel with Help
 		 */
 		public JPanel createHelpPanel(){
 			JPanel helpPN = new JPanel();
@@ -263,7 +263,18 @@ import javax.swing.JTextField;
 			help.setWrapStyleWord(true);
 			help.setEditable(false);
 			help.setFont(new Font("Calibri",12,12));
-			help.setText("FIR Filter");
+			help.setText("Finite Impulse Response Filter is used to remove unwanted components from EEG signal."
+					+ " This filter is defined by its Impuse Response. This value determines its filtering atributes."
+					+ " Response is Finite because it is of finite duration, because it settles to zero in finite time."
+					+ " FIR filter is more dificult to implement and requries more computation memory and time than IIR."
+					+ " However it is more versatile with its parameters.\r\n"
+					+ "This filter can be modified with 5 parameters. Only 3 of them (signed with *) are required for easy use.\r\n"
+					+ "Lower frequency[Hz] - The lower threshold of chosen band. Required parameter.\r\n"
+					+ "Higher frequency[Hz] - The higher threshold of chosen band. Required parameter.\r\n"
+					+ "Sample rate[Hz] - Determines how many samples are taken each second. Required parameter.\r\n"
+					+ "Numbers of samples - Determines the function of filter. Higher number of impulse samples can improve"
+					+ " filter function. Too many samples delays the filter too much and damages the function. Recomended values are 3 - 100.\r\n"
+					+ "Ripple[dB] - Filter can conpensate for signal ripple. Thresholds for compensation are 21dB and 50dB");
 			helpPN.add(jsc);
 			return helpPN;
 		}
@@ -276,8 +287,8 @@ import javax.swing.JTextField;
 			JTabbedPane tabbedPN = new JTabbedPane();
 			this.genPN = createGeneratePanel();
 			this.helpPN = createHelpPanel();
-			tabbedPN.addTab("Generování", genPN);
-			tabbedPN.addTab("Nápovìda", helpPN);
+			tabbedPN.addTab("Generate", genPN);
+			tabbedPN.addTab("Help", helpPN);
 			
 			return tabbedPN;
 		}

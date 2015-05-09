@@ -70,7 +70,7 @@ public class AmplDetDialog extends JDialog{
 		
 		c.insets = new Insets(5,12,5,12);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mainPN.add(new JLabel("Hranice: *"),c);
+		mainPN.add(new JLabel("Treshold: *"),c);
 		c.gridx = 1;
 		mainPN.add(borderTF,c);
 		c.gridx = 0;
@@ -99,7 +99,7 @@ public class AmplDetDialog extends JDialog{
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(AmplDetDialog.this,"Hranice musí být reálná èíslo vìtší než 0!","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(AmplDetDialog.this,"Threshold must be a real number greater than 0!","Wrong number", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				

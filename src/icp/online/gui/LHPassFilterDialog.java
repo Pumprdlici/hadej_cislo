@@ -67,19 +67,19 @@ public class LHPassFilterDialog extends JDialog{
 		
 		borderTF = new JTextField(12);
 		borderTF.setText("8");
-		borderTF.setToolTipText("Interval: 0 - vzorkovací frekvence/2");
+		borderTF.setToolTipText("Interval: 0 - Sample rate/2");
 		sampleRateTF = new JTextField(12);
 		sampleRateTF.setText("1024");
 		sampleRateTF.setToolTipText("Interval: > 0");
 		
 		c.insets = new Insets(5,12,5,12);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mainPN.add(new JLabel("Hranice: *"),c);
+		mainPN.add(new JLabel("Treshold: *"),c);
 		c.gridx = 1;
 		mainPN.add(borderTF,c);
 		c.gridx = 0;
 		c.gridy = 1;
-		mainPN.add(new JLabel("Vzorkovací frekvence: *"),c);
+		mainPN.add(new JLabel("Sample rate: *"),c);
 		c.gridx = 1;
 		mainPN.add(sampleRateTF,c);
 		c.gridx = 0;
@@ -109,8 +109,8 @@ public class LHPassFilterDialog extends JDialog{
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(LHPassFilterDialog.this,"Hranice musí být reálné èíslo vìtší než 0\r\n"
-							+ "a menší než polovina vzorkovací frekvence!","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(LHPassFilterDialog.this,"Threshold must be a real number greater than 0\r\n"
+							+ "and lesser than half of sample rate!","Wrong value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
@@ -119,7 +119,7 @@ public class LHPassFilterDialog extends JDialog{
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(LHPassFilterDialog.this,"Vzorkovací frekvence musí být reálné èíslo vìtší než 0!","Špatnì zadaná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(LHPassFilterDialog.this,"Sample rate must be a real number greater than 0!","Wrong value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				

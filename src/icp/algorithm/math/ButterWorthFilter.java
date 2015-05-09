@@ -43,6 +43,7 @@ public class ButterWorthFilter implements IFilter {
      * using DSP-collection library.
      * 
      * @param inputSample Input data
+	 * @return double Output data
      */
 	public double getOutputSample(double inputSample) {
 		return filter.step(inputSample);

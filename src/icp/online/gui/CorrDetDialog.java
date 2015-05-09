@@ -331,7 +331,7 @@ public class CorrDetDialog extends JDialog {
 					JOptionPane.showMessageDialog(CorrDetDialog.this,"The value of the corr. coeff. must be\r\nnumerical " +
 							"and within the range \r\n" + "of <-1,1>.", "Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 				} else {
-					MainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
+					mainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
 					CorrDetDialog.this.dispose();
 				}
 			}

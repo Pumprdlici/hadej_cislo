@@ -352,7 +352,7 @@ public class CorrDetDialog extends JDialog {
 		help.setFont(new Font("Calibri",12,12));
 		help.setText("Korelaèní metoda slouží k odstranìní artefaktù z EEG signálu." +
 				" Metoda hledá vztah, resp. " +
-				"podobnost mezi dvìma signály. K tomu používá vzorec pro Pearssonùv korelaèní koeficient r: " +
+				"pod obnost mezi dvìma signály. K tomu používá vzorec pro Pearssonùv korelaèní koeficient r: " +
 				"r = (n*sum(xi*yi)-sum(xi)*sum(yi)) / (sqrt(n*sum(xi*xi)-sum(xi)*sum(xi)) * sqrt(n*sum(yi*yi)-sum(yi)*sum(yi)))\r\n" +
 				"Tento koeficient mùže nabývat hodnot v rozsahu <-1,1>. Hodnoty -1 nabývá v pøípadì, že oba signály anti-korelují," +
 				"tzn. s rùstem hodnot jednoho signálu klesají hodnoty druhého signálu stejnou rychlostí. " +

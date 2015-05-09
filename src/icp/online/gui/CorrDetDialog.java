@@ -70,7 +70,7 @@ public class CorrDetDialog extends JDialog {
 		super(frame);
 		this.mainFrame = frame;
 		this.setModal(true);
-		this.setTitle("Metoda korelace");	
+		this.setTitle("Correlation method");	
 		this.getContentPane().add(createMainPanel());
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -93,7 +93,7 @@ public class CorrDetDialog extends JDialog {
 		log.setText("");
 		try {
 			bfr = new BufferedReader(new FileReader(file));
-			log.append("Soubor nalezen. Nacitam hodnoty:\r\n");
+			log.append("File not found. Reading values:\r\n");
 			String line;
 			try {
 				while((line = bfr.readLine()) != null){
@@ -104,8 +104,8 @@ public class CorrDetDialog extends JDialog {
 							log.append(a+"\r\n");
 							patternList.add(a);
 						} catch(NumberFormatException e){
-							log.append("Nalezena neciselna hodnota: " + hodnoty[i]+"\r\n" +
-									"Vzor se nepodarilo nacist.\r\n");
+							log.append("Nonnumerical value found: " + hodnoty[i]+"\r\n" +
+									"Unable to read the pattern.\r\n");
 							bfr.close();
 							return null;
 						}
@@ -113,11 +113,11 @@ public class CorrDetDialog extends JDialog {
 				}
 				bfr.close();
 			} catch (IOException e) {
-				log.append("Necekany konec souboru. Vzor se nepodarilo nacist.\r\n");
+				log.append("Unexpected end of file. Unable to read the pattern.\r\n");
 				return null;
 			}
 		} catch (FileNotFoundException e1) {
-			log.append("Soubor nenalezen. Vzor se nepodarilo nacist.\r\n");
+			log.append("File not found. Unable to read the pattern.\r\n");
 		}
 		double[] pattern = new double[patternList.size()];
 		for(int i = 0; i < pattern.length; i++){
@@ -133,13 +133,13 @@ public class CorrDetDialog extends JDialog {
 	public JPanel createFilePanel(){
 		JPanel filePN = new JPanel(new BorderLayout());
 		fileTA = new JTextArea(12,20);
-		fileTA.setText("Èekám na soubor...");
+		fileTA.setText("Waiting for file...");
 		fileTA.setEditable(false);
 		fileTA.setFont(new Font("Calibri",12,12));
 		JScrollPane jsp = new JScrollPane(fileTA);
 		filePN.add(jsp, BorderLayout.EAST);
 		JPanel chooseFilePN = new JPanel();
-		JButton chooseFileBT = new JButton("Vybrat soubor");
+		JButton chooseFileBT = new JButton("Choose a file");
 		chooseFileBT.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -165,18 +165,18 @@ public class CorrDetDialog extends JDialog {
 		
 		this.delimiterTF = new JTextField(12);
 		delimiterTF.setText(";");
-		delimiterTF.setToolTipText("Zadejte oddìlovaè jednotlivých hodnot v souboru.");
+		delimiterTF.setToolTipText("Insert the delimiter of the values in the file.");
 		thresholdTF1 = new JTextField(12);
 		thresholdTF1.setText("0.86");
-		thresholdTF1.setToolTipText("Zadejte maximální hodnotu korelaèního koeficientu.");
+		thresholdTF1.setToolTipText("Insert maximal value of correlation coefficient.");
 		
 		c.insets = new Insets(12,12,12,12);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		paramPN.add(new JLabel("Oddìlovaè hodnot:"),c);
+		paramPN.add(new JLabel("Delimiter:"),c);
 		paramPN.add(delimiterTF,c);
 		c.gridx = 0;
 		c.gridy = 1;
-		paramPN.add(new JLabel("Max. korelaèní koeficient:"),c);
+		paramPN.add(new JLabel("Max. corr coeffient:"),c);
 		c.gridx = 1;
 		paramPN.add(thresholdTF1,c);
 		
@@ -190,18 +190,18 @@ public class CorrDetDialog extends JDialog {
 				try {
 					threshold = Double.parseDouble(thresholdTF1.getText());
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota max. korelaèního \r\nkoeficientu musí být èíselná.");
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The maximal corr. coefficient value must be numerical.");
 					return;
 				}
 				if(Math.abs(threshold)>1.0){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota max. korelaèního \r\n" +
-							"koeficientu musí být èíselná a \r\n" + "v rozsahu <-1,1>.", "Špatná hranièní hodnota kor. koef.", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The maximal corr. coefficient \r\n" +
+							"must be numerical and \r\n" + "in the range of <-1,1>.", "Wrong threshold of corr. coeff.", JOptionPane.ERROR_MESSAGE);
 				} else if(CorrDetDialog.this.pattern == null){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Vzor artefaktu pro korelaci se nepodaøilo " +
-							"naèíst. Zkuste to prosím znovu a \r\nzkontrolujte, že soubor neobsahuje neèíselné hodnoty nebo desetinné \r\n" +
-							"èárky místo teèek.", "Špatný vzor pro korelaci", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The pattern for the correlation was not read. Please try again and \r\n" +
+							"check the file for nonnumerical values or wrong decimal points. \r\n",
+							"Wrong correlation pattern", JOptionPane.ERROR_MESSAGE);
 				} else {
-					mainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
+					MainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
 					CorrDetDialog.this.dispose();
 				}
 			}
@@ -223,55 +223,55 @@ public class CorrDetDialog extends JDialog {
 		
 		nPointsTF = new JTextField(12);
 		nPointsTF.setText("250");
-		nPointsTF.setToolTipText("Zadejte poèet bodù vzoru.\r\n Jeden bod odpovídá 1 ms signálu.");
+		nPointsTF.setToolTipText("Insert the number of points of the pattern.\r\n One point represents 1 ms of the signal.");
 		aTF = new JTextField(12);
 		aTF.setText("1");
-		aTF.setToolTipText("Zadejte amplitudu gaussovy køivky.");
+		aTF.setToolTipText("Type the amplitude of the curve.");
 		muTF = new JTextField(12);
 		muTF.setText("0");
-		muTF.setToolTipText("Zadejte posun amplitudy na ose x.");
+		muTF.setToolTipText("Type the shift of the amplitude on the x-axis.");
 		sigmaTF = new JTextField(12);
 		sigmaTF.setText("1");
-		sigmaTF.setToolTipText("Zadejte šíøku kopce.");
+		sigmaTF.setToolTipText("Type the width of the hill.");
 		thresholdTF2 = new JTextField(12);
 		thresholdTF2.setText("0.86");
-		thresholdTF2.setToolTipText("Zadejte maximální povolený korelaèní koeficient.");
+		thresholdTF2.setToolTipText("Type the threshold for the correlation coefficient.");
 		
 		c.insets = new Insets(5,12,5,12);
 		c.fill = GridBagConstraints.HORIZONTAL;
-		paramPN.add(new JLabel("Poèet bodù:"),c);
+		paramPN.add(new JLabel("No. of points:"),c);
 		c.gridx = 1;
 		paramPN.add(nPointsTF,c);
 		c.gridx = 0;
 		c.gridy = 1;
-		paramPN.add(new JLabel("Hodnota a:"),c);
+		paramPN.add(new JLabel("Value a:"),c);
 		c.gridx = 1;
 		paramPN.add(aTF,c);
 		c.gridx = 0;
 		c.gridy = 2;
-		paramPN.add(new JLabel("Hodnota mu:"),c);
+		paramPN.add(new JLabel("Value mu:"),c);
 		c.gridx = 1;
 		paramPN.add(muTF,c);
 		c.gridx = 0;
 		c.gridy = 3;
-		paramPN.add(new JLabel("Hodnota sigma:"),c);
+		paramPN.add(new JLabel("Value sigma:"),c);
 		c.gridx = 1;
 		paramPN.add(sigmaTF,c);
 		c.gridx = 0;
 		c.gridy = 4;
-		paramPN.add(new JLabel("Max. korelaèní. koef:"),c);
+		paramPN.add(new JLabel("Max. corr. coef:"),c);
 		c.gridx = 1;
 		paramPN.add(thresholdTF2,c);
 		gaussPN.add(paramPN, BorderLayout.CENTER);
 		
 		gaussTA = new JTextArea(12,20);
-		gaussTA.setText("Hodnoty vygenerovane køivky:\r\n");
+		gaussTA.setText("Generated curve:\r\n");
 		gaussTA.setEditable(false);
 		gaussTA.setFont(new Font("Calibri",12,12));
 		JScrollPane jsc = new JScrollPane(gaussTA);
 		gaussPN.add(jsc, BorderLayout.EAST);
 		
-		JButton genBT = new JButton("Generuj");
+		JButton genBT = new JButton("Generate");
 		genBT.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -280,32 +280,33 @@ public class CorrDetDialog extends JDialog {
 				try {
 					nPoints = Integer.parseInt(nPointsTF.getText());
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Poèet bodù musí být celoèíselná hodnota.","Neceloèíselná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The no. of points must be a numerical value.","Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
 					a = Double.parseDouble(aTF.getText());
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota a musí být èíselná.","Neèíselná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The value of 'a' must be a numerical value.","Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
 					sigma = Double.parseDouble(sigmaTF.getText());
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota mu musí být èíselná.","Neèíselná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The value of 'mu' must be a numerical value.","Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try {
 					mu = Double.parseDouble(muTF.getText());
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota sigma musí být èíselná.","Neèíselná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The value of 'sigma' must be a numerical value.","Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if(nPoints<0){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Poèet bodù musí vìtší než jedna.","Neèíselná hodnota", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The no. of poitns must be higher than one.","Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 				} else {
 					CorrDetDialog.this.pattern = CorrelationArtifactDet.generateGaussianPattern(nPoints, a, mu, sigma);
 					okBT.setEnabled(true);
+					gaussTA.setText("Generated curve:\r\n");
 					for(int i = 0; i<pattern.length; i++){
 						gaussTA.append(i + ": " + pattern[i]+"\r\n");
 					}
@@ -323,14 +324,14 @@ public class CorrDetDialog extends JDialog {
 				try {
 					threshold = Double.parseDouble(thresholdTF2.getText());
 				} catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota max. korelaèního \r\nkoeficientu musí být èíselná.");
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The value of the corr. coeff. must be numerical.","Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if(Math.abs(threshold)>1.0){
-					JOptionPane.showMessageDialog(CorrDetDialog.this,"Hodnota max. korelaèního \r\n" +
-							"koeficientu musí být èíselná a \r\n" + "v rozsahu <-1,1>.", "Špatná hranièní hodnota kor. koef.", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(CorrDetDialog.this,"The value of the corr. coeff. must be\r\nnumerical " +
+							"and within the range \r\n" + "of <-1,1>.", "Nonnumerical value", JOptionPane.ERROR_MESSAGE);
 				} else {
-					mainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
+					MainFrame.artifactDetection = new CorrelationArtifactDet(CorrDetDialog.this.pattern, threshold);
 					CorrDetDialog.this.dispose();
 				}
 			}
@@ -350,18 +351,16 @@ public class CorrDetDialog extends JDialog {
 		help.setWrapStyleWord(true);
 		help.setEditable(false);
 		help.setFont(new Font("Calibri",12,12));
-		help.setText("Korelaèní metoda slouží k odstranìní artefaktù z EEG signálu." +
-				" Metoda hledá vztah, resp. " +
-				"pod obnost mezi dvìma signály. K tomu používá vzorec pro Pearssonùv korelaèní koeficient r: " +
+		help.setText("The correlation method is used for the detecion and removal of artifact in EEG signal." +
+				" The method searches for a similarity between two signals. " +
+				"That is accomplished via the Pearson's correlation coefficient\r\n r: " +
 				"r = (n*sum(xi*yi)-sum(xi)*sum(yi)) / (sqrt(n*sum(xi*xi)-sum(xi)*sum(xi)) * sqrt(n*sum(yi*yi)-sum(yi)*sum(yi)))\r\n" +
-				"Tento koeficient mùže nabývat hodnot v rozsahu <-1,1>. Hodnoty -1 nabývá v pøípadì, že oba signály anti-korelují," +
-				"tzn. s rùstem hodnot jednoho signálu klesají hodnoty druhého signálu stejnou rychlostí. " +
-				"Naopak hodnoty 1 nabývá koeficient v pøípadì, kdy je rùst hodnot obou signálù totožný. \r\n" +
-				"Korelovány jsou vždy dvì pole double hodnot. Výsledný korelaèní koeficient se porovnává s nastavenou" +
-				" maximální hodnotou, pokud je koeficient vyšší, obsahuje signál artefakt.\r\n\r\n" +
-				"Vzor pro korelaci mùžete naèíst buï: \r\n-z .txt souboru (soubor blink.txt s artefaktem mrknutí se nachází ve složce data)," +
-				"jednotlivé hodnoty vzoru musí být oddìleny zadaným oddìlovaèem \r\n-vygenerovat jako Gaussovu køivku. Ta se generuje pomocí " +
-				"vzorce: y = a*e^(-((x-mu)^2)/(2*sigma^2)");
+				"This coefficient has values of <-1,1>. It reaches the value -1 in case of anti-correlation of the two signals. " +
+				"Opposite to that, the coefficient reaches the value of 1 when the values of both signals are increasing at the same rate. " +
+				"Two arrays of double values are correlated. If the result of the correlation is higher than the set threshold an artifact is detected " +
+				"and the epoch is removed from the signal.\r\n\r\n" +
+				"The correlation pattern can be chosen in tow ways: \r\n-from a .txt file (the values must be separated bt the set delimiter" +
+				"\r\n-generated as Gaussian curve using the equation y = a*e^(-((x-mu)^2)/(2*sigma^2)");
 		helpPN.add(jsc);
 		return helpPN;
 	}
@@ -375,9 +374,9 @@ public class CorrDetDialog extends JDialog {
 		this.filePN = createFilePanel();
 		this.gaussPN = createGaussPanel();
 		this.helpPN = createHelpPanel();
-		tabbedPN.addTab("Ze souboru", filePN);
-		tabbedPN.addTab("Gaussova køivka", gaussPN);
-		tabbedPN.addTab("Nápovìda", helpPN);
+		tabbedPN.addTab("File", filePN);
+		tabbedPN.addTab("Gaussian curve", gaussPN);
+		tabbedPN.addTab("Help", helpPN);
 		
 		return tabbedPN;
 	}

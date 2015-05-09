@@ -423,7 +423,7 @@ public class MainFrame extends JFrame implements Observer {
 		
 		JMenuItem LHpassFilter = new JMenuItem(
 				"Low/High pass filter");
-		LHpassFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
+		LHpassFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L,
 				ActionEvent.CTRL_MASK));
 		LHpassFilter.addActionListener(new ActionListener() {
 		
@@ -438,7 +438,7 @@ public class MainFrame extends JFrame implements Observer {
 		
 		JMenuItem firFilter = new JMenuItem(
 				"FIR filter");
-		firFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
+		firFilter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
 				ActionEvent.CTRL_MASK));
 		firFilter.addActionListener(new ActionListener() {
 		
@@ -468,7 +468,7 @@ public class MainFrame extends JFrame implements Observer {
 		
 		JMenuItem corrArtifact = new JMenuItem(
 				"Correlation artifact detection");
-		corrArtifact.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+		corrArtifact.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
 				ActionEvent.CTRL_MASK));
 		corrArtifact.addActionListener(new ActionListener() {
 		

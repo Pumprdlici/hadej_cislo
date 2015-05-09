@@ -140,7 +140,7 @@ import javax.swing.JTextField;
 						impulsTA.setText(null);
 						String temp = Arrays.toString(ButterWorthFilter.calculateImpulseResponse(lower, upper, sampleRate));
 						String[] pole = temp.substring(1, temp.length() - 1).split(",");
-						impulsTA.append("Impuls response\r\nfor values: " + lower + " " + upper + " " + sampleRate);
+						impulsTA.append("Impulse response\r\nfor values: " + lower + " " + upper + " " + sampleRate);
 						for(String cislo : pole)
 							impulsTA.append("\r\n"+cislo);
 					}

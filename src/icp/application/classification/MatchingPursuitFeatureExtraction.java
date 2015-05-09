@@ -22,7 +22,7 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Subsampling factor
 	 */
-	private static final int DOWN_SMPL_FACTOR = 2;
+	private static final int DOWN_SMPL_FACTOR = 8;
 
 	
 	/**
@@ -37,12 +37,21 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 		
 	/**
 	 * Prepare instance for use.
-	 * Default number of iteration is 1.
+	 * Default number of iterations is 4.
 	 */
 	public MatchingPursuitFeatureExtraction() {
 		this.instance = MatchingPursuit.getInstance();
-		this.instance.setIterationCount(1);
+		this.instance.setIterationCount(4);
 	}
+	
+	/**
+	 * Prepare instance for use, adjustable number of iterations.
+	 */
+	public MatchingPursuitFeatureExtraction(int numberOfIterations) {
+		this.instance = MatchingPursuit.getInstance();
+		this.instance.setIterationCount(numberOfIterations);
+	}
+	
 	
 	@Override
 	public double[] extractFeatures(double[][] epoch) {
@@ -62,20 +71,20 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 				k++;
 			}
 		}
-		
-		return instance.processSignal(signal).getReconstruction();
+
+		return signal;
 		
 	}
 
 	
 	@Override
 	public int getFeatureDimension() {
-		int lenghtOfFeatures = EPOCH_SIZE * CHANNELS.length  / DOWN_SMPL_FACTOR;
+		int lenghtOfProcessedEpoch = EPOCH_SIZE / DOWN_SMPL_FACTOR;
 		int i = 1;
-		while(lenghtOfFeatures > Math.pow(2, i)) {
+		while(lenghtOfProcessedEpoch > Math.pow(2, i)) {
 			i++;
 		}
-		return (int) Math.pow(2, i);
+		return ((int) Math.pow(2, i) * CHANNELS.length);
 	}
 	
 	

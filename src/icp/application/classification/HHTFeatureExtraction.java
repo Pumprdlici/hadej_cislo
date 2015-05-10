@@ -325,16 +325,16 @@ public class HHTFeatureExtraction implements IFeatureExtraction {
 	}
 	
 	/**
-	 * Setter for downSmplFactor attribute. It requires value equal or greater than 0.
+	 * Setter for downSmplFactor attribute. It requires value greater than 0.
 	 * @param downSmplFactor
 	 * @throws IllegalArgumentException
 	 */
 	public void setDownSmplFactor(int downSmplFactor) {
-		if(downSmplFactor >= 0) {
+		if(downSmplFactor > 0) {
 			this.downSmplFactor = downSmplFactor;
 		}
 		else {
-			throw new IllegalArgumentException("Wrong input value! You cannot set negative sub-sampling factor.");
+			throw new IllegalArgumentException("Wrong input value! You cannot set negative sub-sampling factor or 0.");
 		}
 	}
 	

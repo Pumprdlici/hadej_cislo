@@ -1,0 +1,6 @@
+FilterAndSubsamplingFeatureExtraction
+256
+4
+300
+KNNClassifier
+5

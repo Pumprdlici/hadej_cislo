@@ -1,0 +1,9 @@
+WaveletTransformFeatureExtraction
+512
+200
+8
+32
+MLPClassifier
+96
+8
+1

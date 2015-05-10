@@ -1,0 +1,12 @@
+HHTFeatureExtraction
+512
+1
+200
+256
+8
+3.0
+0.2
+3.0
+1
+SVMClassifier
+256.0

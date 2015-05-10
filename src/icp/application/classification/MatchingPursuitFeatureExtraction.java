@@ -17,18 +17,17 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Number of samples to be used - Fs = 1000 Hz expected
 	 */
-	private static final int EPOCH_SIZE = 512;
+	private int epochSize = 512;
 	
 	/**
 	 * Subsampling factor
 	 */
-	private static final int DOWN_SMPL_FACTOR = 8;
+	private int downSmplFactor = 8;
 
-	
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private static final int SKIP_SAMPLES = 200;
+	private int skipSamples = 200;
 	
 	/**
 	 * Private instance of singleton.
@@ -58,12 +57,12 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 		
 		int numberOfChannels = CHANNELS.length;
 		double[] signal = new double[getFeatureDimension()];
-		double[] processingPart = new double[EPOCH_SIZE / DOWN_SMPL_FACTOR];
+		double[] processingPart = new double[epochSize / downSmplFactor];
 		
 		int k = 0;
 		for(int i = 0; i < numberOfChannels; i++) {
-			for(int j = 0; j < EPOCH_SIZE / DOWN_SMPL_FACTOR; j++) {
-				processingPart[j] = epoch[i][j * DOWN_SMPL_FACTOR + SKIP_SAMPLES];
+			for(int j = 0; j < epochSize / downSmplFactor; j++) {
+				processingPart[j] = epoch[i][j * downSmplFactor + skipSamples];
 			}
 			processingPart = instance.processSignal(processingPart).getReconstruction();
 			for(int j = 0; j < processingPart.length; j++) {
@@ -79,7 +78,7 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	
 	@Override
 	public int getFeatureDimension() {
-		int lenghtOfProcessedEpoch = EPOCH_SIZE / DOWN_SMPL_FACTOR;
+		int lenghtOfProcessedEpoch = epochSize / downSmplFactor;
 		int i = 1;
 		while(lenghtOfProcessedEpoch > Math.pow(2, i)) {
 			i++;
@@ -102,6 +101,48 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 		this.instance.setIterationCount(iterationCount);
 	}
 	
+	
+	/**
+	 * Sets size of epoch to use for feature extraction
+	 * 
+	 * @param epochSize	size of epoch to use
+	 */
+	public void setEpochSize(int epochSize) {
+		if (epochSize > 0) {
+			this.epochSize = epochSize;
+		} else {
+			throw new IllegalArgumentException("Epoch Size must be > 0");
+		}
+	}
+	
+	/**
+	 * Setter for downSmplFactor attribute. It requires value greater than 0.
+	 * @param downSmplFactor
+	 * @throws IllegalArgumentException
+	 */
+	public void setDownSmplFactor(int downSmplFactor) {
+		if(downSmplFactor >= 1) {
+			this.downSmplFactor = downSmplFactor;
+		}
+		else {
+			throw new IllegalArgumentException("Wrong input value! Sub-sampling factor must be >= 1.");
+		}
+	}
+	
+	/**
+	 * Setter for skipSamples attribute. It requires value equal or greater than 0.
+	 * @param skipSamples
+	 * @throws IllegalArgumentException
+	 */
+	public void setSkipSamples(int skipSamples) {
+		if(skipSamples >= 0) {
+			this.skipSamples = skipSamples;
+		}
+		else {
+			throw new IllegalArgumentException("Number of skip samples must be >=0.");
+		}
+	}
+	
 	/**
 	 * Gets number of iterations.
 	 * 
@@ -109,6 +150,30 @@ public class MatchingPursuitFeatureExtraction implements IFeatureExtraction {
 	 */
 	public int getIterationCount() {
 		return this.instance.getIterationCount();
+	}
+	
+	/**
+	 * Getter for epochSize attribute.
+	 * @return epochSize epochSize
+	 */
+	public int getEpochSize() {
+		return epochSize;
+	}
+	
+	/**
+	 * Getter for downSmplFactor attribute.
+	 * @return downSmplFactor downSmplFactor
+	 */
+	public int getDownSmplFactor() {
+		return downSmplFactor;
+	}
+	
+	/**
+	 * Getter for skipSamples attribute.
+	 * @return skipSamples downSmplFactor
+	 */
+	public int getSkipSamples() {
+		return skipSamples;
 	}
 
 }

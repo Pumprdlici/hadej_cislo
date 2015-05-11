@@ -17,6 +17,7 @@ import icp.application.classification.MLPClassifier;
 import icp.application.classification.MatchingPursuitFeatureExtraction;
 import icp.application.classification.SVMClassifier;
 import icp.application.classification.WaveletTransformFeatureExtraction;
+import icp.application.classification.test.TestClassificationAccuracy;
 import icp.application.classification.test.TrainUsingOfflineProvider;
 import icp.online.app.IDataProvider;
 import icp.online.app.OffLineDataProvider;
@@ -340,6 +341,8 @@ public class MainFrame extends JFrame implements Observer {
 				"Load configuration and classifier files");
 		JMenuItem chartMenuItem = new JMenuItem();
 		chartMenuItem.setAction(this.epochCharts);
+		JMenuItem testAllMenuItem = new JMenuItem();
+		testAllMenuItem.setAction(new RunTestAll());
 		JMenuItem endMenuItem = new JMenuItem("Close");
 		endMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
 				ActionEvent.CTRL_MASK));
@@ -496,6 +499,7 @@ public class MainFrame extends JFrame implements Observer {
 		menuBar.add(fileMenu);
 		fileMenu.add(onlineMenuItem);
 		fileMenu.add(offlineMenuItem);
+		fileMenu.add(testAllMenuItem);
 		fileMenu.add(loadConfigAndClassifierItem);
 		fileMenu.add(chartMenuItem);
 		fileMenu.addSeparator();
@@ -831,5 +835,33 @@ public class MainFrame extends JFrame implements Observer {
 					ActionEvent.CTRL_MASK));
 			putValue("Name", "Online data");
 		}
+	}
+	
+	public class RunTestAll extends AbstractAction {
+		MainFrame mainFrame;
+		
+		public RunTestAll() {
+			super();
+			mainFrame = MainFrame.this;
+			putValue("AcceleratorKey", KeyStroke.getKeyStroke(KeyEvent.VK_A,
+					ActionEvent.CTRL_MASK));
+			putValue("Name", "Test all datasets");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				if (!isTrained()) {
+					trainingDialog();
+				} else {
+					TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy(mainFrame.classifier);
+				}
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+		
 	}
 }

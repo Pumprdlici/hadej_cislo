@@ -187,8 +187,20 @@ public class MainFrame extends JFrame implements Observer {
 						.parseInt(br.readLine()));
 			} else if (radka.equals("MatchingPursuitFeatureExtraction")) {
 				fe = new MatchingPursuitFeatureExtraction();
+				((MatchingPursuitFeatureExtraction) fe).setEpochSize(Integer
+						.parseInt(br.readLine()));
+				((MatchingPursuitFeatureExtraction) fe).setDownSmplFactor(Integer
+						.parseInt(br.readLine()));
+				((MatchingPursuitFeatureExtraction) fe).setSkipSamples(Integer
+						.parseInt(br.readLine()));
 			} else if (radka.equals("HHTFeatureExtraction")) {
 				fe = new HHTFeatureExtraction();
+				((HHTFeatureExtraction) fe).setEpochSize(Integer
+						.parseInt(br.readLine()));
+				((HHTFeatureExtraction) fe).setDownSmplFactor(Integer
+						.parseInt(br.readLine()));
+				((HHTFeatureExtraction) fe).setSkipSamples(Integer
+						.parseInt(br.readLine()));
 				((HHTFeatureExtraction) fe).setSampleWindowSize(Integer
 						.parseInt(br.readLine()));
 				((HHTFeatureExtraction) fe).setSampleWindowShift(Integer

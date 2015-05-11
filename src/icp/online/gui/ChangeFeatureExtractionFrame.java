@@ -130,7 +130,7 @@ public class ChangeFeatureExtractionFrame extends JFrame {
 	/**
 	 * Types of features in HHT
 	 */
-	private String[] hhtFeatureTypes = { "Frequencies", "Amplitudes" };
+	private String[] hhtFeatureTypes = { "Amplitudes", "Frequencies" };
 
 	/**
 	 * Radio button for selecting Filter And Subsampling Feature Extraction

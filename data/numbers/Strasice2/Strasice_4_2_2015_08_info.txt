@@ -1,0 +1,5 @@
+male 13
+The numbers guessed: 3
+The number thought: 7
+Additional information:
+- no clear P300 response

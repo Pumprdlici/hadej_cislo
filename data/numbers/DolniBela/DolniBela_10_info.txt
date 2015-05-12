@@ -1,0 +1,7 @@
+male 15 years
+right-handed
+The numbers guessed: 7, 3
+The number thought: 3
+Additional information:
+
+

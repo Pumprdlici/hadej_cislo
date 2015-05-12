@@ -1,0 +1,4 @@
+female 13
+The numbers guessed: 8
+The number thought: 8
+Additional information:

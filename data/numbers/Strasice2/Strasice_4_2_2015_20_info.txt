@@ -1,0 +1,4 @@
+male 13
+The numbers guessed: 2, 5
+The number thought: 5
+Additional information:

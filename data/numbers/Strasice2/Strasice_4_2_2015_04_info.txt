@@ -1,0 +1,5 @@
+female 13 years
+The numbers guessed: 2
+The number thought: 2
+Additional information:
+- P300 with the latency of 470 ms, guessed after 6 trials

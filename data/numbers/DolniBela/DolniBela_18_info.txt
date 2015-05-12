@@ -1,0 +1,7 @@
+male 12 years
+right-handed
+The numbers guessed: 4
+The number thought: 4
+Additional information:
+- weak P300 component
+- blinks excessively

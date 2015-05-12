@@ -1,0 +1,7 @@
+male 12 years
+right-handed
+The numbers guessed: 5
+The number thought: 5
+Additional information:
+- easy to guess
+

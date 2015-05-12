@@ -1,0 +1,5 @@
+female, 13
+right-handed
+the number guessed: 4
+the number thought: 4
+perfect reaction, no doubt

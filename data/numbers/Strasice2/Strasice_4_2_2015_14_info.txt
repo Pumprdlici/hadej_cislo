@@ -1,0 +1,5 @@
+female 11
+The numbers guessed: 1, 6
+The number thought: 6
+Additional information:
+latency almost 525 ms

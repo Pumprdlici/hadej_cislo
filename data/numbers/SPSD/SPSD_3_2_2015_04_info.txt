@@ -1,0 +1,4 @@
+kluk 17 let
+hádáme postupnì 4, 1, je to 1
+u 4 latence cca. 350 ms, u 1 latence 550 ms
+ 

@@ -1,0 +1,4 @@
+the number guessed: 7
+the number thought: 7
+male, age: 15
+right-handed

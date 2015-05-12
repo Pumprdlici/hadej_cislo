@@ -1,0 +1,9 @@
+male, 15 years
+The number guessed: 7
+The number thought: 7
+Additional information:
+- 7, 8 - similar responses
+
+
+
+ 

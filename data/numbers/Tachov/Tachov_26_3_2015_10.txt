@@ -1,0 +1,4 @@
+male, 16
+the number guessed: 2
+the number thought: 2
+right-handed

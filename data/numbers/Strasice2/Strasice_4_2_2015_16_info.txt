@@ -1,0 +1,5 @@
+female 12
+The numbers guessed: 3, 2
+The number thought: 2
+Additional information:
+at the beginning, she reacts to 3

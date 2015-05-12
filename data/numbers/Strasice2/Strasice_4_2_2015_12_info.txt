@@ -1,0 +1,8 @@
+male 12
+The numbers guessed: 3
+The number thought: 3
+Additional information:
+weak candidates: 6, 7
+
+Classifier guessed:
+8, 7, 6, 3

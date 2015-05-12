@@ -1,0 +1,5 @@
+Male 14 years
+The numbers guessed: 1, 8
+The number thought: 2
+Additional information:
+- no clear P300 response

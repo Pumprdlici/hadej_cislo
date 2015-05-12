@@ -1,0 +1,5 @@
+female, 15
+the number guessed: 1, 9, 6
+the number thought: 2
+no apparent P300 response
+right-handed

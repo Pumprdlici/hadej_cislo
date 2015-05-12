@@ -1,0 +1,6 @@
+female, 15
+right-handed
+the number guessed: 7
+the number thought: 7
+
+

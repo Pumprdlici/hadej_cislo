@@ -1,0 +1,7 @@
+female, 15
+right-handed
+the number guessed: 6
+the number thought: 6
+no evoked potentional, just intensive blinking on 6
+
+

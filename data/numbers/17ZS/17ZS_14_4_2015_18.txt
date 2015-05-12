@@ -1,0 +1,6 @@
+male, 13
+right-handed
+the number guessed: 3
+the number thought: 3
+
+

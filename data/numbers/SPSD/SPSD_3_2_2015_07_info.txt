@@ -1,0 +1,5 @@
+male, 17 years
+the number guessed: 5, the number thought: 5
+
+
+ 

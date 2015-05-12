@@ -1,0 +1,8 @@
+male 12
+The numbers guessed: 4, 6
+The number thought: 6
+Additional information:
+- 6, 7 - similar responses
+
+Classifier guessed:
+6, 4, 7, 9, 2, 1, 5, 8, 3

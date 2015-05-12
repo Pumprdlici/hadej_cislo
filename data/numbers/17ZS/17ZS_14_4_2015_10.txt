@@ -1,0 +1,6 @@
+female, 11
+right-handed
+the number guessed: 2
+the number thought: 2
+
+tady mohlo dojit k chybe pri prepisu souboru, proverit, uhadli jsme

@@ -1,0 +1,4 @@
+female, 12
+right-handed
+the number guessed: 8
+the number thought: 8

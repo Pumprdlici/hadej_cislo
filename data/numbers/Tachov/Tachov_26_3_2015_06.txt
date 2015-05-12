@@ -1,0 +1,5 @@
+male, 15
+the number guessed: 7
+the number thought: 7
+P300-like response also on 9
+right-handed

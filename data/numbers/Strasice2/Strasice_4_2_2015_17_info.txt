@@ -1,0 +1,5 @@
+male 13
+The numbers guessed: 9
+The number thought: 9
+Additional information:
+latency 450 - 500 ms

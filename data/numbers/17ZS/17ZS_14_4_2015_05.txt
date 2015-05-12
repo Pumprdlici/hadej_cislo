@@ -1,0 +1,5 @@
+male, 13
+right-handed
+the number guessed: 4, 2
+the number thought: 7
+blinks excessively

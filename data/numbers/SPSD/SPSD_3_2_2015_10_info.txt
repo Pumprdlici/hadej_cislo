@@ -1,0 +1,10 @@
+male, 16 years
+The number guessed: 7, 3
+The number thought: 3
+Additional information:
+- blinks excessively
+- 3 looks good at the very beginning, but is spoilt by eye-blinking
+
+
+
+ 

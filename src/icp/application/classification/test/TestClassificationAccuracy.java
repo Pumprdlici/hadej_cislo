@@ -25,7 +25,7 @@ import java.util.Map.Entry;
  */
 public class TestClassificationAccuracy implements Observer {
 
-    private String dir = "data/numbers/Strasice";
+    private String dir = "data/numbers";
     private final String infoFileName = "info.txt";
 
     private Map<String, Integer> results;

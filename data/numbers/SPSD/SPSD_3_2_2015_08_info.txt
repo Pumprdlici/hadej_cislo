@@ -1,0 +1,10 @@
+male, 17 years
+The number guessed: 9, 1
+The number thought: 6
+Additional information:
+- blinks excessively
+- 1, 3, 9 - similar responses
+- 6 - looks differently
+
+
+ 

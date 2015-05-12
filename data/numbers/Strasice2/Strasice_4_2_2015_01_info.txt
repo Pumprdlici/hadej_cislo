@@ -1,0 +1,7 @@
+male 12 years
+The numbers guessed: 2, 9, 1
+The number thought: 4
+Additional information:
+- lots of artifacts
+	- 50 Hz, blinking, etc.
+- no clear P300 component

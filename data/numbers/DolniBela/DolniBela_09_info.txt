@@ -1,0 +1,7 @@
+female 
+left-handed
+The numbers guessed: 4
+The number thought: 7
+Additional information:
+- 7 - moved baseline
+

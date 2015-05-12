@@ -1,0 +1,6 @@
+female 15 years
+right-handed
+The numbers guessed: 4
+The number thought: 4
+Additional information:
+

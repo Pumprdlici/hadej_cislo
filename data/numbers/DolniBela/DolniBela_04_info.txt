@@ -1,0 +1,6 @@
+male 11 years
+right-handed
+The numbers guessed: 7
+The number thought: 7
+Additional information:
+- latency over 550 ms

@@ -1,0 +1,4 @@
+Female 40 
+The numbers guessed: 7
+The number thought: 7
+Additional information:

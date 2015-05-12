@@ -1,0 +1,5 @@
+female 12 years
+The numbers guessed: 2
+The number thought: 2
+Additional information:
+- P300 with the latency of 400 ms, amplitude over 40 microV

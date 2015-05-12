@@ -1,0 +1,5 @@
+male, 14
+the number guessed: 3
+the number thought: 3
+right-handed
+wears glasses

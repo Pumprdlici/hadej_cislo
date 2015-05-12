@@ -1,0 +1,8 @@
+female 11
+The numbers guessed: 5
+The number thought: 5
+Additional information:
+latency almost 600 ms
+
+Classifier guessed:
+8, 6, 1

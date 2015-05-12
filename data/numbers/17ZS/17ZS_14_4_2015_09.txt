@@ -1,0 +1,7 @@
+female, 13
+left-handed
+the number guessed: 5
+the number thought: 5
+
+
+tady mohlo dojit k chybe pri prepisu souboru, proverit, uhadli jsme

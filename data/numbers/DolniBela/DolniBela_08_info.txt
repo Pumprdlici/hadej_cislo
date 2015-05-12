@@ -1,0 +1,7 @@
+male 14 years
+left-handed
+The numbers guessed: 1, 5, 3
+The number thought: 3
+Additional information:
+- weak response over 550 ms
+

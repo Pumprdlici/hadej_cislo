@@ -1,0 +1,7 @@
+male, 14
+right-handed
+the number guessed: ?
+the number thought: ?
+felt bad, experiment canceled
+
+

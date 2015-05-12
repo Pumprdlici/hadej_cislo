@@ -1,0 +1,8 @@
+male 15 years
+right-handed
+The numbers guessed: 3
+The number thought: 3
+Additional information:
+- 9 - another weak candidate
+- contact lenses
+

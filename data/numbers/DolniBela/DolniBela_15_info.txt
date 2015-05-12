@@ -1,0 +1,6 @@
+female 10 years
+right-handed
+The numbers guessed: 9, 8
+The number thought: 8
+Additional information:
+

@@ -54,15 +54,20 @@ public class Statistics {
         this.rank = rank;
         if (rank <= 3) {
             pts = pointsForRank.get(rank);
-            Statistics.setTotalPts(pts);
+            Statistics.addTotalPts(pts);
         }
     }
-    public static int getTotalPts() {
+    private static void addTotalPts(int totalPts) {
+		Statistics.totalPts += totalPts;
+		
+	}
+
+	public static int getTotalPts() {
         return totalPts;
     }
 
     public static void setTotalPts(int totalPts) {
-        Statistics.totalPts += totalPts;
+        Statistics.totalPts = totalPts;
     }
 
 

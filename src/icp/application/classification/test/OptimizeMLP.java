@@ -33,7 +33,7 @@ public class OptimizeMLP {
 				
 			}
 			else {
-				System.out.println("No record: " + accuracy * 100);
+				System.out.println("No record: current accuracy = " + accuracy * 100 + ", max_accuracy = " + maxAccuracy * 100);
 			}
 		}
 		

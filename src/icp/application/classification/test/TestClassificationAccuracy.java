@@ -48,6 +48,7 @@ public class TestClassificationAccuracy implements Observer {
     	
         stats = new HashMap<String, Statistics>();
         results = new HashMap<String, Integer>();
+        Statistics.setTotalPts(0);
         
         
         try {

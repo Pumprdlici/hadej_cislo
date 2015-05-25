@@ -37,7 +37,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private int SKIP_SAMPLES = 200;
+	private int SKIP_SAMPLES = 150;
 
 	/**
 	 * Name of the wavelet
@@ -47,7 +47,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Size of feature vector
 	 */
-	private int FEATURE_SIZE = 32;
+	private int FEATURE_SIZE = 16;
 
 	/**
 	 * Constructor for the wavelet transform feature extraction with default
@@ -181,5 +181,14 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 			throw new IllegalArgumentException(
 					"Feature Size must be > 0 and <= 1024");
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "DWT: EPOCH_SIZE: " + this.EPOCH_SIZE + 
+				" FEATURE_SIZE: " + this.FEATURE_SIZE +
+				" WAVELETNAME: " + this.NAME +
+				" SKIP_SAMPLES: " + this.SKIP_SAMPLES +
+				"\n";
 	}
 }

@@ -149,4 +149,9 @@ public class JavaMLClassifier implements IERPClassifier {
 		
 	}
 
+	@Override
+	public IFeatureExtraction getFeatureExtraction() {
+		return this.fe;
+	}
+
 }

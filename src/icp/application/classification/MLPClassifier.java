@@ -1,11 +1,13 @@
 package icp.application.classification;
 
 import icp.Const;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.neuroph.core.Layer;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.learning.DataSet;
 import org.neuroph.nnet.MultiLayerPerceptron;
@@ -24,6 +26,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
 
     private IFeatureExtraction fe; /* feature extraction used to decompose each epoch */
 
+    private int numberOfIters = 0;
 
     public MLPClassifier() {
         neuralNetwork = new MultiLayerPerceptron(Const.DEFAULT_OUTPUT_NEURONS);
@@ -90,6 +93,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
     public void train(List<double[][]> epochs, List<Double> targets, int numberOfIter, IFeatureExtraction fe) {
         this.fe = fe;
         int targetsSize = neuralNetwork.getOutputsCount();
+        this.numberOfIters = numberOfIter;
 
         // fill in the neuroph data structure for holding the training set
         DataSet dataset = new DataSet(fe.getFeatureDimension(), targetsSize);
@@ -120,5 +124,21 @@ public class MLPClassifier extends ERPClassifierAdapter {
     @Override
     public void load(String file) {
         this.neuralNetwork = NeuralNetwork.load(file);
+    }
+    
+    @Override
+    public String toString() {
+    	String returnString =  "MLP: ( ";
+    	for (Layer layer: this.neuralNetwork.getLayers()) {
+    		returnString += layer.getNeuronsCount() + " ";
+    	}
+    	returnString  += ")";
+    	returnString += ": iters: " + this.numberOfIters;
+    	return returnString;
+    }
+    
+    @Override
+    public IFeatureExtraction getFeatureExtraction() {
+    	return fe;
     }
 }

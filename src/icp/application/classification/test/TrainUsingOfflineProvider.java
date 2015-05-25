@@ -5,6 +5,7 @@ import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
 import icp.online.app.DataObjects.MessageType;
@@ -113,7 +114,7 @@ public class TrainUsingOfflineProvider implements Observer {
 	private void train() {
 		// create classifiers
 		if (classifier == null) {
-			fe = new FilterAndSubsamplingFeatureExtraction();
+			fe = new WaveletTransformFeatureExtraction();
 			int numberOfInputNeurons = fe.getFeatureDimension();
 			int middleNeurons = this.middleNeurons;
 			int outputNeurons = 1;

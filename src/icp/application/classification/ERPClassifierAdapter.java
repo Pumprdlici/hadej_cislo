@@ -53,4 +53,9 @@ public class ERPClassifierAdapter implements IERPClassifier {
 		throw new NullPointerException();
 	}
 
+	@Override
+	public IFeatureExtraction getFeatureExtraction() {
+		throw new NullPointerException();
+	}
+
 }

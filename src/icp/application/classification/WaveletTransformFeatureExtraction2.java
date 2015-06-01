@@ -17,7 +17,7 @@ import cz.zcu.kiv.eegdsp.wavelet.discrete.algorithm.wavelets.WaveletDWT;
  * @author Jaroslav Klaus
  *
  */
-public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
+public class WaveletTransformFeatureExtraction2 implements IFeatureExtraction {
 
 	/**
 	 * EEG channels to be transformed to feature vectors
@@ -53,15 +53,8 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	 * Constructor for the wavelet transform feature extraction with default
 	 * wavelet
 	 */
-	public WaveletTransformFeatureExtraction() {
+	public WaveletTransformFeatureExtraction2() {
 		this.NAME = 8;
-	}
-	
-	public WaveletTransformFeatureExtraction(int name, int epochSize, int skipSamples, int featureSize) {
-		this.NAME = name;
-		this.EPOCH_SIZE = epochSize;
-		this.SKIP_SAMPLES = skipSamples;
-		this.FEATURE_SIZE = featureSize;
 	}
 
 	/**
@@ -71,7 +64,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	 * @param name
 	 *            - name of the wavelet transform method
 	 */
-	public WaveletTransformFeatureExtraction(int name) {
+	public WaveletTransformFeatureExtraction2(int name) {
 		setWaveletName(name);
 	}
 

@@ -10,6 +10,7 @@ import icp.application.classification.JavaMLClassifier;
 import icp.application.classification.KNNClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.NoFilterFeatureExtraction;
+import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.application.classification.WindowedMeansFeatureExtraction;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
@@ -36,49 +37,47 @@ public class TestClassificationAccuracy implements Observer {
 
     
    
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
     }
     
-    public TestClassificationAccuracy() throws InterruptedException {
+    public TestClassificationAccuracy() throws InterruptedException, IOException {
     	this(null);
     }
 
-    public TestClassificationAccuracy(IERPClassifier classifier) throws InterruptedException {
+    public TestClassificationAccuracy(IERPClassifier classifier) throws InterruptedException, IOException {
     	
         stats = new HashMap<String, Statistics>();
-        results = new HashMap<String, Integer>();
         Statistics.setTotalPts(0);
         
+        results = new HashMap<String, Integer>();
         
-        try {
-            File directory;
-            Map<String, Integer> map;
-            for (String dirName : Const.DIRECTORIES) {
-                directory = new File(dirName);
-                if (directory.exists() && directory.isDirectory()) {
-                    map = loadExpectedResults(infoFileName, dirName);
-                    results.putAll(map);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int counter = 0;
+        
         File directory;
         File f;
         for (String dirName : Const.DIRECTORIES) {
             directory = new File(dirName);
             if (directory.exists() && directory.isDirectory()) {
-                for (Entry<String, Integer> entry : results.entrySet()) {
+            	Map<String, Integer> map = loadExpectedResults(infoFileName, dirName);
+            	Map<String, Integer> localResults = new HashMap<String, Integer>(map);
+            	results.putAll(map);
+                //System.out.println("Result size  -- " + results.size());
+                for (Entry<String, Integer> entry : localResults.entrySet()) {
                     f = new File(directory, entry.getKey());
+                    
+                    
                     if (f.exists() && f.isFile()) {
+                    	counter++;
+                    	//System.out.println(counter + ".filename: " + filename + "--" + results.size());
                         end = false;
                         filename = f.getName();
+                        
                         if (classifier == null) {
                         	//classifier = new KNNClassifier();
-                        	classifier = new MLPClassifier();
+                        	 classifier = new MLPClassifier();
                         	 classifier.load(Const.TRAINING_FILE_NAME);
-                             IFeatureExtraction fe = new FilterAndSubsamplingFeatureExtraction();
+                             IFeatureExtraction fe = new WaveletTransformFeatureExtraction();
                              classifier.setFeatureExtraction(fe);
                         }
                        
@@ -86,10 +85,11 @@ public class TestClassificationAccuracy implements Observer {
                         OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
                         Thread t = new Thread(offLineData);
                         t.start();
-                       // t.join();
+                        
                         while (!end) {
                             Thread.sleep(500);
                         }
+                        t.join();
                         
                     }
                 }
@@ -108,9 +108,9 @@ public class TestClassificationAccuracy implements Observer {
             if (entry.getValue().getRank() == 1) {
                 okNumber++;
             }
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue());
-            System.out.println();
+            //System.out.println(entry.getKey());
+            //System.out.println(entry.getValue());
+            //System.out.println();
         }
         System.out.println("Total points: " + Statistics.getTotalPts() + " of " + Statistics.MAX_POINT * stats.size());
         System.out.println("Perfect guess: " + okNumber);

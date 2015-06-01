@@ -124,6 +124,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
     @Override
     public void load(String file) {
         this.neuralNetwork = NeuralNetwork.load(file);
+        System.out.println(toString());
     }
     
     @Override

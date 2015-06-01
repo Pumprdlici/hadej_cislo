@@ -15,7 +15,7 @@ public class Const {
     public static final String EEG_EXTENSION = ".eeg";
 
     //----------------------Settings constants---------------------------
-    public static final String DEF_IP_ADDRESS = "147.228.127.95";
+    public static final String DEF_IP_ADDRESS = "127.0.0.1";
     public static final String[] DEF_PORTS = {"51244"};
     public static final int DEF_PORT = 51244;
     public static final String IPADDRESS_PATTERN
@@ -36,7 +36,7 @@ public class Const {
 
     //------------------------Classifier training-----------------------
     public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/set2.eeg";
-    public static final String TRAINING_FILE_NAME = "data/best_class_2_650.txt";
+    public static final String TRAINING_FILE_NAME = "data/new_models/winnermlpdwt.classifier";
 
     //----------------------Epoch------------------------
     public static final int PREESTIMULUS_VALUES = 100;

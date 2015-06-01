@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 public class TrainUsingOfflineProvider implements Observer {
 
@@ -113,8 +114,10 @@ public class TrainUsingOfflineProvider implements Observer {
 
 	private void train() {
 		// create classifiers
-		if (classifier == null) {
-			fe = new WaveletTransformFeatureExtraction();
+		
+			Random r = new Random(System.nanoTime());
+			//fe = new WaveletTransformFeatureExtraction(r.nextInt(16) + 1, 512, 10 * r.nextInt(18), (int) Math.round(Math.pow(2, 3 + r.nextInt(4))) );
+			fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8 );
 			int numberOfInputNeurons = fe.getFeatureDimension();
 			int middleNeurons = this.middleNeurons;
 			int outputNeurons = 1;
@@ -126,7 +129,7 @@ public class TrainUsingOfflineProvider implements Observer {
 			classifier = new MLPClassifier(nnStructure);
 			// classifier = new JavaMLClassifier();
 			classifier.setFeatureExtraction(fe);
-		}
+		
 
 		// training
 		System.out.println("Training started.");

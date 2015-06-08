@@ -1,28 +1,28 @@
-Stankov_26_01_2015_01.eeg 1
-Stankov_26_01_2015_02.eeg 2
-Strankov_26_01_2015_03.eeg 5
-Stankov_26_01_2015_04.eeg 7
-Stankov_26_01_2015_05.eeg 1
-Stankov_26_01_2015_06.eeg 2
-Stankov_26_1_2015_07.eeg 5
-Stankov_26_01_2015_08.eeg 5
-Stankov_26_01_2015_09.eeg 3
-Stankov_26_1_2015_10.eeg 6
-Stankov_26_01_2015_11.eeg 3
-Stankov_26_1_2015_12.eeg 5
-Stankov_26_1_2015_13.eeg 5
-Stankov_26_1_2015_14.eeg 5
-Stankov_26_01_2015_15.eeg 4
-Stankov_26_01_2015_16.eeg 7
-Stankov_26_1_2015_17.eeg 8
-Stankov_26_1_2015_18.eeg 8
-Stankov_26_1_2015_19.eeg 7
-Stankov_26_1_2015_20.eeg 2
-Stankov_26_01_2015_21.eeg 6
-Stankov_26_01_2015_22.eeg 7
-Stankov_26_1_2015_23.eeg 3
-Stankov_26_1_2015_24.eeg 5
-Stankov_26_1_2015_25.eeg 7
-Stankov_26_1_20145_27.eeg 4
-Stankov_26_1_2015_28.eeg 6
-Stankov_26_1_2015_29.eeg 9
+Stankov_26_01_2015_01.eeg 1 1
+Stankov_26_01_2015_02.eeg 2 2
+Strankov_26_01_2015_03.eeg 5 4 5
+Stankov_26_01_2015_04.eeg 7 7
+Stankov_26_01_2015_05.eeg 1 1
+Stankov_26_01_2015_06.eeg 2 2
+Stankov_26_1_2015_07.eeg 5 5
+Stankov_26_01_2015_08.eeg 5 5
+Stankov_26_01_2015_09.eeg 3 3
+Stankov_26_1_2015_10.eeg 6 6
+Stankov_26_01_2015_11.eeg 3 4 3
+Stankov_26_1_2015_12.eeg 5 9 6 3
+Stankov_26_1_2015_13.eeg 5 5
+Stankov_26_1_2015_14.eeg 5 6 7
+Stankov_26_01_2015_15.eeg 4 4
+Stankov_26_01_2015_16.eeg 7 7
+Stankov_26_1_2015_17.eeg 8 5 1 8
+Stankov_26_1_2015_18.eeg 8 5 1 8
+Stankov_26_1_2015_19.eeg 7 7
+Stankov_26_1_2015_20.eeg 2 4 8 1
+Stankov_26_01_2015_21.eeg 6 6
+Stankov_26_01_2015_22.eeg 7 7
+Stankov_26_1_2015_23.eeg 3 3
+Stankov_26_1_2015_24.eeg 5 5
+Stankov_26_1_2015_25.eeg 7 5
+Stankov_26_1_20145_27.eeg 4 4
+Stankov_26_1_2015_28.eeg 6 2
+Stankov_26_1_2015_29.eeg 9 1

@@ -1,11 +1,11 @@
-Tachov_26_3_2015_01.eeg 7
-Tachov_26_3_2015_02.eeg 3
-Tachov_26_3_2015_03.eeg 9
-Tachov_26_3_2015_04.eeg 4
-Tachov_26_3_2015_05.eeg 2
-Tachov_26_3_2015_06.eeg 7
-Tachov_26_3_2015_07.eeg 5
-Tachov_26_3_2015_08.eeg 7
-Tachov_26_3_2015_09.eeg 8
-Tachov_26_3_2015_10.eeg 2
-Tachov_26_3_2015_11.eeg 2
+Tachov_26_3_2015_01.eeg 7 7
+Tachov_26_3_2015_02.eeg 3 3
+Tachov_26_3_2015_03.eeg 9 9
+Tachov_26_3_2015_04.eeg 4 6 2
+Tachov_26_3_2015_05.eeg 2 1 9 6
+Tachov_26_3_2015_06.eeg 7 7
+Tachov_26_3_2015_07.eeg 5 6 2
+Tachov_26_3_2015_08.eeg 7 7
+Tachov_26_3_2015_09.eeg 8 5 8
+Tachov_26_3_2015_10.eeg 2 2
+Tachov_26_3_2015_11.eeg 2 8 1

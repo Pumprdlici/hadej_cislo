@@ -1,15 +1,15 @@
-pd_strasice_7_1_2015_01.eeg 3
-PD_Strasice_7_1_2015_02.eeg 5
-PD_Strasice_7_1_2015_03.eeg 5
-PD_Strasice_7_1_2015_04.eeg 5
-PD_Strasice_7_1_2015_05.eeg 1
-PD_Strasice_7_1_2015_06.eeg 7
-PD_Strasice_7_1_2015_07.eeg 3
-PD_Strasice_7_1_2015_08.eeg 2
-PD_Strasice_7_1_2015_09.eeg 3
-PD_Strasice_7_1_2015_10.eeg 8
-PD_Strasice_7_1_2015_11.eeg 4
-PD_Strasice_7_1_2015_12.eeg 2
-PD_Strasice_7_1_2015_13.eeg 2
-PD_Strasice_7_1_2015_14.eeg 8
-PD_Strasice_7_2015_15.eeg 8
+pd_strasice_7_1_2015_01.eeg 3 3
+PD_Strasice_7_1_2015_02.eeg 5 5
+PD_Strasice_7_1_2015_03.eeg 5 5
+PD_Strasice_7_1_2015_04.eeg 5 5
+PD_Strasice_7_1_2015_05.eeg 1 1
+PD_Strasice_7_1_2015_06.eeg 7 4 7
+PD_Strasice_7_1_2015_07.eeg 3 3
+PD_Strasice_7_1_2015_08.eeg 2 2
+PD_Strasice_7_1_2015_09.eeg 3 3
+PD_Strasice_7_1_2015_10.eeg 8 8
+PD_Strasice_7_1_2015_11.eeg 4 4
+PD_Strasice_7_1_2015_12.eeg 2 2
+PD_Strasice_7_1_2015_13.eeg 2 2
+PD_Strasice_7_1_2015_14.eeg 8 8
+PD_Strasice_7_2015_15.eeg 8 8

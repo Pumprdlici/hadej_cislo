@@ -1,0 +1,6 @@
+male, 13 years
+the number guessed: 6
+the number thought: 6
+right-handed
+perfect response
+classifier: 6, 2, 9, 4, 8, 7, 5, 3, 1 AD (100)

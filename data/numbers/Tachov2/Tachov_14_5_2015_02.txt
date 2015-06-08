@@ -1,0 +1,6 @@
+female, 10 years
+the number guessed: 9
+the number thought: 9
+right-handed
+clear response
+classifier: 9, 6, 2, 3, 7, 1, 4, 8, 5

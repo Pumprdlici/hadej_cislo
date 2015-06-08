@@ -1,0 +1,6 @@
+female, 14
+right-handed
+the number guessed: 3
+the number thought: 3
+classifier: 3, 5, 1, 2, 8, 7, 6, 4, 9
+clear 50 Hz distortions

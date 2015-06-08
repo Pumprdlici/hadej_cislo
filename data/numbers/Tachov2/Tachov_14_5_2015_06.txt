@@ -1,0 +1,6 @@
+male, 12 years
+the number guessed: 3
+the number thought: 3
+left-handed
+
+classifier: 9, 5, 3, 6, 8, 7, 2, 4, 1

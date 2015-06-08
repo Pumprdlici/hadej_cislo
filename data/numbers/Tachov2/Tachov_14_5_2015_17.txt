@@ -1,0 +1,5 @@
+male, 12 years
+the number guessed: 3, 7
+the number thought: 7
+left-handed
+classifier: 3, 2, 5, 8, 4, 6, 7, 1, 9 AD (100)

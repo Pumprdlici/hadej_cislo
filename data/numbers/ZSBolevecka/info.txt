@@ -1,0 +1,20 @@
+ZSBolevecka_26_5_2015_01.eeg 9 9
+ZSBolevecka_26_5_2015_02.eeg 5 5
+ZSBolevecka_26_5_2015_03.eeg 3 3
+ZSBolevecka_26_5_2015_04.eeg 9 9
+ZSBolevecka_26_5_2015_05.eeg 8 8
+ZSBolevecka_26_5_2015_06.eeg 5 7
+ZSBolevecka_26_5_2015_07.eeg 3 9
+ZSBolevecka_26_5_2015_08.eeg 3 9
+BoleveckaZS_26_5_2015_09.eeg 7 9
+ZSBolevec_26_5_2015_10.eeg 6 4 9 7 
+ZSBolevecka_26_5_2015_11.eeg 7 7
+ZSBolevecka_26_5_2015_12.eeg 3 3
+BoleveckaZS_26_5_2015_13.eeg 7 7
+ZSBolevecka_26_5_2015_14.eeg 6 6  
+Horazdovice_26_5_2015_15.eeg 7 7
+ZSBolevecka_26_5_2015_16.eeg 6 9 7 3
+ZSBolevecka_26_5_2015_17.eeg 6 4 9 6
+BoleveckaZS_26_5_2015_19.eeg 7 4
+BoleveckaZS_26_5_2015_20.eeg 3 3
+BoleveckaZS_26_5_2015_21.eeg 4 4

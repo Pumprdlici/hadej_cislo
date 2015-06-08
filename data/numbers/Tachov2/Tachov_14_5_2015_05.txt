@@ -1,0 +1,7 @@
+male, 11 years
+the number guessed: 6, 8, 1, 4
+the number thought: 9
+right-handed
+5, 6 - strong at the beginning
+wears glasses
+classifier: 8, 9, 7, 1, 5, 3, 2, 6, 4

@@ -1,0 +1,7 @@
+male, 10 years
+the number guessed: 3, 5, 6
+the number thought: 6
+left-handed
+5, 6 - strong at the beginning
+wears glasses
+classifier: 9, 6, 8, 5, 2, 7, 1, 4, 3

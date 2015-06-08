@@ -1,0 +1,7 @@
+female, 13
+right-handed
+the number guessed: 8
+the number thought: 8
+classifier: 8, 6, 2
+
+

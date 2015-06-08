@@ -1,0 +1,6 @@
+male, 13
+right-handed
+the number guessed: 9
+the number thought: 9
+classifier: 6, 2, 9
+

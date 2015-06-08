@@ -1,0 +1,20 @@
+﻿Tachov_14_5_2015_01.eeg 7 7
+Tachov_14_5_2015_02.eeg 9 9
+Tachov_14_05_2015_03.eeg 2 5 3
+Tachov_14_5_2015_04.eeg 6 3 5 6
+Tachov_14_05_2015_05.eeg 9 6 8 1 4
+Tachov_14_5_2015_06.eeg 3 3
+Tachov_14_5_2015_07.eeg 3 6 1 5
+Tachov_14_5_2015_08.eeg 5 5
+Tachov_14_5_2015_09.eeg 4 9 7 1
+Tachov_14_05_2015_10.eeg 5 5
+Tachov_14_5_2015_11.eeg 2 4 5 
+Tachov_14_5_2015_12.eeg 9 9
+Tachov_14_5_2015_13.eeg 8 5 8
+Tachov_14_05_2015_15.eeg 8 8
+Tachov_14_5_2015_16.eeg 6 6
+Tachov_14_5_2015_17.eeg 7 3 7
+Tachov_14_5_2015_18.eeg 7 5 7
+Tachov_14_5_2015_19.eeg 7 5 7
+Tachov_14_5_2015_20.eeg 6 5 6
+Tachov_14_5_2015_21.eeg 9 9

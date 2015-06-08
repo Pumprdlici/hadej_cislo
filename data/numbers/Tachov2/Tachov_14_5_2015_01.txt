@@ -1,0 +1,5 @@
+female, 10 years
+the number guessed: 7
+the number thought: 7
+clear response
+classifier: 7, 3, 1, 2, 4

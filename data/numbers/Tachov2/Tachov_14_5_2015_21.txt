@@ -1,0 +1,5 @@
+male, 13 years
+the number guessed: 9
+the number thought: 9
+right-handed
+classifier: 9, 5, 3, 7, 6, 4, 1, 8, 2 AD (100)

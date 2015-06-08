@@ -1,0 +1,7 @@
+male, 13
+right-handed
+the number guessed: 9
+the number thought: 9
+classifier: 9, 3, 6
+wears glasses
+

@@ -1,0 +1,6 @@
+female, 9 years
+the number guessed: 9
+the number thought: 9
+right-handed
+
+classifier: 9, 8, 7, 5, 1, 4, 2, 6, 3 AD (100)

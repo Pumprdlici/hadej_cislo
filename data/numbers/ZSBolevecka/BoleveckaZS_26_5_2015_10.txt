@@ -1,0 +1,6 @@
+male, 12
+right-handed
+the number guessed: 4, 9, 7, 6
+the number thought: 6
+classifier: 3, 9, 6, 7, 1, 8, 4, 2, 5
+less concentrated, increased latency

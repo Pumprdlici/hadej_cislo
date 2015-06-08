@@ -1,22 +1,22 @@
-Horazdovice_20140512_003.eeg 3
-Horazdovice_20141205_001.eeg 4
-Horazdovice_20141204_008.eeg 5
-Horazdovice20141204_009.eeg 7
-Horazdovice_20141205_004.eeg 2
-Horazdovice_20141204_012.eeg 5
-Horazdovice20141204_013.eeg 5
-Horazdovice_20141204_014.eeg 3
-Horazdovice_20141204_015.eeg 1
-Horazdovice_20141204_017.eeg 3
-Horazdovice_20141204_018.eeg 1
-Horazdovice20141204_019.eeg 7
-Horazdovice20141204_021.eeg 5
-Horazdovice20141204_022.eeg 5
-Horazdovice20141204_023.eeg 2
-Horazdovice20141204_024.eeg 1
-Horazdovice20141204_025.eeg 5
-Horazdovice20141204_028.eeg 2
-Horazdovice20141204_029.eeg 7
-Horazdovice20141204_030.eeg 2
-Horazdovice20141204_031.eeg 5
-Horazdovice20141204_032.eeg 7
+Horazdovice_20140512_003.eeg 3 3
+Horazdovice_20141205_001.eeg 4 9 3 4
+Horazdovice_20141204_008.eeg 5 4 2 5
+Horazdovice20141204_009.eeg 7 7
+Horazdovice_20141205_004.eeg 2 2
+Horazdovice_20141204_012.eeg 5 8 5
+Horazdovice20141204_013.eeg 5 9 5
+Horazdovice_20141204_014.eeg 3 7 2 1
+Horazdovice_20141204_015.eeg 1 1
+Horazdovice_20141204_017.eeg 3 7 3
+Horazdovice_20141204_018.eeg 1 1
+Horazdovice20141204_019.eeg 7 2 5
+Horazdovice20141204_021.eeg 5 5
+Horazdovice20141204_022.eeg 5 5
+Horazdovice20141204_023.eeg 2 2
+Horazdovice20141204_024.eeg 1 1
+Horazdovice20141204_025.eeg 5 2 7 6 
+Horazdovice20141204_028.eeg 2 2
+Horazdovice20141204_029.eeg 7 7
+Horazdovice20141204_030.eeg 2 2
+Horazdovice20141204_031.eeg 5 4
+Horazdovice20141204_032.eeg 7 7

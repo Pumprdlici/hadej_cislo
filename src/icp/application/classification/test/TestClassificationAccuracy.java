@@ -39,10 +39,11 @@ public class TestClassificationAccuracy implements Observer {
    
     public static void main(String[] args) throws InterruptedException, IOException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
+        testClassificationAccuracy.computeHumanAccuracy();
     }
     
     public TestClassificationAccuracy() throws InterruptedException, IOException {
-    	this(null);
+    	//this(null);
     }
 
     public TestClassificationAccuracy(IERPClassifier classifier) throws InterruptedException, IOException {
@@ -99,6 +100,20 @@ public class TestClassificationAccuracy implements Observer {
         printStats();
     }
 
+    public void computeHumanAccuracy() throws IOException{
+        double totalPercentage = 0;
+        int dirCount = 0;
+        for (String dirName : Const.DIRECTORIES) {
+            dirCount++;
+            double percentageForDir = getHumanGuessPercentage(infoFileName, dirName);
+            totalPercentage += percentageForDir;
+            System.out.println(dirName + " " + percentageForDir * 100 + "%");
+        }
+
+        System.out.println();
+        System.out.println("Total percentage: " + totalPercentage/dirCount * 100 + "%");
+    }
+
     private void printStats() {
         System.out.println("----------------------------------------------");
         System.out.println("Statistics: ");
@@ -136,12 +151,41 @@ public class TestClassificationAccuracy implements Observer {
                     num = Integer.parseInt(parts[1]);
                     res.put(parts[0], num);
                 } catch (NumberFormatException ex) {
+                    //NaN
                 }
             }
         }
 
         br.close();
         return res;
+    }
+
+    private double getHumanGuessPercentage(String filename, String dir) throws IOException {
+        File file = new File(dir + File.separator + filename);
+        FileInputStream fis = new FileInputStream(file);
+        int fileCount = 0;
+        int goodGuess = 0;
+
+        //Construct BufferedReader from InputStreamReader
+        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+        String line;
+        while ((line = br.readLine()) != null) {
+            fileCount++;
+            String[] parts = line.split(" ");
+            if (parts.length > 2) {
+                try {
+                    if (Integer.parseInt(parts[1]) == Integer.parseInt(parts[2])) {
+                        goodGuess++;
+                    }
+                } catch (NumberFormatException ex) {
+                    //NaN
+                }
+            }
+        }
+
+        br.close();
+        return (double) goodGuess/fileCount;
     }
 
     private Integer[] initProbabilities(double[] probabilities) {

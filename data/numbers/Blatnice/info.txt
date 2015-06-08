@@ -1,17 +1,18 @@
-blastnice_20141023_21.eeg 1
-blatnice20131023_13.eeg 3
-blatnice20141023_7.eeg 8
-blatnice20141023_9.eeg 3
-blatnice20141023_10.eeg 6
-blatnice20141023_11.eeg 1
-blatnice20141023_12.eeg 7
-blatnice20141023_14.eeg 4
-blatnice20141023_15.eeg 6
-blatnice20141023_16.eeg 3
-blatnice20141023_17.eeg 9
-blatnice20141023_18.eeg 2
-blatnice20141023_19.eeg 3
-blatnice20141023_20.eeg 2
-blatnice20141023_22.eeg 3
-blatnice20141023_23.eeg 2
-blatnice20141023_24.eeg 1
+blastnice_20141023_21.eeg 1 1
+blatnice20131023_13.eeg 3 3
+blatnice20141023_7.eeg 8 8
+blatnice20141023_8.eeg 1 1
+blatnice20141023_9.eeg 3 3
+blatnice20141023_10.eeg 6 6
+blatnice20141023_11.eeg 1 1
+blatnice20141023_12.eeg 7 7
+blatnice20141023_14.eeg 4 9 4
+blatnice20141023_15.eeg 6 5
+blatnice20141023_16.eeg 3 3
+blatnice20141023_17.eeg 9 9
+blatnice20141023_18.eeg 2 5 2
+blatnice20141023_19.eeg 3 3
+blatnice20141023_20.eeg 2 5 2
+blatnice20141023_22.eeg 3 9 7 3
+blatnice20141023_23.eeg 2 6
+blatnice20141023_24.eeg 1 1

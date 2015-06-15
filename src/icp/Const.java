@@ -77,5 +77,6 @@ public class Const {
     //---------------------TEST---------------------
     public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
         "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo", "data/numbers/Stankov", 
-        "data/numbers/17ZS", "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2", "data/numbers/Tachov"};
+        "data/numbers/17ZS", "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2",
+        "data/numbers/Tachov", "data/numbers/Tachov2", "data/numbers/ZSBolevecka"};
 }

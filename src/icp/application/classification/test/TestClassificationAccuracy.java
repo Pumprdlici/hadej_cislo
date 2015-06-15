@@ -100,18 +100,19 @@ public class TestClassificationAccuracy implements Observer {
         printStats();
     }
 
-    public void computeHumanAccuracy() throws IOException{
-        double totalPercentage = 0;
-        int dirCount = 0;
+    public void computeHumanAccuracy() throws IOException {
+        int totalGood = 0;
+        int fileCount = 0;
         for (String dirName : Const.DIRECTORIES) {
-            dirCount++;
-            double percentageForDir = getHumanGuessPercentage(infoFileName, dirName);
-            totalPercentage += percentageForDir;
+            int[] results = getHumanGuessPercentage(infoFileName, dirName);
+            double percentageForDir = (double) results[1]/results[0];
             System.out.println(dirName + " " + percentageForDir * 100 + "%");
+            totalGood += results[1];
+            fileCount += results[0];
         }
 
         System.out.println();
-        System.out.println("Total percentage: " + totalPercentage/dirCount * 100 + "%");
+        System.out.println("Total percentage: " + (double) totalGood/fileCount * 100 + "%");
     }
 
     private void printStats() {
@@ -160,11 +161,12 @@ public class TestClassificationAccuracy implements Observer {
         return res;
     }
 
-    private double getHumanGuessPercentage(String filename, String dir) throws IOException {
+    private int[] getHumanGuessPercentage(String filename, String dir) throws IOException {
         File file = new File(dir + File.separator + filename);
         FileInputStream fis = new FileInputStream(file);
         int fileCount = 0;
         int goodGuess = 0;
+        int[] countAllAndGood = new int[2];
 
         //Construct BufferedReader from InputStreamReader
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
@@ -185,7 +187,9 @@ public class TestClassificationAccuracy implements Observer {
         }
 
         br.close();
-        return (double) goodGuess/fileCount;
+        countAllAndGood[0] = fileCount;
+        countAllAndGood[1] = goodGuess;
+        return countAllAndGood;
     }
 
     private Integer[] initProbabilities(double[] probabilities) {

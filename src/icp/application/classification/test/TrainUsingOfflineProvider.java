@@ -115,6 +115,7 @@ public class TrainUsingOfflineProvider implements Observer {
 	private void train() {
 		// create classifiers
 		
+            /*
 			Random r = new Random(System.nanoTime());
 			//fe = new WaveletTransformFeatureExtraction(r.nextInt(16) + 1, 512, 10 * r.nextInt(18), (int) Math.round(Math.pow(2, 3 + r.nextInt(4))) );
 			fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8 );
@@ -129,7 +130,7 @@ public class TrainUsingOfflineProvider implements Observer {
 			classifier = new MLPClassifier(nnStructure);
 			// classifier = new JavaMLClassifier();
 			classifier.setFeatureExtraction(fe);
-		
+		*/
 
 		// training
 		System.out.println("Training started.");

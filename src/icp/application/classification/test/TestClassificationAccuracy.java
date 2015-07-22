@@ -2,16 +2,10 @@ package icp.application.classification.test;
 
 import icp.Const;
 import icp.online.app.OnlineDetection;
-import icp.application.classification.ERPClassifierAdapter;
-import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
-import icp.application.classification.JavaMLClassifier;
-import icp.application.classification.KNNClassifier;
 import icp.application.classification.MLPClassifier;
-import icp.application.classification.NoFilterFeatureExtraction;
 import icp.application.classification.WaveletTransformFeatureExtraction;
-import icp.application.classification.WindowedMeansFeatureExtraction;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.OffLineDataProvider;
@@ -20,6 +14,10 @@ import icp.online.gui.*;
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by stebjan on 20.1.2015.
@@ -35,67 +33,71 @@ public class TestClassificationAccuracy implements Observer {
     private boolean end;
     private Map<String, Statistics> stats;
 
-    
-   
     public static void main(String[] args) throws InterruptedException, IOException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
         testClassificationAccuracy.computeHumanAccuracy();
     }
-    
+
     public TestClassificationAccuracy() throws InterruptedException, IOException {
-    	//this(null);
+        //this(null);
     }
 
-    public TestClassificationAccuracy(IERPClassifier classifier) throws InterruptedException, IOException {
-    	
-        stats = new HashMap<String, Statistics>();
+    public TestClassificationAccuracy(IERPClassifier classifier) throws InterruptedException, IOException, ExecutionException {
+        stats = new HashMap<>();
         Statistics.setTotalPts(0);
-        
-        results = new HashMap<String, Integer>();
-        
+        results = new HashMap<>();
         int counter = 0;
-        
+
         File directory;
         File f;
+        ExecutorService service = Executors.newFixedThreadPool(10);
         for (String dirName : Const.DIRECTORIES) {
             directory = new File(dirName);
             if (directory.exists() && directory.isDirectory()) {
-            	Map<String, Integer> map = loadExpectedResults(infoFileName, dirName);
-            	Map<String, Integer> localResults = new HashMap<String, Integer>(map);
-            	results.putAll(map);
+                Map<String, Integer> map = loadExpectedResults(infoFileName, dirName);
+                Map<String, Integer> localResults = new HashMap<String, Integer>(map);
+                results.putAll(map);
                 //System.out.println("Result size  -- " + results.size());
                 for (Entry<String, Integer> entry : localResults.entrySet()) {
                     f = new File(directory, entry.getKey());
-                    
-                    
+
                     if (f.exists() && f.isFile()) {
-                    	counter++;
-                    	//System.out.println(counter + ".filename: " + filename + "--" + results.size());
+                        counter++;
+                        //System.out.println(counter + ".filename: " + filename + "--" + results.size());
                         end = false;
                         filename = f.getName();
-                        
+
                         if (classifier == null) {
-                        	//classifier = new KNNClassifier();
-                        	 classifier = new MLPClassifier();
-                        	 classifier.load(Const.TRAINING_FILE_NAME);
-                             IFeatureExtraction fe = new WaveletTransformFeatureExtraction();
-                             classifier.setFeatureExtraction(fe);
+                            //classifier = new KNNClassifier();
+                            classifier = new MLPClassifier();
+                            classifier.load(Const.TRAINING_FILE_NAME);
+                            IFeatureExtraction fe = new WaveletTransformFeatureExtraction();
+                            classifier.setFeatureExtraction(fe);
                         }
-                       
+
                         OnlineDetection detection = new OnlineDetection(classifier, this);
                         OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);
-                        Thread t = new Thread(offLineData);
-                        t.start();
+                        //submits task for execution. Calling get() method blocks thread until work is done.
+                        service.submit(offLineData).get(); 
                         
-                        while (!end) {
-                            Thread.sleep(500);
-                        }
-                        t.join();
-                        
+                        /*
+                         Thread t = new Thread(offLineData);
+
+                         t.start();
+
+                         while (!end) {
+                         Thread.sleep(500);
+                         }
+                         t.join();
+                         */
                     }
                 }
             }
         }
+
+        service.shutdown();
+        // now wait for the jobs to finish
+        service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
         printStats();
     }
@@ -104,15 +106,15 @@ public class TestClassificationAccuracy implements Observer {
         int totalGood = 0;
         int fileCount = 0;
         for (String dirName : Const.DIRECTORIES) {
-            int[] results = getHumanGuessPercentage(infoFileName, dirName);
-            double percentageForDir = (double) results[1]/results[0];
+            int[] res = getHumanGuessPercentage(infoFileName, dirName);
+            double percentageForDir = (double) res[1] / res[0];
             System.out.println(dirName + " " + percentageForDir * 100 + "%");
-            totalGood += results[1];
-            fileCount += results[0];
+            totalGood += res[1];
+            fileCount += res[0];
         }
 
         System.out.println();
-        System.out.println("Total percentage: " + (double) totalGood/fileCount * 100 + "%");
+        System.out.println("Total percentage: " + (double) totalGood / fileCount * 100 + "%");
     }
 
     private void printStats() {
@@ -136,7 +138,7 @@ public class TestClassificationAccuracy implements Observer {
     }
 
     private Map<String, Integer> loadExpectedResults(String filename, String dir) throws IOException {
-        Map<String, Integer> res = new HashMap<String, Integer>();
+        Map<String, Integer> res = new HashMap<>();
         File file = new File(dir + File.separator + filename);
         FileInputStream fis = new FileInputStream(file);
 
@@ -218,7 +220,7 @@ public class TestClassificationAccuracy implements Observer {
         if (message instanceof ObserverMessage) {
             ObserverMessage msg = (ObserverMessage) message;
             if (msg.getMsgType() == MessageType.END) {
-             //   System.out.println(filename);
+                //   System.out.println(filename);
                 int winner = (result[0] + 1);
                 Statistics st = new Statistics();
                 st.setExpectedResult(getExpectedResult(filename));
@@ -237,9 +239,8 @@ public class TestClassificationAccuracy implements Observer {
         }
     }
 
-	public Map<String, Statistics> getStats() {
-		return stats;
-	}
-    
-    
+    public Map<String, Statistics> getStats() {
+        return stats;
+    }
+
 }

@@ -32,9 +32,9 @@ public class TrainUsingOfflineProvider implements Observer {
 
 	public TrainUsingOfflineProvider(IFeatureExtraction fe,
 			IERPClassifier classifier, String file) {
-		this.fe = fe;
-		this.classifier = classifier;
-		this.file = file;
+		TrainUsingOfflineProvider.fe = fe;
+		TrainUsingOfflineProvider.classifier = classifier;
+		TrainUsingOfflineProvider.file = file;
 
 		epochs = new ArrayList<double[][]>();
 		targets = new ArrayList<Double>();
@@ -51,7 +51,6 @@ public class TrainUsingOfflineProvider implements Observer {
 		try {
 			t.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -72,7 +71,6 @@ public class TrainUsingOfflineProvider implements Observer {
 		try {
 			t.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -115,22 +113,10 @@ public class TrainUsingOfflineProvider implements Observer {
 	private void train() {
 		// create classifiers
 		
-            /*
-			Random r = new Random(System.nanoTime());
-			//fe = new WaveletTransformFeatureExtraction(r.nextInt(16) + 1, 512, 10 * r.nextInt(18), (int) Math.round(Math.pow(2, 3 + r.nextInt(4))) );
-			fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8 );
-			int numberOfInputNeurons = fe.getFeatureDimension();
-			int middleNeurons = this.middleNeurons;
-			int outputNeurons = 1;
-			ArrayList<Integer> nnStructure = new ArrayList<Integer>();
-			nnStructure.add(numberOfInputNeurons);
-			nnStructure.add(middleNeurons);
-			nnStructure.add(outputNeurons);
-			// classifier = new KNNClassifier();
-			classifier = new MLPClassifier(nnStructure);
-			// classifier = new JavaMLClassifier();
-			classifier.setFeatureExtraction(fe);
-		*/
+          if (classifier == null) {  
+			setDefaultClassifier();
+          }
+	
 
 		// training
 		System.out.println("Training started.");
@@ -141,6 +127,25 @@ public class TrainUsingOfflineProvider implements Observer {
 			classifier.save(file);
 		}
 		System.out.println("Training finished.");
+	}
+
+	/**
+	 * 
+	 * If no classifier is set, create a default classifier with empirically set parameters
+	 * 
+	 */
+	private void setDefaultClassifier() {
+		Random r = new Random(System.nanoTime());
+	    fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8 );
+		int numberOfInputNeurons = fe.getFeatureDimension();
+		int middleNeurons = this.middleNeurons;
+		int outputNeurons = 1;
+		ArrayList<Integer> nnStructure = new ArrayList<Integer>();
+		nnStructure.add(numberOfInputNeurons);
+		nnStructure.add(middleNeurons);
+		nnStructure.add(outputNeurons);
+		classifier = new MLPClassifier(nnStructure);
+		classifier.setFeatureExtraction(fe);
 	}
 
 	public IERPClassifier getClassifier() {

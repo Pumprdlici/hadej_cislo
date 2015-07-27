@@ -28,7 +28,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     private int FZIndex;
     private int CZIndex;
     private int PZIndex;
-    
+
     private IArtifactDetection artifactDetector;
 
     private boolean running;
@@ -39,8 +39,8 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 
         String baseName = vhdrFile.substring(0, vhdrFile.lastIndexOf("."));
         this.eegFile = baseName + Const.EEG_EXTENSION;
-        
-        
+        //this.eegFile = baseName + ".dat";
+
         this.running = true;
     }
 
@@ -52,7 +52,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         this.vhdrFile = baseName + Const.VHDR_EXTENSION;
         this.vmrkFile = baseName + Const.VMRK_EXTENSION;
         this.eegFile = baseName + Const.EEG_EXTENSION;
-        
+        //this.eegFile = baseName + ".dat";
         this.running = true;
     }
 
@@ -79,14 +79,13 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     FZIndex = channel.getNumber();
                 } else if ("cz".equals(channel.getName().toLowerCase())) {
                     CZIndex = channel.getNumber();
-                } if ("pz".equals(channel.getName().toLowerCase())) {
+                }
+                if ("pz".equals(channel.getName().toLowerCase())) {
                     PZIndex = channel.getNumber();
                 }
-                
-                
+
             }
-            
-         
+
             double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex);
             double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex);
             double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex);
@@ -104,27 +103,32 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     stimulusIndex = Integer.parseInt(stimulusNumber) - 1;
                 }
                 em.setStimulusIndex(stimulusIndex);
-                float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel,
-                        marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
-                float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel,
-                        marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
-                float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel,
-                        marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
+                try {
+                    float[] ffzChannel = toFloatArray(Arrays.copyOfRange(fzChannel,
+                            marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
+                    float[] fczChannel = toFloatArray(Arrays.copyOfRange(czChannel,
+                            marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
+                    float[] fpzChannel = toFloatArray(Arrays.copyOfRange(pzChannel,
+                            marker.getPosition() - Const.PREESTIMULUS_VALUES, marker.getPosition() + Const.POSTSTIMULUS_VALUES));
 
-                Baseline.correct(ffzChannel, Const.PREESTIMULUS_VALUES);
-                Baseline.correct(fczChannel, Const.PREESTIMULUS_VALUES);
-                Baseline.correct(fpzChannel, Const.PREESTIMULUS_VALUES);
+                    Baseline.correct(ffzChannel, Const.PREESTIMULUS_VALUES);
+                    Baseline.correct(fczChannel, Const.PREESTIMULUS_VALUES);
+                    Baseline.correct(fpzChannel, Const.PREESTIMULUS_VALUES);
 
-                em.setFZ(ffzChannel, 100);
-                em.setCZ(fczChannel, 100);
-                em.setPZ(fpzChannel, 100);
-                
-                artifactDetector = MainFrame.artifactDetection;
-                if(artifactDetector != null)
-                	em = artifactDetector.detectArtifact(em);
+                    em.setFZ(ffzChannel, 100);
+                    em.setCZ(fczChannel, 100);
+                    em.setPZ(fpzChannel, 100);
 
-                this.setChanged();
-                this.notifyObservers(em);
+                    artifactDetector = MainFrame.artifactDetection;
+                    if (artifactDetector != null) {
+                        em = artifactDetector.detectArtifact(em);
+                    }
+
+                    this.setChanged();
+                    this.notifyObservers(em);
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                }
             }
             this.setChanged();
             this.notifyObservers(new ObserverMessage(MessageType.END, "EEG file loaded."));

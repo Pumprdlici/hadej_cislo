@@ -3,6 +3,9 @@ package icp.application.classification.test;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class OptimizeMLP {
 	
@@ -17,14 +20,16 @@ public class OptimizeMLP {
 			TrainUsingOfflineProvider trainOfflineProvider = new TrainUsingOfflineProvider(numberOfIters, middleNeurons);
 			System.out.println("New classifier: " + trainOfflineProvider.getClassifier());
 			System.out.println("New feature extraction: " + trainOfflineProvider.getClassifier().getFeatureExtraction());
-			TestClassificationAccuracy testAccuracy;
+			TestClassificationAccuracy testAccuracy = null;
 			try {
 				testAccuracy = new TestClassificationAccuracy( trainOfflineProvider.getClassifier());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return;
-			}
+			} catch (ExecutionException ex) {
+                        Logger.getLogger(OptimizeMLP.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 			Map<String, Statistics> stats = testAccuracy.getStats();
 			int okNumber = 0;
 			for (Map.Entry<String, Statistics> entry : stats.entrySet()) {

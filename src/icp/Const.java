@@ -36,7 +36,7 @@ public class Const {
 
     //------------------------Classifier training-----------------------
     //public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/no_artifacts2.dat";
-    public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/set2.dat";
+    public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/no_artifacts2.dat";
     public static final String TRAINING_FILE_NAME = "data/new_models/winnermlpdwt.classifier";
 
     //----------------------Epoch------------------------

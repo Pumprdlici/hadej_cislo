@@ -15,8 +15,8 @@ public class OptimizeMLP {
 		double maxAccuracy = 0;
 		Random random = new Random();
 		while (accuracy < 0.7) { 
-			int numberOfIters = 50 + random.nextInt(1500);
-			int middleNeurons =  4 + random.nextInt(6);
+			int numberOfIters = 200 + random.nextInt(1000);
+			int middleNeurons =  6 + random.nextInt(3);
 			TrainUsingOfflineProvider trainOfflineProvider = new TrainUsingOfflineProvider(numberOfIters, middleNeurons);
 			System.out.println("New classifier: " + trainOfflineProvider.getClassifier());
 			System.out.println("New feature extraction: " + trainOfflineProvider.getClassifier().getFeatureExtraction());

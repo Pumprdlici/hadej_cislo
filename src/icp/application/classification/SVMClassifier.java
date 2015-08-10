@@ -304,5 +304,10 @@ public class SVMClassifier extends ERPClassifierAdapter {
 			System.out.println("Something get wrong during loading the file best_class_2_650.txt!");
 		}
 	}
+	
+	@Override
+	public IFeatureExtraction getFeatureExtraction() {
+		return fe;
+	}
 
 }

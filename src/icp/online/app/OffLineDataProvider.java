@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -98,9 +99,10 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
             double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex, order);
             double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex, order);
 
-            writePzIntoCsv(pzChannel, pzPw);
+            //writePzIntoCsv(pzChannel, pzPw);
 
             List<EEGMarker> markers = dt.readMarkerList(vmrkFile);
+            Collections.shuffle(markers);
             for (EEGMarker marker : markers) {
                 if (!running) {
                     break;
@@ -126,7 +128,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     Baseline.correct(fczChannel, Const.PREESTIMULUS_VALUES);
                     Baseline.correct(fpzChannel, Const.PREESTIMULUS_VALUES);
 
-                    writeCsv(fpzChannel, stimulusNumber, outfile);
+                    //writeCsv(fpzChannel, stimulusNumber, outfile);
 
                     em.setFZ(ffzChannel, 100);
                     em.setCZ(fczChannel, 100);

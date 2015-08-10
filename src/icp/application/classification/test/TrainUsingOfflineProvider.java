@@ -7,6 +7,7 @@ import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.SVMClassifier;
 import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
@@ -177,9 +178,9 @@ public class TrainUsingOfflineProvider implements Observer {
             }
         }
 
-        System.out.println("Target cnt: " + tCnt);
+       /* System.out.println("Target cnt: " + tCnt);
         System.out.println("Non-target cnt: " + nCnt);
-        System.out.println("Total cnt: " + cnt);
+        System.out.println("Total cnt: " + cnt);*/
 
         Chart chart = new Chart("Target training data average");
         chart.update(tAvg);
@@ -209,16 +210,18 @@ public class TrainUsingOfflineProvider implements Observer {
      *
      */
     private void setDefaultClassifier() {
-        Random r = new Random(System.nanoTime());
-        fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8);
-        int numberOfInputNeurons = fe.getFeatureDimension();
+        /*Random r = new Random(System.nanoTime());
+        fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8);*/
+        fe = new WaveletTransformFeatureExtraction();
+        /*int numberOfInputNeurons = fe.getFeatureDimension();
         int middleNeurons = this.middleNeurons;
         int outputNeurons = 1;
         ArrayList<Integer> nnStructure = new ArrayList<Integer>();
         nnStructure.add(numberOfInputNeurons);
         nnStructure.add(middleNeurons);
         nnStructure.add(outputNeurons);
-        classifier = new MLPClassifier(nnStructure);
+        classifier = new MLPClassifier(nnStructure);*/
+        classifier = new SVMClassifier();
         classifier.setFeatureExtraction(fe);
     }
 

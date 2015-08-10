@@ -1,26 +1,25 @@
 package icp.online.app;
 
-import icp.algorithm.math.Baseline;
-import icp.algorithm.math.IArtifactDetection;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-
 import cz.zcu.kiv.signal.ChannelInfo;
 import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.signal.EEGMarker;
 import icp.Const;
+import icp.algorithm.math.Baseline;
+import icp.algorithm.math.IArtifactDetection;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.gui.MainFrame;
+
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 public class OffLineDataProvider extends Observable implements Runnable, IDataProvider {
 
@@ -93,10 +92,11 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
             //Create a Printwriter text output stream and link it to the CSV File
             java.io.PrintWriter outfile = new java.io.PrintWriter(file);
             java.io.PrintWriter pzPw = new java.io.PrintWriter(pzFile);
+            ByteOrder order = ByteOrder.LITTLE_ENDIAN;
 
-            double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex);
-            double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex);
-            double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex);
+            double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex, order);
+            double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex, order);
+            double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex, order);
 
             writePzIntoCsv(pzChannel, pzPw);
 

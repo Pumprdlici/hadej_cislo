@@ -19,6 +19,8 @@ import icp.Const;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.gui.MainFrame;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class OffLineDataProvider extends Observable implements Runnable, IDataProvider {
 
@@ -83,18 +85,27 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                 if ("pz".equals(channel.getName().toLowerCase())) {
                     PZIndex = channel.getNumber();
                 }
-
             }
+
+            //create a File class object and give the file the name employees.csv
+            java.io.File file = new java.io.File("RawData_BaselineCorrect.csv");
+            java.io.File pzFile = new java.io.File("RawPzChannel.csv");
+            //Create a Printwriter text output stream and link it to the CSV File
+            java.io.PrintWriter outfile = new java.io.PrintWriter(file);
+            java.io.PrintWriter pzPw = new java.io.PrintWriter(pzFile);
 
             double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex);
             double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex);
             double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex);
-            Map<String, EEGMarker> markers = dt.readMarkers(vmrkFile);
-            for (Map.Entry<String, EEGMarker> entry : markers.entrySet()) {
+
+            writePzIntoCsv(pzChannel, pzPw);
+
+            List<EEGMarker> markers = dt.readMarkerList(vmrkFile);
+            for (EEGMarker marker : markers) {
                 if (!running) {
                     break;
                 }
-                EEGMarker marker = entry.getValue();
+
                 EpochMessenger em = new EpochMessenger();
 
                 String stimulusNumber = marker.getStimulus().replaceAll("[\\D]", "");
@@ -115,6 +126,8 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     Baseline.correct(fczChannel, Const.PREESTIMULUS_VALUES);
                     Baseline.correct(fpzChannel, Const.PREESTIMULUS_VALUES);
 
+                    writeCsv(fpzChannel, stimulusNumber, outfile);
+
                     em.setFZ(ffzChannel, 100);
                     em.setCZ(fczChannel, 100);
                     em.setPZ(fpzChannel, 100);
@@ -130,6 +143,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                     ex.printStackTrace();
                 }
             }
+            outfile.close();
             this.setChanged();
             this.notifyObservers(new ObserverMessage(MessageType.END, "EEG file loaded."));
 
@@ -141,5 +155,25 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     @Override
     public void stop() {
         this.running = false;
+    }
+
+    private void writeCsv(float[] vals, String stimulus, PrintWriter outfile) throws FileNotFoundException {
+
+        //Iterate the elements actually being used
+        for (int i = 0; i < vals.length; i++) {
+            outfile.append(vals[i] + ",");
+        }
+        outfile.append(stimulus);
+        outfile.append("\n");
+
+    }
+
+    private void writePzIntoCsv(double[] vals, PrintWriter outfile) {
+        //Iterate the elements actually being used
+        for (int i = 0; i < vals.length; i++) {
+            outfile.append(vals[i] + ",");
+        }
+        //outfile.append(stimulus);
+        outfile.append("\n");
     }
 }

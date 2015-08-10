@@ -1,6 +1,8 @@
 package icp.application.classification.test;
 
 import icp.Const;
+import icp.algorithm.math.ButterWorthFilter;
+import icp.algorithm.math.IFilter;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TrainUsingOfflineProvider implements Observer {
 
@@ -32,13 +36,15 @@ public class TrainUsingOfflineProvider implements Observer {
     private static IFeatureExtraction fe;
     private static IERPClassifier classifier;
     private static String file;
+    private IFilter filter;
 
     public TrainUsingOfflineProvider(IFeatureExtraction fe,
-            IERPClassifier classifier, String file) {
+            IERPClassifier classifier, String file, IFilter filter) {
         TrainUsingOfflineProvider.fe = fe;
         TrainUsingOfflineProvider.classifier = classifier;
         TrainUsingOfflineProvider.file = file;
 
+        this.filter = filter;
         epochs = new ArrayList<double[][]>();
         targets = new ArrayList<Double>();
         numberOfTargets = 0;
@@ -84,7 +90,7 @@ public class TrainUsingOfflineProvider implements Observer {
                     2000, 8);
         } else {
             TrainUsingOfflineProvider train = new TrainUsingOfflineProvider(fe,
-                    classifier, file);
+                    classifier, file, new ButterWorthFilter());
         }
     }
 
@@ -93,7 +99,11 @@ public class TrainUsingOfflineProvider implements Observer {
         if (message instanceof ObserverMessage) {
             ObserverMessage msg = (ObserverMessage) message;
             if (msg.getMsgType() == MessageType.END) {
-
+                try {
+                    writeCSV(epochs);
+                } catch (Exception ex) {
+                    Logger.getLogger(TrainUsingOfflineProvider.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 this.train();
             }
         }
@@ -104,6 +114,7 @@ public class TrainUsingOfflineProvider implements Observer {
             // 1 = target, 3 = non-target
             if (stimulus == 1 && numberOfTargets <= numberOfNonTargets) {
                 epochs.add(epoch);
+
                 targets.add(1.0);
                 numberOfTargets++;
             } else if (stimulus == 3 && numberOfTargets >= numberOfNonTargets) {
@@ -123,16 +134,35 @@ public class TrainUsingOfflineProvider implements Observer {
 
         double[][] tAvg = new double[epochs.get(0).length][epochs.get(0)[0].length];
         double[][] nAvg = new double[epochs.get(0).length][epochs.get(0)[0].length];
-        //Arrays.fill(tAvg, 0);
-        //Arrays.fill(nAvg, 0);
+        for (int k = 0; k < tAvg.length; k++) {
+            Arrays.fill(tAvg[k], 0);
+            Arrays.fill(nAvg[k], 0);
+        }
         int cnt = 0;
+        int tCnt = 0;
+        int nCnt = 0;
+        double t;
+        double val = 0;
         for (double[][] epoch : epochs) {
+            t = targets.get(cnt);
+            if (t == 1) {
+                tCnt++;
+            } else {
+                nCnt++;
+            }
             for (int i = 0; i < epoch.length; i++) {
                 for (int j = 0; j < epoch[i].length; j++) {
-                    if (targets.get(cnt) == 1) {
-                        tAvg[i][j] += epoch[i][j];
+                    val = epoch[i][j];
+                    if (filter != null) {
+                        val = filter.getOutputSample(val);
+                    }
+
+                    if (t == 1) {
+
+                        tAvg[i][j] += val;
                     } else {
-                        nAvg[i][j] += epoch[i][j];
+
+                        nAvg[i][j] += val;
                     }
                 }
             }
@@ -142,10 +172,14 @@ public class TrainUsingOfflineProvider implements Observer {
 
         for (int i = 0; i < tAvg.length; i++) {
             for (int j = 0; j < tAvg[i].length; j++) {
-                tAvg[i][j] = tAvg[i][j] / cnt;
-                nAvg[i][j] = nAvg[i][j] / cnt;
+                tAvg[i][j] = tAvg[i][j] / tCnt;
+                nAvg[i][j] = nAvg[i][j] / nCnt;
             }
         }
+
+        System.out.println("Target cnt: " + tCnt);
+        System.out.println("Non-target cnt: " + nCnt);
+        System.out.println("Total cnt: " + cnt);
 
         Chart chart = new Chart("Target training data average");
         chart.update(tAvg);
@@ -190,6 +224,33 @@ public class TrainUsingOfflineProvider implements Observer {
 
     public IERPClassifier getClassifier() {
         return this.classifier;
+    }
+
+    /**
+     * Writes epochs into comma delimited csv file Epochs.csv.
+     *
+     * @param epochs list of epochs
+     * @throws java.lang.Exception
+     *
+     *
+     */
+    public static void writeCSV(List<double[][]> epochs) throws Exception {
+
+        //create a File class object and give the file the name employees.csv
+        java.io.File file = new java.io.File("Epochs.csv");
+
+        //Create a Printwriter text output stream and link it to the CSV File
+        java.io.PrintWriter outfile = new java.io.PrintWriter(file);
+
+        //Iterate the elements actually being used
+        for (double[][] epoch : epochs) {
+            for (int i = 0; i < epoch[2].length; i++) {
+                outfile.write(epoch[2][i] + ",");
+            }
+            outfile.write("\n");
+        }
+
+        outfile.close();
     }
 
 }

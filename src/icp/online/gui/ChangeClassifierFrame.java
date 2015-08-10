@@ -515,7 +515,7 @@ public class ChangeClassifierFrame extends JFrame {
 
 					c.dispose();
 
-					new TrainUsingOfflineProvider(c.fe, classifier, classifierFile);
+					new TrainUsingOfflineProvider(c.fe, classifier, classifierFile, mainFrame.dataFilter);
 					mainFrame.setFe(fe);
 					mainFrame.setClassifier(classifier);
 					mainFrame.setFeStatus("Feature Extraction: "

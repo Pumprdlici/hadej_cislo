@@ -213,15 +213,15 @@ public class TrainUsingOfflineProvider implements Observer {
         /*Random r = new Random(System.nanoTime());
         fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8);*/
         fe = new WaveletTransformFeatureExtraction();
-        /*int numberOfInputNeurons = fe.getFeatureDimension();
+        int numberOfInputNeurons = fe.getFeatureDimension();
         int middleNeurons = this.middleNeurons;
         int outputNeurons = 1;
         ArrayList<Integer> nnStructure = new ArrayList<Integer>();
         nnStructure.add(numberOfInputNeurons);
         nnStructure.add(middleNeurons);
         nnStructure.add(outputNeurons);
-        classifier = new MLPClassifier(nnStructure);*/
-        classifier = new SVMClassifier();
+        classifier = new MLPClassifier(nnStructure);
+        //classifier = new SVMClassifier();
         classifier.setFeatureExtraction(fe);
     }
 

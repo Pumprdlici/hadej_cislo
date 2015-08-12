@@ -90,4 +90,20 @@ public class Chart extends JFrame {
 
         chart.fireChartChanged();
     }
+    
+    public void update(double[] pzAvg) {
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+        final XYSeries series = new XYSeries("");
+        for (int i = 0; i < pzAvg.length; i++) {
+                series.add(i, pzAvg[i]);
+
+        }
+        dataset.addSeries(series);
+        
+        chart = createChart(dataset);
+        chartPanel.setChart(chart);
+        chartPanel.repaint();
+
+        chart.fireChartChanged();
+    }
 }

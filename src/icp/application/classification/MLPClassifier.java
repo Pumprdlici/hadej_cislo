@@ -2,11 +2,15 @@ package icp.application.classification;
 
 import icp.Const;
 import icp.online.gui.Chart;
+import java.io.FileNotFoundException;
 
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.neuroph.core.Layer;
 import org.neuroph.core.NeuralNetwork;
@@ -28,7 +32,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
     private IFeatureExtraction fe; /* feature extraction used to decompose each epoch */
 
     private int numberOfIters = 0;
-    
+
     private double[] featureAverage;
 
     public MLPClassifier() {
@@ -70,7 +74,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
                     + featureVector.length + " must be the same as the number of input neurons: "
                     + neuralNetwork.getInputsCount() + ".");
         }
-        
+
         neuralNetwork.setInput(featureVector);
         neuralNetwork.calculate();
         double[] output = neuralNetwork.getOutput();
@@ -106,87 +110,110 @@ public class MLPClassifier extends ERPClassifierAdapter {
         int countNonTarget = 0;
         Arrays.fill(sumTarget, 0);
         Arrays.fill(sumNonTarget, 0);
+
+        java.io.File file = new java.io.File("TrainFeatures.csv");
+        java.io.PrintWriter outfile = null;
+        try {
+            //Create a Printwriter text output stream and link it to the CSV File
+            outfile = new java.io.PrintWriter(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(MLPClassifier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         for (int i = 0; i < epochs.size(); i++) {
             double[][] epoch = epochs.get(i);
             double[] features = this.fe.extractFeatures(epoch);
             double[] target = new double[targetsSize];
             target[0] = targets.get(i);
-            if (target[0] == 0) {
-            	
-            	/*if (i < 10) {
-            		Chart chartNonTarget = new Chart("Non-Target feature training data trial " + i);
-            		chartNonTarget.update(features);
-            		chartNonTarget.pack();
-            		chartNonTarget.setVisible(true);
-            	}*/
-                 
-            	countNonTarget++;
-            	for (int j = 0; j < sumNonTarget.length; j++) {
-            		sumNonTarget[j] += features[j];
-            	}
-            	/*if (countNonTarget == 10) {
-            		
-            		for (int j = 0; j < sumNonTarget.length; j++) {
-            	    	sumNonTarget[j] /= countNonTarget;
-            		}
-            		countNonTarget = 0;
-            		dataset.addRow(sumNonTarget, target);
-            		Arrays.fill(sumNonTarget, 0);
-            	}*/
-            	
-            } else {
-            	/*if (i < 10) {
-            		Chart chartTarget = new Chart("Target feature training data trial " + i);
-            		chartTarget.update(features);
-            		chartTarget.pack();
-            		chartTarget.setVisible(true);
-            	}*/
-            	countTarget++;
-            	for (int j = 0; j < sumTarget.length; j++) {
-            		sumTarget[j] += features[j];
-            	}
-            	/*if (countTarget == 10) {
-            		
-            		for (int j = 0; j < sumTarget.length; j++) {
-            	    	sumTarget[j] /= countTarget;
-            		}
-            		countTarget = 0;
-            		dataset.addRow(sumTarget, target);
-            		Arrays.fill(sumTarget, 0);
-            	}*/
+
+            try {
+                writeCsv(features, target[0], outfile);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MLPClassifier.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-           
-            
-            
-            
+            if (target[0] == 0) {
+
+                /*if (i < 10) {
+                 Chart chartNonTarget = new Chart("Non-Target feature training data trial " + i);
+                 chartNonTarget.update(features);
+                 chartNonTarget.pack();
+                 chartNonTarget.setVisible(true);
+                 }*/
+                countNonTarget++;
+                for (int j = 0; j < sumNonTarget.length; j++) {
+                    sumNonTarget[j] += features[j];
+                }
+                /*if (countNonTarget == 10) {
+            		
+                 for (int j = 0; j < sumNonTarget.length; j++) {
+                 sumNonTarget[j] /= countNonTarget;
+                 }
+                 countNonTarget = 0;
+                 dataset.addRow(sumNonTarget, target);
+                 Arrays.fill(sumNonTarget, 0);
+                 }*/
+
+            } else {
+                /*if (i < 10) {
+                 Chart chartTarget = new Chart("Target feature training data trial " + i);
+                 chartTarget.update(features);
+                 chartTarget.pack();
+                 chartTarget.setVisible(true);
+                 }*/
+                countTarget++;
+                for (int j = 0; j < sumTarget.length; j++) {
+                    sumTarget[j] += features[j];
+                }
+                /*if (countTarget == 10) {
+            		
+                 for (int j = 0; j < sumTarget.length; j++) {
+                 sumTarget[j] /= countTarget;
+                 }
+                 countTarget = 0;
+                 dataset.addRow(sumTarget, target);
+                 Arrays.fill(sumTarget, 0);
+                 }*/
+            }
+
             //dataset.addRow(features, target);
         }
         
+        outfile.close();
+
         for (int j = 0; j < sumNonTarget.length; j++) {
-    		sumNonTarget[j] /= countNonTarget;
-    	}
-        
+            sumNonTarget[j] /= countNonTarget;
+        }
+
         for (int j = 0; j < sumTarget.length; j++) {
-    		sumTarget[j] /= countTarget;
-    	}
-        
-        
+            sumTarget[j] /= countTarget;
+        }
+
         Chart chartNonTarget = new Chart("Non-Target feature training data average");
         chartNonTarget.update(sumNonTarget);
         chartNonTarget.pack();
         chartNonTarget.setVisible(true);
-        
+
         Chart chartTarget = new Chart("Target feature training data average");
         chartTarget.update(sumTarget);
         chartTarget.pack();
         chartTarget.setVisible(true);
-        
+
         // shuffle the resulting dataset
         //dataset.shuffle();
-
         // train the NN
         this.train(dataset, numberOfIter, Const.LEARNING_RATE);
+    }
+
+    private void writeCsv(double[] vals, double stimulus, PrintWriter outfile) throws FileNotFoundException {
+
+        //Iterate the elements actually being used
+        for (int i = 0; i < vals.length; i++) {
+            outfile.append(vals[i] + ",");
+        }
+        outfile.append("" + stimulus);
+        outfile.append("\n");
+
     }
 
     @Override
@@ -204,20 +231,20 @@ public class MLPClassifier extends ERPClassifierAdapter {
         this.neuralNetwork = NeuralNetwork.load(file);
         System.out.println(toString());
     }
-    
+
     @Override
     public String toString() {
-    	String returnString =  "MLP: ( ";
-    	for (Layer layer: this.neuralNetwork.getLayers()) {
-    		returnString += layer.getNeuronsCount() + " ";
-    	}
-    	returnString  += ")";
-    	returnString += ": iters: " + this.numberOfIters;
-    	return returnString;
+        String returnString = "MLP: ( ";
+        for (Layer layer : this.neuralNetwork.getLayers()) {
+            returnString += layer.getNeuronsCount() + " ";
+        }
+        returnString += ")";
+        returnString += ": iters: " + this.numberOfIters;
+        return returnString;
     }
-    
+
     @Override
     public IFeatureExtraction getFeatureExtraction() {
-    	return fe;
+        return fe;
     }
 }

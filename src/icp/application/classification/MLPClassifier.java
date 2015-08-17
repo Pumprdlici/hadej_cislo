@@ -11,6 +11,7 @@ import java.util.List;
 import org.neuroph.core.Layer;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
+import org.neuroph.core.data.DataSetRow;
 import org.neuroph.core.events.LearningEvent;
 import org.neuroph.core.events.LearningEventListener;
 import org.neuroph.nnet.MultiLayerPerceptron;
@@ -36,7 +37,9 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
     
     private boolean log = true;
     
-    private double lastIteration;
+    private double lastIteration = 0;
+    private double maxValidationAccuracy = 0;
+    private DataSet[] trainingTesting;
 
     public MLPClassifier() {
         neuralNetwork = new MultiLayerPerceptron(Const.DEFAULT_OUTPUT_NEURONS);
@@ -192,10 +195,16 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
         
         // shuffle the resulting dataset
         dataset.shuffle();
-        //dataset.shuffle();
+        trainingTesting = dataset.createTrainingAndTestSubsets(80, 20);
+        
 
         // train the NN
-        this.train(dataset, numberOfIter, Const.LEARNING_RATE);
+        this.maxValidationAccuracy = 0;
+        this.train(trainingTesting[0], numberOfIter, Const.LEARNING_RATE);
+        this.load("best.txt");
+        
+        System.out.println("-----------------------------\nEnd of training: training data accuracy: " + this.testNeuralNetwork(trainingTesting[0]) +  ", testing data accuracy: " + this.testNeuralNetwork(trainingTesting[1]));
+       
     }
 
     @Override
@@ -237,13 +246,37 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
 	    if (log && bp.getCurrentIteration() % 50 == 0) {
 	    	System.out.println("Current iteration: " + bp.getCurrentIteration());
 	    	System.out.println("Error: " + bp.getTotalNetworkError());
+	    	double validationAccuracy = testNeuralNetwork(trainingTesting[1]);
+	    	//System.out.println("Validation accuracy: " + validationAccuracy);
+	    	if (this.maxValidationAccuracy < validationAccuracy) {
+	    		this.maxValidationAccuracy = validationAccuracy;
+	    		System.out.println("-----------------------------\nBest validation accuracy: " + this.maxValidationAccuracy);
+	    		this.save("best.txt");
+	    	}
 	    }
-        if (Math.random() > 0.99 && bp.getCurrentIteration() > 50 && bp.getTotalNetworkError() - lastIteration < 0.0001) {
-        	System.out.println("Reset");
-        	this.neuralNetwork.randomizeWeights();
-        	
-        }
+       
         lastIteration = bp.getTotalNetworkError();
 		
 	}
+	
+	 private double testNeuralNetwork(DataSet testSet) {
+		 	int correct = 0, incorrect = 0;
+		    for(DataSetRow dataRow : testSet.getRows()) {
+		        this.neuralNetwork.setInput(dataRow.getInput());
+		        this.neuralNetwork.calculate();
+		        double[] networkOutput = this.neuralNetwork.getOutput();
+		        if (Math.round(dataRow.getDesiredOutput()[0]) == Math.round(networkOutput[0])) {
+		        	correct++;
+		        } else {
+		        	incorrect++;
+		        }
+		        
+		       // System.out.print("Input: " + Arrays.toString(dataRow.getInput()) );
+		       // System.out.println(" Output: " + Arrays.toString(networkOutput) );
+		        
+
+		    }
+		    return ((double)correct) / (correct + incorrect);
+
+		}
 }

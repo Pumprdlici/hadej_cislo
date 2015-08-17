@@ -1,5 +1,6 @@
 package icp.algorithm.math;
 
+import icp.Const;
 import biz.source_code.dsp.filter.FilterCharacteristicsType;
 import biz.source_code.dsp.filter.FilterPassType;
 import biz.source_code.dsp.filter.IirFilter;
@@ -34,7 +35,7 @@ public class ButterWorthFilter implements IFilter {
      * Default constructor with recommended values.
      */
 	public ButterWorthFilter() {
-		this(0.1, 8, 1024);
+		this(0.8, 15, Const.SAMPLING_FQ);
 	}
 	
 	@Override

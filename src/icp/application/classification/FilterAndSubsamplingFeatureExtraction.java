@@ -17,11 +17,11 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
 	
 	 private static int[] CHANNELS = {1, 2, 3}; /* EEG channels to be transformed to feature vectors */
 
-	 private int EPOCH_SIZE = 650; /* number of samples to be used - Fs = 1000 Hz expected */
+	 private int EPOCH_SIZE = 256; /* number of samples to be used - Fs = 1000 Hz expected */
 
-	 private int DOWN_SMPL_FACTOR = 2;  /* subsampling factor */
+	 private int DOWN_SMPL_FACTOR = 16;  /* subsampling factor */
 
-	 private int SKIP_SAMPLES = 0; /* skip initial samples in each epoch */
+	 private int SKIP_SAMPLES = 220; /* skip initial samples in each epoch */
 	 
 	 private IFilter filter = null; /* used filter, if no filter is selected -> will be null */
 

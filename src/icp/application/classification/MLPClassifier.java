@@ -10,9 +10,12 @@ import java.util.List;
 
 import org.neuroph.core.Layer;
 import org.neuroph.core.NeuralNetwork;
-import org.neuroph.core.learning.DataSet;
+import org.neuroph.core.data.DataSet;
+import org.neuroph.core.events.LearningEvent;
+import org.neuroph.core.events.LearningEventListener;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.BackPropagation;
+import org.neuroph.util.random.NguyenWidrowRandomizer;
 
 /**
  *
@@ -21,15 +24,19 @@ import org.neuroph.nnet.learning.BackPropagation;
  * @author Lukas Vareka
  *
  */
-public class MLPClassifier extends ERPClassifierAdapter {
+public class MLPClassifier extends ERPClassifierAdapter implements LearningEventListener {
 
-    private NeuralNetwork neuralNetwork; 		/* neural network implementation */
+    private NeuralNetwork<BackPropagation> neuralNetwork; 		/* neural network implementation */
 
     private IFeatureExtraction fe; /* feature extraction used to decompose each epoch */
 
     private int numberOfIters = 0;
     
     private double[] featureAverage;
+    
+    private boolean log = true;
+    
+    private double lastIteration;
 
     public MLPClassifier() {
         neuralNetwork = new MultiLayerPerceptron(Const.DEFAULT_OUTPUT_NEURONS);
@@ -41,7 +48,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
      */
     public MLPClassifier(ArrayList<Integer> params) {
         neuralNetwork = new MultiLayerPerceptron(params);
-        neuralNetwork.randomizeWeights();
+        neuralNetwork.randomizeWeights(new NguyenWidrowRandomizer(0.3, 0.7));
 
     }
 
@@ -57,6 +64,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
         BackPropagation backP = new BackPropagation();
         backP.setMaxIterations(maxIters);
         backP.setLearningRate(learningRate);
+        backP.addListener(this);
         neuralNetwork.learn(dataset, backP);
     }
 
@@ -160,7 +168,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
             
             
             
-            //dataset.addRow(features, target);
+            dataset.addRow(features, target);
         }
         
         for (int j = 0; j < sumNonTarget.length; j++) {
@@ -183,6 +191,7 @@ public class MLPClassifier extends ERPClassifierAdapter {
         chartTarget.setVisible(true);
         
         // shuffle the resulting dataset
+        dataset.shuffle();
         //dataset.shuffle();
 
         // train the NN
@@ -220,4 +229,21 @@ public class MLPClassifier extends ERPClassifierAdapter {
     public IFeatureExtraction getFeatureExtraction() {
     	return fe;
     }
+
+	@Override
+	public void handleLearningEvent(LearningEvent learningEvent) {
+	    BackPropagation bp = (BackPropagation) learningEvent.getSource();
+	    lastIteration = bp.getTotalNetworkError();
+	    if (log && bp.getCurrentIteration() % 50 == 0) {
+	    	System.out.println("Current iteration: " + bp.getCurrentIteration());
+	    	System.out.println("Error: " + bp.getTotalNetworkError());
+	    }
+        if (Math.random() > 0.99 && bp.getCurrentIteration() > 50 && bp.getTotalNetworkError() - lastIteration < 0.0001) {
+        	System.out.println("Reset");
+        	this.neuralNetwork.randomizeWeights();
+        	
+        }
+        lastIteration = bp.getTotalNetworkError();
+		
+	}
 }

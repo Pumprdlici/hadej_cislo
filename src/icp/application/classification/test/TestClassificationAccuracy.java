@@ -101,6 +101,15 @@ public class TestClassificationAccuracy implements Observer {
 
         printStats();
     }
+    
+        private void writePzIntoCsv(double[] vals, PrintWriter outfile) {
+        //Iterate the elements actually being used
+        for (int i = 0; i < vals.length; i++) {
+            outfile.append(vals[i] + ",");
+        }
+        //outfile.append(stimulus);
+        outfile.append("\n");
+    }
 
     public void computeHumanAccuracy() throws IOException {
         int totalGood = 0;

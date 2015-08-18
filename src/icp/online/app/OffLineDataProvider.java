@@ -51,10 +51,15 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         this.running = true;
     }
 
-    public OffLineDataProvider(String trainDir, Observer obs) {
+    public OffLineDataProvider(String trainDir, Observer obs) throws IOException {
         this.addObserver(obs);
-        this.files = new HashMap<String, Integer>();
+        File dir = new File(trainDir);
+        if (!dir.exists() || !dir.isDirectory()) {
+            throw new FileNotFoundException(dir + " is not a directory");
+        }
+        this.files = loadExpectedResults(trainDir);
         this.running = true;
+        //TODO
     }
 
     private void setFileNames(String filename) {
@@ -161,7 +166,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                         ex.printStackTrace();
                     }
                 }
-                System.out.println("File " + fileEntry.getKey() + " red");
+               // System.out.println("File " + fileEntry.getKey() + " red");
             }
 //            outfile.close();
             this.setChanged();

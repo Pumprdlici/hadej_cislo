@@ -14,7 +14,8 @@ public class EpochMessenger {
     /**
      * Channels [Fz, Cz, Pz] * time samples
      */
-    private final double[][] epoch; // klasifikator pracuje s polem typu double, ne float
+    private final double[][] epoch;
+    private boolean isTarget;// klasifikator pracuje s polem typu double, ne float
 
     /**
      * Guessed number-related stimulus 1 - 9
@@ -37,6 +38,14 @@ public class EpochMessenger {
 
     public int getStimulusIndex() {
         return stimulusIndex;
+    }
+
+    public boolean isTarget() {
+        return isTarget;
+    }
+
+    public void setTarget(boolean isTarget) {
+        this.isTarget = isTarget;
     }
 
     public void setStimulusIndex(int stimulusIndex) {

@@ -7,22 +7,14 @@ import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
-import icp.application.classification.SVMClassifier;
-import icp.application.classification.WaveletTransformFeatureExtraction;
-import icp.online.app.EpochMessenger;
-import icp.online.app.OffLineDataProvider;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
+import icp.online.app.EpochMessenger;
+import icp.online.app.OffLineDataProvider;
 import icp.online.gui.Chart;
-import icp.online.gui.EpochCharts;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -113,12 +105,12 @@ public class TrainUsingOfflineProvider implements Observer {
             int stimulus = ((EpochMessenger) message).getStimulusIndex();
 
             // 1 = target, 3 = non-target
-            if (stimulus == 1 && numberOfTargets <= numberOfNonTargets) {
+            if (((EpochMessenger) message).isTarget() && numberOfTargets <= numberOfNonTargets) {
                 epochs.add(epoch);
 
                 targets.add(1.0);
                 numberOfTargets++;
-            } else if (stimulus == 3 && numberOfTargets >= numberOfNonTargets) {
+            } else if (!((EpochMessenger) message).isTarget() && numberOfTargets >= numberOfNonTargets) {
                 epochs.add(epoch);
                 targets.add(0.0);
                 numberOfNonTargets++;

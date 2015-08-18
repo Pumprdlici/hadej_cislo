@@ -89,7 +89,10 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         try {
             for (Map.Entry<String, Integer> fileEntry: files.entrySet()) {
                 setFileNames(fileEntry.getKey());
-
+                File file = new File(fileEntry.getKey());
+                if (!file.exists()) {
+                    continue;
+                }
 
                 List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
                 for (ChannelInfo channel : channels) {
@@ -110,7 +113,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 //            java.io.PrintWriter outfile = new java.io.PrintWriter(file);
 //            java.io.PrintWriter pzPw = new java.io.PrintWriter(pzFile);
                 ByteOrder order = ByteOrder.LITTLE_ENDIAN;
-
+                System.out.println(eegFile);
                 double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex, order);
                 double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex, order);
                 double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex, order);
@@ -151,7 +154,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                         em.setPZ(fpzChannel, 100);
 
                         if (em.getStimulusIndex() + 1 == fileEntry.getValue()) {
-                            //System.out.println(em.getStimulusIndex());
+//                            System.out.println(em.getStimulusIndex());
                             em.setTarget(true);
                         }
 
@@ -166,7 +169,6 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                         ex.printStackTrace();
                     }
                 }
-               // System.out.println("File " + fileEntry.getKey() + " red");
             }
 //            outfile.close();
             this.setChanged();
@@ -216,7 +218,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
             if (parts.length > 1) {
                 try {
                     num = Integer.parseInt(parts[1]);
-                    res.put(parts[0], num);
+                    res.put(dir + File.separator + parts[0], num);
                 } catch (NumberFormatException ex) {
                     //NaN
                 }

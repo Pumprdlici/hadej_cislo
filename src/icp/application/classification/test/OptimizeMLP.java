@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class OptimizeMLP {
 	
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		double accuracy = 0;
 		double maxAccuracy = 0;
 		Random random = new Random();

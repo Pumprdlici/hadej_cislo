@@ -14,6 +14,7 @@ import icp.online.app.OffLineDataProvider;
 import icp.online.gui.Chart;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class TrainUsingOfflineProvider implements Observer {
         }
     }
 
-    public TrainUsingOfflineProvider(int iters, int middleNeurons) {
+    public TrainUsingOfflineProvider(int iters, int middleNeurons) throws IOException {
 
         epochs = new ArrayList<double[][]>();
         targets = new ArrayList<Double>();
@@ -68,6 +69,7 @@ public class TrainUsingOfflineProvider implements Observer {
 
         OffLineDataProvider offLineData = new OffLineDataProvider(new File(
                 Const.TRAINING_RAW_DATA_FILE_NAME), this);
+       // OffLineDataProvider offLineData = new OffLineDataProvider("C:\\java\\guess_the_number\\data\\numbers\\Vybrane", this);
         Thread t = new Thread(offLineData);
         t.start();
         try {
@@ -77,7 +79,7 @@ public class TrainUsingOfflineProvider implements Observer {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (classifier == null) {
             TrainUsingOfflineProvider train = new TrainUsingOfflineProvider(
                     2000, 8);

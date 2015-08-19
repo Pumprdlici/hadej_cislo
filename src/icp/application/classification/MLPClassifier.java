@@ -73,7 +73,7 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
 
     @Override
     public double classify(double[][] epoch) {
-        double[] featureVector = this.fe.extractFeatures(epoch);
+    	double[] featureVector = this.fe.extractFeatures(epoch);
 
         // feature vector dimension must correspond to the number of input neurons
         if (featureVector.length != neuralNetwork.getInputsCount()) {
@@ -194,7 +194,10 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
         chartTarget.setVisible(true);
         
         // shuffle the resulting dataset
+        
+        //dataset.save("default_training_dataset");
         dataset.shuffle();
+        dataset.save("default_training_dataset");
         trainingTesting = dataset.createTrainingAndTestSubsets(80, 20);
         
 
@@ -220,7 +223,6 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
     @Override
     public void load(String file) {
         this.neuralNetwork = NeuralNetwork.load(file);
-        System.out.println(toString());
     }
     
     @Override
@@ -259,7 +261,7 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
 		
 	}
 	
-	 private double testNeuralNetwork(DataSet testSet) {
+	 public double testNeuralNetwork(DataSet testSet) {
 		 	int correct = 0, incorrect = 0;
 		    for(DataSetRow dataRow : testSet.getRows()) {
 		        this.neuralNetwork.setInput(dataRow.getInput());

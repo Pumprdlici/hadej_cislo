@@ -59,7 +59,6 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         }
         this.files = loadExpectedResults(trainDir);
         this.running = true;
-        //TODO
     }
 
     private void setFileNames(String filename) {
@@ -84,10 +83,11 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 
     @Override
     public void run() {
-        DataTransformer dt = new EEGDataTransformer();
+
 
         try {
             for (Map.Entry<String, Integer> fileEntry: files.entrySet()) {
+                DataTransformer dt = new EEGDataTransformer();
                 setFileNames(fileEntry.getKey());
                 File file = new File(fileEntry.getKey());
                 if (!file.exists()) {

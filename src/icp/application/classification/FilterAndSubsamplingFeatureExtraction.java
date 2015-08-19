@@ -1,6 +1,7 @@
 package icp.application.classification;
 
 import icp.Const;
+import icp.algorithm.math.ButterWorthFilter;
 import icp.algorithm.math.IFilter;
 import icp.algorithm.math.SignalProcessing;
 import icp.online.gui.MainFrame;
@@ -15,15 +16,15 @@ import icp.online.gui.MainFrame;
  */
 public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction {
 	
-	 private static int[] CHANNELS = {1, 2, 3}; /* EEG channels to be transformed to feature vectors */
+	 private static int[] CHANNELS = {3}; /* EEG channels to be transformed to feature vectors */
 
-	 private int EPOCH_SIZE = 256; /* number of samples to be used - Fs = 1000 Hz expected */
+	 private int EPOCH_SIZE = 650; /* number of samples to be used - Fs = 1000 Hz expected */
 
-	 private int DOWN_SMPL_FACTOR = 16;  /* subsampling factor */
+	 private int DOWN_SMPL_FACTOR = 4;  /* subsampling factor */
 
-	 private int SKIP_SAMPLES = 220; /* skip initial samples in each epoch */
+	 private int SKIP_SAMPLES = 100; /* skip initial samples in each epoch */
 	 
-	 private IFilter filter = null; /* used filter, if no filter is selected -> will be null */
+	 private IFilter filter = new ButterWorthFilter(1, 10, Const.SAMPLING_FQ); /* used filter, if no filter is selected -> will be null */
 
     @Override
     public double[] extractFeatures(double[][] epoch) {
@@ -33,7 +34,10 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
         int i = 0;
 
         // filter the data
-        filter = MainFrame.dataFilter;
+        if (filter == null) {
+            filter = MainFrame.dataFilter;
+        }
+
         for (int channel : CHANNELS) {
             double[] currChannelData = epoch[channel - 1];
             for (int j = 0; j < EPOCH_SIZE; j++) {

@@ -19,6 +19,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.neuroph.core.data.DataSet;
+
 public class TrainUsingOfflineProvider implements Observer {
 
     private final List<double[][]> epochs;
@@ -195,6 +197,19 @@ public class TrainUsingOfflineProvider implements Observer {
             classifier.save(file);
         }
         System.out.println("Training finished.");
+        
+        
+        // try to classify another load dataset 
+        if (classifier instanceof MLPClassifier) {
+        	MLPClassifier mlp = (MLPClassifier)classifier;
+        	DataSet dataset = DataSet.load("testing_dataset");
+        	
+        	System.out.println("Another dataset accuracy: " + mlp.testNeuralNetwork(dataset));
+        	
+        	
+        	
+        	
+        }
     }
 
     /**

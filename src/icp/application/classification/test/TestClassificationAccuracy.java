@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class TestClassificationAccuracy implements Observer {
 
-    private String dir = "data/numbers";
     private final String infoFileName = "info.txt";
 
     private Map<String, Integer> results;
@@ -60,13 +59,12 @@ public class TestClassificationAccuracy implements Observer {
                 results.putAll(map);
                 //System.out.println("Result size  -- " + results.size());
                 for (Entry<String, Integer> entry : localResults.entrySet()) {
-                    f = new File(directory, entry.getKey());
-
+                    f = new File(entry.getKey());
                     if (f.exists() && f.isFile()) {
                         counter++;
                         //System.out.println(counter + ".filename: " + filename + "--" + results.size());
                         end = false;
-                        filename = f.getName();
+                        filename = entry.getKey();
 
                         if (classifier == null) {
                             //classifier = new KNNClassifier();
@@ -163,7 +161,7 @@ public class TestClassificationAccuracy implements Observer {
             if (parts.length > 1) {
                 try {
                     num = Integer.parseInt(parts[1]);
-                    res.put(parts[0], num);
+                    res.put(dir + File.separator + parts[0], num);
                 } catch (NumberFormatException ex) {
                     //NaN
                 }

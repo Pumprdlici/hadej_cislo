@@ -1,0 +1,13 @@
+17ZS/17ZS_14_4_2015_13.eeg 5 5
+17ZS/17ZS_14_4_2015_14.eeg 2 2
+Blatnice/blatnice20141023_20.eeg 2 5 2
+Blatnice/blatnice20141023_24.eeg 1 1
+DolniBela/DolniBela_01.eeg 7 7
+DolniBela/DolniBela_17.eeg 5 5
+DolniBela/DolniBela_20.eeg 4 4
+Horazdovice/Horazdovice_20140512_003.eeg 3 3
+KVary/KarlovyVary_20150507_09.eeg 9 9
+Masarykovo/masarykovo007_20141124.eeg 9 9
+Masarykovo/masarykovo008_20141124.eeg 1 1
+Stankov/Stankov_26_1_20145_27.eeg 4 4
+Strasice/PD_Strasice_7_1_2015_02.eeg 5 5

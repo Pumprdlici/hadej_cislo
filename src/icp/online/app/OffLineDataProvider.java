@@ -91,6 +91,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
                 setFileNames(fileEntry.getKey());
                 File file = new File(fileEntry.getKey());
                 if (!file.exists()) {
+                    System.out.println(file.getAbsolutePath() + " not exists!");
                     continue;
                 }
 
@@ -205,6 +206,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     }
     private Map<String, Integer> loadExpectedResults(String dir) throws IOException {
         Map<String, Integer> res = new HashMap<>();
+      //  File file = new File(dir + File.separator + "infoTrain.txt");
         File file = new File(dir + File.separator + "info.txt");
         FileInputStream fis = new FileInputStream(file);
 

@@ -38,6 +38,7 @@ public class Const {
     //public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/no_artifacts2.dat";
     public static final String TRAINING_RAW_DATA_FILE_NAME = "data/train/no_artifacts2.dat";
     public static final String TRAINING_FILE_NAME = "data/new_models/winnermlpdwt.classifier";
+    public static final String INFO_DIR = "data/numbers";
 
     //----------------------Epoch------------------------
     public static final int PREESTIMULUS_VALUES = 100;
@@ -84,4 +85,5 @@ public class Const {
         "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo", "data/numbers/Stankov", 
          "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2",
         "data/numbers/Tachov", "data/numbers/Tachov2", "data/numbers/ZSBolevecka"};
+    //public static final String[] DIRECTORIES = {"data/numbers"};
 }

@@ -72,6 +72,7 @@ public class TrainUsingOfflineProvider implements Observer {
        // OffLineDataProvider offLineData = new OffLineDataProvider(new File(
        //         Const.TRAINING_RAW_DATA_FILE_NAME), this);
        OffLineDataProvider offLineData = new OffLineDataProvider("C:\\Users\\lukasvareka\\Documents\\guess_the_number\\data\\numbers\\17ZS", this);
+        //OffLineDataProvider offLineData = new OffLineDataProvider(Const.INFO_DIR, this);
         Thread t = new Thread(offLineData);
         t.start();
         try {

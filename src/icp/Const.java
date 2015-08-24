@@ -76,8 +76,12 @@ public class Const {
     public static final int ELECTROD_VALS = 20;
     
     //---------------------TEST---------------------
-    public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
+   /* public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
         "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo", "data/numbers/Stankov", 
         "data/numbers/17ZS", "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2",
+        "data/numbers/Tachov", "data/numbers/Tachov2", "data/numbers/ZSBolevecka"};*/
+    public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
+        "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo", "data/numbers/Stankov", 
+         "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2",
         "data/numbers/Tachov", "data/numbers/Tachov2", "data/numbers/ZSBolevecka"};
 }

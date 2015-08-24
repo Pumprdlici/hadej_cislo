@@ -69,9 +69,9 @@ public class TrainUsingOfflineProvider implements Observer {
         this.iters = iters;
         this.middleNeurons = middleNeurons;
 
-        OffLineDataProvider offLineData = new OffLineDataProvider(new File(
-                Const.TRAINING_RAW_DATA_FILE_NAME), this);
-      // OffLineDataProvider offLineData = new OffLineDataProvider("C:\\java\\guess_the_number\\data\\numbers\\17ZS", this);
+       // OffLineDataProvider offLineData = new OffLineDataProvider(new File(
+       //         Const.TRAINING_RAW_DATA_FILE_NAME), this);
+       OffLineDataProvider offLineData = new OffLineDataProvider("C:\\Users\\lukasvareka\\Documents\\guess_the_number\\data\\numbers\\17ZS", this);
         Thread t = new Thread(offLineData);
         t.start();
         try {
@@ -125,9 +125,9 @@ public class TrainUsingOfflineProvider implements Observer {
     private void train() {
         // create classifiers
 
-        if (classifier == null) {
+        //if (classifier == null) {
             setDefaultClassifier();
-        }
+        //}
 
         double[][] tAvg = new double[epochs.get(0).length][epochs.get(0)[0].length];
         double[][] nAvg = new double[epochs.get(0).length][epochs.get(0)[0].length];
@@ -178,7 +178,7 @@ public class TrainUsingOfflineProvider implements Observer {
         System.out.println("Non-target cnt: " + nCnt);
         System.out.println("Total cnt: " + cnt);*/
 
-        Chart chart = new Chart("Target training data average");
+        /*Chart chart = new Chart("Target training data average");
         chart.update(tAvg);
         chart.pack();
         chart.setVisible(true);
@@ -186,10 +186,11 @@ public class TrainUsingOfflineProvider implements Observer {
         Chart chart2 = new Chart("Non-target training data average");
         chart2.update(nAvg);
         chart2.pack();
-        chart2.setVisible(true);
+        chart2.setVisible(true);*/
 
         // training
         System.out.println("Training started.");
+        //fe = new FilterAndSubsamplingFeatureExtraction();
         classifier.train(this.epochs, this.targets, this.iters, fe);
         if (file == null || file.equals("")) {
             classifier.save(Const.TRAINING_FILE_NAME);
@@ -223,7 +224,7 @@ public class TrainUsingOfflineProvider implements Observer {
         fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8);*/
         //fe = new WaveletTransformFeatureExtraction();
     	fe = new FilterAndSubsamplingFeatureExtraction();
-        int numberOfInputNeurons = fe.getFeatureDimension();
+    	int numberOfInputNeurons = fe.getFeatureDimension();
         int middleNeurons = this.middleNeurons;
         int outputNeurons = 1;
         ArrayList<Integer> nnStructure = new ArrayList<Integer>();

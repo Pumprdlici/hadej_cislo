@@ -113,7 +113,7 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
 //            java.io.PrintWriter outfile = new java.io.PrintWriter(file);
 //            java.io.PrintWriter pzPw = new java.io.PrintWriter(pzFile);
                 ByteOrder order = ByteOrder.LITTLE_ENDIAN;
-                System.out.println(eegFile);
+                //System.out.println(eegFile);
                 double[] fzChannel = dt.readBinaryData(vhdrFile, eegFile, FZIndex, order);
                 double[] czChannel = dt.readBinaryData(vhdrFile, eegFile, CZIndex, order);
                 double[] pzChannel = dt.readBinaryData(vhdrFile, eegFile, PZIndex, order);

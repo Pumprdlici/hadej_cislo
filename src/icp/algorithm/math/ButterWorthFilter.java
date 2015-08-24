@@ -1,11 +1,12 @@
 package icp.algorithm.math;
 
 import icp.Const;
-import biz.source_code.dsp.filter.FilterCharacteristicsType;
-import biz.source_code.dsp.filter.FilterPassType;
-import biz.source_code.dsp.filter.IirFilter;
-import biz.source_code.dsp.filter.IirFilterCoefficients;
-import biz.source_code.dsp.filter.IirFilterDesignFisher;
+import icp.algorithm.math.filter.biz.FilterCharacteristicsType;
+import icp.algorithm.math.filter.biz.FilterPassType;
+import icp.algorithm.math.filter.biz.IirFilter;
+import icp.algorithm.math.filter.biz.IirFilterCoefficients;
+import icp.algorithm.math.filter.biz.IirFilterDesignFisher;
+
 
 /**
  * This class simulates function of IIR ButterWorthFilter using DSP-collection library.
@@ -18,6 +19,8 @@ public class ButterWorthFilter implements IFilter {
 	IirFilter filter;
 	/** Instance of IirFilterCoefficients with impulse response values stored */
 	IirFilterCoefficients coeffs;
+	private double Fa;
+	private double Fb;
 	
 	/**
 	 * Constructor calculates impulse response using DSP-collection and creates instance of IirFilter. 
@@ -59,8 +62,10 @@ public class ButterWorthFilter implements IFilter {
      * @return double[] IirFilterCoefficients instance
      */
 	public IirFilterCoefficients setupFilter(double Fa, double Fb, int sampleRate) {
+		this.Fa = Fa;
+		this.Fb = Fb;
 		IirFilterCoefficients coef = IirFilterDesignFisher.design(FilterPassType.bandpass, 
-				FilterCharacteristicsType.butterworth,
+				FilterCharacteristicsType.chebyshev,
 				1, -1, Fa/sampleRate, Fb/sampleRate);
 		
 		return coef;
@@ -91,5 +96,10 @@ public class ButterWorthFilter implements IFilter {
 		}
 		
 		return result;
+	}
+	
+	
+	public String toString() {
+		return "Butterworth: Fa = " + Fa + " Fb = " + Fb + "\n";
 	}
 }

@@ -183,7 +183,7 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
     	}
         
         
-        Chart chartNonTarget = new Chart("Non-Target feature training data average");
+        /*Chart chartNonTarget = new Chart("Non-Target feature training data average");
         chartNonTarget.update(sumNonTarget);
         chartNonTarget.pack();
         chartNonTarget.setVisible(true);
@@ -191,7 +191,7 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
         Chart chartTarget = new Chart("Target feature training data average");
         chartTarget.update(sumTarget);
         chartTarget.pack();
-        chartTarget.setVisible(true);
+        chartTarget.setVisible(true);*/
         
         // shuffle the resulting dataset
         
@@ -246,13 +246,13 @@ public class MLPClassifier extends ERPClassifierAdapter implements LearningEvent
 	    BackPropagation bp = (BackPropagation) learningEvent.getSource();
 	    lastIteration = bp.getTotalNetworkError();
 	    if (log && bp.getCurrentIteration() % 50 == 0) {
-	    	System.out.println("Current iteration: " + bp.getCurrentIteration());
-	    	System.out.println("Error: " + bp.getTotalNetworkError());
+	    	//System.out.println("Current iteration: " + bp.getCurrentIteration());
+	    	//System.out.println("Error: " + bp.getTotalNetworkError());
 	    	double validationAccuracy = testNeuralNetwork(trainingTesting[1]);
 	    	//System.out.println("Validation accuracy: " + validationAccuracy);
 	    	if (this.maxValidationAccuracy < validationAccuracy) {
 	    		this.maxValidationAccuracy = validationAccuracy;
-	    		System.out.println("-----------------------------\nBest validation accuracy: " + this.maxValidationAccuracy);
+	    		//System.out.println("-----------------------------\nBest validation accuracy: " + this.maxValidationAccuracy);
 	    		this.save("best.txt");
 	    	}
 	    }

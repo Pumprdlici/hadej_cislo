@@ -2,6 +2,7 @@ package icp.application.classification.test;
 
 import icp.Const;
 import icp.online.app.OnlineDetection;
+import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
@@ -74,6 +75,7 @@ public class TestClassificationAccuracy implements Observer {
                             IFeatureExtraction fe = new WaveletTransformFeatureExtraction();
                             classifier.setFeatureExtraction(fe);
                         }
+                        
 
                         OnlineDetection detection = new OnlineDetection(classifier, this);
                         OffLineDataProvider offLineData = new OffLineDataProvider(f, detection);

@@ -11,15 +11,13 @@ import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
-import icp.online.gui.Chart;
+import org.neuroph.core.data.DataSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.neuroph.core.data.DataSet;
 
 public class TrainUsingOfflineProvider implements Observer {
 
@@ -71,8 +69,8 @@ public class TrainUsingOfflineProvider implements Observer {
 
        // OffLineDataProvider offLineData = new OffLineDataProvider(new File(
        //         Const.TRAINING_RAW_DATA_FILE_NAME), this);
-       OffLineDataProvider offLineData = new OffLineDataProvider("C:\\Users\\lukasvareka\\Documents\\guess_the_number\\data\\numbers\\17ZS", this);
-        //OffLineDataProvider offLineData = new OffLineDataProvider(Const.INFO_DIR, this);
+      // OffLineDataProvider offLineData = new OffLineDataProvider("C:\\Users\\lukasvareka\\Documents\\guess_the_number\\data\\numbers\\17ZS", this);
+        OffLineDataProvider offLineData = new OffLineDataProvider(Const.INFO_DIR, this);
         Thread t = new Thread(offLineData);
         t.start();
         try {

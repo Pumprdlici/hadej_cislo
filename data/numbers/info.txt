@@ -1,3 +1,4 @@
+#Data with visible P3
 17ZS/17ZS_14_4_2015_04.eeg 7 7
 17ZS/17ZS_14_4_2015_07.eeg 4 4
 17ZS/17ZS_14_4_2015_9.eeg 5 5
@@ -92,3 +93,87 @@ Tachov2/Tachov_14_05_2015_15.eeg 8 8
 Tachov2/Tachov_14_5_2015_16.eeg 6 6
 Tachov2/Tachov_14_5_2015_20.eeg 6 5 6
 Tachov2/Tachov_14_5_2015_21.eeg 9 9
+
+#Data with artifacts
+17ZS/17ZS_14_4_2015_05.eeg 7 4 2
+17ZS/17ZS_14_4_2015_20.eeg 5 1 5
+17ZS/17ZS_14_4_2015_25.eeg 6 6
+Blatnice/blatnice20131023_13.eeg 3 3
+Blatnice/blatnice20141023_9.eeg 3 3
+Blatnice/blatnice20141023_14.eeg 4 9 4
+Blatnice/blatnice20141023_15.eeg 6 5
+Blatnice/blatnice20141023_16.eeg 3 3
+Blatnice/blatnice20141023_18.eeg 2 5 2
+Blatnice/blatnice20141023_19.eeg 3 3
+Blatnice/blatnice20141023_22.eeg 3 9 7 3
+Blatnice/blatnice20141023_23.eeg 2 6
+DolniBela/DolniBela_02.eeg 7 9
+DolniBela/DolniBela_07.eeg 3 3
+DolniBela/DolniBela_08.eeg 3 1 5 3
+DolniBela/DolniBela_09.eeg 7 4
+DolniBela/DolniBela_10.eeg 3 7 3
+DolniBela/DolniBela_11.eeg 3 7 3
+DolniBela/DolniBela_15.eeg 8 9 8
+DolniBela/DolniBela_19.eeg 6 6
+Horazdovice/Horazdovice_20141204_008.eeg 5 4 2 5
+Horazdovice/Horazdovice20141204_009.eeg 7 7
+Horazdovice/Horazdovice_20141205_004.eeg 2 2
+Horazdovice/Horazdovice_20141204_012.eeg 5 8 5
+Horazdovice/Horazdovice_20141204_014.eeg 3 7 2 1
+Horazdovice/Horazdovice20141204_022.eeg 5 5
+Horazdovice/Horazdovice20141204_024.eeg 1 1
+Horazdovice/Horazdovice20141204_025.eeg 5 2 7 6
+Horazdovice/Horazdovice20141204_028.eeg 2 2
+Horazdovice/Horazdovice20141204_031.eeg 5 4
+KVary/KarlovyVary_20150507_03.eeg 5 4 9
+KVary/KarlovyVary_20150507_04.eeg 7 7
+KVary/KarlovyVary_20150507_05.eeg 6 6
+KVary/KarlovyVary_20150507_08.eeg 2 7 2
+KVary/KarlovyVary_20150507_11.eeg 6 8 1
+Masarykovo/masarykovo003_20141124.eeg 2 1 4 7
+Masarykovo/masarykovo005_20141124.eeg 6 6
+Masarykovo/masarykovo011_20141124.eeg 5 5
+Masarykovo/masarykovo014_20141124.eeg 2 7 8
+Masarykovo/masarykovo015_20141124.eeg 3 9
+Masarykovo/masarykovo017_20141124.eeg 2 2
+Masarykovo/masarykovo018_20141124.eeg 6 6
+Masarykovo/masarykovo020_20141124.eeg 4 4
+SPSD/SPSD_3_2_2015_02.eeg 4 3
+SPSD/SPSD_3_2_2015_05.eeg 4 6 4
+SPSD/SPSD_3_2_2015_08.eeg 6 9 1
+Stankov/Strankov_26_01_2015_03.eeg 5 4 5
+Stankov/Stankov_26_01_2015_04.eeg 7 7
+Stankov/Stankov_26_01_2015_05.eeg 1 1
+Stankov/Stankov_26_01_2015_06.eeg 2 2
+Stankov/Stankov_26_1_2015_13.eeg 5 5
+Stankov/Stankov_26_1_2015_14.eeg 5 6 7
+Stankov/Stankov_26_1_2015_17.eeg 8 5 1 8
+Stankov/Stankov_26_1_2015_19.eeg 7 7
+Stankov/Stankov_26_1_2015_20.eeg 2 4 8 1
+Stankov/Stankov_26_1_2015_25.eeg 7 5
+Stankov/Stankov_26_1_2015_28.eeg 6 2
+Strasice/PD_Strasice_7_1_2015_07.eeg 3 3
+Strasice/PD_Strasice_7_1_2015_09.eeg 3 3
+Strasice/PD_Strasice_7_1_2015_10.eeg 8 8
+Strasice/PD_Strasice_7_1_2015_12.eeg 2 2
+Strasice2/Strasice_4_2_2015_02.eeg 1 1
+Strasice2/Strasice_4_2_2015_07.eeg 7 7
+Strasice2/Strasice_4_2_2015_08.eeg 3 7
+Strasice2/Strasice_4_2_2015_11.eeg 3 3
+Strasice2/Strasice_4_2_2015_12.eeg 3 3
+Strasice2/Strasice_4_2_2015_17.eeg 9 9
+Strasice2/Strasice_4_2_2015_19.eeg 2 1 2
+Strasice2/Strasice_4_2_2015_20.eeg 5 2 5
+Strasice2/Strasice_4_2_2015_21.eeg 2 1 2
+Tachov/Tachov_26_3_2015_04.eeg 4 6 2
+Tachov/Tachov_26_3_2015_06.eeg 7 7
+Tachov/Tachov_26_3_2015_07.eeg 5 6 2
+ZSBolevecka/ZSBolevecka_26_5_2015_04.eeg 9 9
+ZSBolevecka/ZSBolevecka_26_5_2015_08.eeg 3 9
+ZSBolevecka/BoleveckaZS_26_5_2015_09.eeg 7 9
+Tachov2/Tachov_14_5_2015_01.eeg 7 7
+Tachov2/Tachov_14_5_2015_02.eeg 9 9
+Tachov2/Tachov_14_05_2015_05.eeg 9 6 8 1 4
+Tachov2/Tachov_14_5_2015_07.eeg 3 6 1 5
+Tachov2/Tachov_14_5_2015_09.eeg 4 9 7 1
+Tachov2/Tachov_14_5_2015_11.eeg 2 4 5

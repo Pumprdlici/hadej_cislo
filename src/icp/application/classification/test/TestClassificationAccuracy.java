@@ -1,8 +1,6 @@
 package icp.application.classification.test;
 
 import icp.Const;
-import icp.online.app.OnlineDetection;
-import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
@@ -10,7 +8,8 @@ import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.OffLineDataProvider;
-import icp.online.gui.*;
+import icp.online.app.OnlineDetection;
+import icp.online.gui.ProbabilityComparator;
 
 import java.io.*;
 import java.util.*;
@@ -174,6 +173,7 @@ public class TestClassificationAccuracy implements Observer {
 
     private int[] getHumanGuessPercentage(String filename, String dir) throws IOException {
         File file = new File(dir + File.separator + filename);
+
         FileInputStream fis = new FileInputStream(file);
         int fileCount = 0;
         int goodGuess = 0;
@@ -184,6 +184,9 @@ public class TestClassificationAccuracy implements Observer {
 
         String line;
         while ((line = br.readLine()) != null) {
+            if (line.trim().length() == 0 || line.charAt(0) == '#' ) {
+                continue;
+            }
             fileCount++;
             String[] parts = line.split(" ");
             if (parts.length > 2) {
@@ -199,6 +202,7 @@ public class TestClassificationAccuracy implements Observer {
 
         br.close();
         countAllAndGood[0] = fileCount;
+        System.out.println(fileCount);
         countAllAndGood[1] = goodGuess;
         return countAllAndGood;
     }

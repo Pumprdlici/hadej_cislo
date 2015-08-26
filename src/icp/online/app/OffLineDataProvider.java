@@ -206,8 +206,8 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
     }
     private Map<String, Integer> loadExpectedResults(String dir) throws IOException {
         Map<String, Integer> res = new HashMap<>();
-      //  File file = new File(dir + File.separator + "infoTrain.txt");
-        File file = new File(dir + File.separator + "info.txt");
+        File file = new File(dir + File.separator + "infoTrain.txt");
+        //File file = new File(dir + File.separator + "info.txt");
         FileInputStream fis = new FileInputStream(file);
 
         //Construct BufferedReader from InputStreamReader
@@ -216,6 +216,9 @@ public class OffLineDataProvider extends Observable implements Runnable, IDataPr
         String line;
         int num;
         while ((line = br.readLine()) != null) {
+            if (line.charAt(0) == '#') { //comment in info txt
+                continue;
+            }
             String[] parts = line.split(" ");
             if (parts.length > 1) {
                 try {

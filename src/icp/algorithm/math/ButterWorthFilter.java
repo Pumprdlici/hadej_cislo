@@ -84,7 +84,7 @@ public class ButterWorthFilter implements IFilter {
 		double[] result;
 		
 		IirFilterCoefficients temp = IirFilterDesignFisher.design(FilterPassType.bandpass, 
-				FilterCharacteristicsType.butterworth,
+				FilterCharacteristicsType.chebyshev,
 				1, -1, Fa/sampleRate, Fb/sampleRate);
 		
 		result = new double[temp.a.length + temp.b.length];

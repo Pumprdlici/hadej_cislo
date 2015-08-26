@@ -31,10 +31,13 @@ public class TestClassificationAccuracy implements Observer {
     private String filename;
     private boolean end;
     private Map<String, Statistics> stats;
+    private Double humanAccuracy = null;
 
     public static void main(String[] args) throws InterruptedException, IOException {
         TestClassificationAccuracy testClassificationAccuracy = new TestClassificationAccuracy();
-        testClassificationAccuracy.computeHumanAccuracy();
+        //System.out.println();
+        System.out.println("Human accuracy: Total percentage:  " + testClassificationAccuracy.computeHumanAccuracy() + "%");
+        
     }
 
     public TestClassificationAccuracy() throws InterruptedException, IOException {
@@ -110,19 +113,18 @@ public class TestClassificationAccuracy implements Observer {
         outfile.append("\n");
     }
 
-    public void computeHumanAccuracy() throws IOException {
+    public double computeHumanAccuracy() throws IOException {
         int totalGood = 0;
         int fileCount = 0;
         for (String dirName : Const.DIRECTORIES) {
             int[] res = getHumanGuessPercentage(infoFileName, dirName);
             double percentageForDir = (double) res[1] / res[0];
-            System.out.println(dirName + " " + percentageForDir * 100 + "%");
+            //System.out.println(dirName + " " + percentageForDir * 100 + "%");
             totalGood += res[1];
             fileCount += res[0];
         }
-
-        System.out.println();
-        System.out.println("Total percentage: " + (double) totalGood / fileCount * 100 + "%");
+        return (double) totalGood / fileCount * 100;
+        
     }
 
     private void printStats() {
@@ -142,6 +144,17 @@ public class TestClassificationAccuracy implements Observer {
         System.out.println("Perfect guess: " + okNumber);
         double percent = ((double) okNumber / stats.size()) * 100;
         System.out.println("Accuracy: " + percent + " %");
+        try {
+        	if (humanAccuracy == null) {
+        		this.humanAccuracy = this.computeHumanAccuracy();
+           	}
+        		
+        	System.out.println("Human accuracy: " + this.humanAccuracy + " %");
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
@@ -202,7 +215,7 @@ public class TestClassificationAccuracy implements Observer {
 
         br.close();
         countAllAndGood[0] = fileCount;
-        System.out.println(fileCount);
+        //System.out.println(fileCount);
         countAllAndGood[1] = goodGuess;
         return countAllAndGood;
     }

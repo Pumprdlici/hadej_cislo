@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.javafx.css.CalculatedValue;
-
 public class OptimizeMLP {
 	
 	

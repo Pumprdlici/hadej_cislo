@@ -7,10 +7,12 @@ import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.online.app.DataObjects.MessageType;
 import icp.online.app.DataObjects.ObserverMessage;
 import icp.online.app.EpochMessenger;
 import icp.online.app.OffLineDataProvider;
+
 import org.neuroph.core.data.DataSet;
 
 import java.io.File;
@@ -33,7 +35,7 @@ public class TrainUsingOfflineProvider implements Observer {
     private IFilter filter;
 
     public TrainUsingOfflineProvider(IFeatureExtraction fe,
-            IERPClassifier classifier, String file, IFilter filter) {
+            IERPClassifier classifier, String file, IFilter filter)  {
         TrainUsingOfflineProvider.fe = fe;
         TrainUsingOfflineProvider.classifier = classifier;
         TrainUsingOfflineProvider.file = file;
@@ -44,18 +46,23 @@ public class TrainUsingOfflineProvider implements Observer {
         numberOfTargets = 0;
         numberOfNonTargets = 0;
         this.iters = 2000;
-        this.middleNeurons = 0;
+        this.middleNeurons = 8;
 
         OffLineDataProvider offLineData;
-        offLineData = new OffLineDataProvider(new File(
-                Const.TRAINING_RAW_DATA_FILE_NAME), this);
-        Thread t = new Thread(offLineData);
-        t.start();
         try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+			offLineData =  new OffLineDataProvider(Const.INFO_DIR, this);
+			Thread t = new Thread(offLineData);
+	        t.start();
+	        try {
+	            t.join();
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
     }
 
     public TrainUsingOfflineProvider(int iters, int middleNeurons) throws IOException {
@@ -66,6 +73,7 @@ public class TrainUsingOfflineProvider implements Observer {
         numberOfNonTargets = 0;
         this.iters = iters;
         this.middleNeurons = middleNeurons;
+        classifier = null; 
 
        // OffLineDataProvider offLineData = new OffLineDataProvider(new File(
        //         Const.TRAINING_RAW_DATA_FILE_NAME), this);
@@ -124,9 +132,9 @@ public class TrainUsingOfflineProvider implements Observer {
     private void train() {
         // create classifiers
 
-        //if (classifier == null) {
+        if (classifier == null) {
             setDefaultClassifier();
-        //}
+        }
 
         double[][] tAvg = new double[epochs.get(0).length][epochs.get(0)[0].length];
         double[][] nAvg = new double[epochs.get(0).length][epochs.get(0)[0].length];
@@ -198,18 +206,8 @@ public class TrainUsingOfflineProvider implements Observer {
         }
         System.out.println("Training finished.");
         
+     
         
-        // try to classify another load dataset 
-        if (classifier instanceof MLPClassifier) {
-        	MLPClassifier mlp = (MLPClassifier)classifier;
-        	DataSet dataset = DataSet.load("testing_dataset");
-        	
-        	System.out.println("Another dataset accuracy: " + mlp.testNeuralNetwork(dataset));
-        	
-        	
-        	
-        	
-        }
     }
 
     /**
@@ -221,8 +219,8 @@ public class TrainUsingOfflineProvider implements Observer {
     private void setDefaultClassifier() {
         /*Random r = new Random(System.nanoTime());
         fe = new WaveletTransformFeatureExtraction(14, 512, 20, 8);*/
-        //fe = new WaveletTransformFeatureExtraction();
-    	fe = new FilterAndSubsamplingFeatureExtraction();
+        fe = new WaveletTransformFeatureExtraction();
+    	//fe = new FilterAndSubsamplingFeatureExtraction();
     	int numberOfInputNeurons = fe.getFeatureDimension();
         int middleNeurons = this.middleNeurons;
         int outputNeurons = 1;

@@ -37,7 +37,7 @@ public class WaveletTransformFeatureExtraction implements IFeatureExtraction {
 	/**
 	 * Skip initial samples in each epoch
 	 */
-	private int SKIP_SAMPLES = 100;
+	private int SKIP_SAMPLES = 175;
 
 	/**
 	 * Name of the wavelet

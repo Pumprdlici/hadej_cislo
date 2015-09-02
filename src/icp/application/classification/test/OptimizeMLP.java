@@ -54,7 +54,7 @@ public class OptimizeMLP {
 				System.out.println("No record: current accuracy = " + accuracy * 100 + ", max_accuracy = " + maxAccuracy * 100);
 			}
 			
-			System.out.println ("Average value = " + calculateAverage (accuracies) * 100 + " %");
+			System.out.println ("Average value = " + calculateAverage (accuracies) * 100 + " %, calculated from " + accuracies.size() + " samples.");
 			
 			
 		}

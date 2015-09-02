@@ -51,10 +51,10 @@ public class OnlineDetection extends Observable implements Observer {
                     }
                 }
                 double[][] avgEpochStimulus = getAvgEpochWithStimulus(stimulusID, avgEpoch);
-                double classificationResult = this.classifier.classify(avgEpochStimulus);
+                //double classificationResult = this.classifier.classify(avgEpochStimulus);
                 
                 
-                classificationResult += this.classifier.classify(epochMsg.getEpoch());
+                double classificationResult = this.classifier.classify(epochMsg.getEpoch());
                 
                 //double P300relativeEnergy = calcEnergy(epochStimulus, 250, 500) / calcEnergy(epochStimulus, 0, Const.POSTSTIMULUS_VALUES);
                 

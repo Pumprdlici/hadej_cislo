@@ -26,7 +26,7 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
 
 	 private int DOWN_SMPL_FACTOR = 32;  /* subsampling factor */
 
-	 private int SKIP_SAMPLES = 150; /* skip initial samples in each epoch */
+	 private int SKIP_SAMPLES = 175; /* skip initial samples in each epoch */
 	 
 	 
 	 
@@ -59,7 +59,7 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
         if (filter == null) {
             filter = MainFrame.dataFilter;
         }
-        
+                
         for (int channel : CHANNELS) {
             double[] currChannelData = epoch[channel - 1];
             for (int j = 0; j < EPOCH_SIZE; j++) {
@@ -113,7 +113,7 @@ public class FilterAndSubsamplingFeatureExtraction implements IFeatureExtraction
 	
 	@Override
 	public String toString() {
-		return "FilterAndSubsampling: SKIP_SAMPLES = " + this.SKIP_SAMPLES  + ", filter = " + this.filter.toString();
+		return "FilterAndSubsampling: SKIP_SAMPLES = " + this.SKIP_SAMPLES  + ", filter = " + this.filter;
 	}
 
 

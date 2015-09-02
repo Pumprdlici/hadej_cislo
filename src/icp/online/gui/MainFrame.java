@@ -414,7 +414,9 @@ public class MainFrame extends JFrame implements Observer {
                 if (saveResult == JFileChooser.APPROVE_OPTION) {
                     file = save.getSelectedFile().getPath();
                     file += ".classifier";
-                    new TrainUsingOfflineProvider(fe, classifier, file, dataFilter);
+                    
+					new TrainUsingOfflineProvider(fe, classifier, file, dataFilter);
+					
                     setTrained(true);
                 }
             }
@@ -712,6 +714,7 @@ public class MainFrame extends JFrame implements Observer {
                     file = save.getSelectedFile().getPath();
                     file += ".classifier";
                     new TrainUsingOfflineProvider(fe, classifier, file, dataFilter);
+					
                     setTrained(true);
                 }
             } else {

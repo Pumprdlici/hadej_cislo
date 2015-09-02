@@ -177,3 +177,36 @@ Tachov2/Tachov_14_05_2015_05.eeg 9 6 8 1 4
 Tachov2/Tachov_14_5_2015_07.eeg 3 6 1 5
 Tachov2/Tachov_14_5_2015_09.eeg 4 9 7 1
 Tachov2/Tachov_14_5_2015_11.eeg 2 4 5
+
+#rozkmitane
+17ZS/17ZS_14_4_2015_03.eeg 6 2 6
+17ZS/17ZS_14_4_2015_6.eeg 8 8
+17ZS/17ZS_14_4_2015_8.eeg 4 4
+Blatnice/blastnice_20141023_21.eeg 1 1
+DolniBela/DolniBela_03.eeg 2 2
+DolniBela/DolniBela_14.eeg 5 1
+DolniBela/DolniBela_18.eeg 4 4
+Horazdovice/Horazdovice_20141205_001.eeg 4 9 3 4
+Horazdovice/Horazdovice20141204_023.eeg 2 2
+KVary/KarlovyVary_20150507_15.eeg 4 4
+SPSD/SPSD_3_2_2015_04.eeg 1 4 1
+Stankov/Stankov_26_01_2015_08.eeg 5 5
+Stankov/Stankov_26_01_2015_11.eeg 3 4 3
+Stankov/Stankov_26_01_2015_21.eeg 6 6
+Stankov/Stankov_26_1_2015_24.eeg 5 5
+Stankov/Stankov_26_1_2015_29.eeg 9 1
+Strasice/PD_Strasice_7_1_2015_04.eeg 5 5
+Strasice2/Strasice_4_2_2015_15.eeg 3 3
+Strasice2/Strasice_4_2_2015_16.eeg 2 3 2
+Tachov/Tachov_26_3_2015_11.eeg 2 8 1
+ZSBolevecka/ZSBolevecka_26_5_2015_02.eeg 5 5
+ZSBolevecka/ZSBolevecka_26_5_2015_05.eeg 8 8
+ZSBolevecka/ZSBolevec_26_5_2015_10.eeg 6 4 9 7
+ZSBolevecka/ZSBolevecka_26_5_2015_11.eeg 7 7
+ZSBolevecka/ZSBolevecka_26_5_2015_12.eeg 3 3
+ZSBolevecka/ZSBolevecka_26_5_2015_17.eeg 6 4 9 6
+ZSBolevecka/BoleveckaZS_26_5_2015_19.eeg 7 4
+Tachov2/Tachov_14_05_2015_03.eeg 2 5 3
+Tachov2/Tachov_14_5_2015_17.eeg 7 3 7
+Tachov2/Tachov_14_5_2015_18.eeg 7 5 7
+

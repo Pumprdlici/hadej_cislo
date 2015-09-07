@@ -1,6 +1,6 @@
 WaveletTransformFeatureExtraction
 512
-100
+175
 8
 16
 MLPClassifier

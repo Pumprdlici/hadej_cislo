@@ -114,6 +114,8 @@ public class MainFrame extends JFrame implements Observer {
     public static IFilter dataFilter = null;
 
     private String configurationFile;
+    
+    private final SetupDialogContent content = new SetupDialogContent();
 
     public MainFrame() {
         super(Const.APP_NAME);
@@ -781,7 +783,7 @@ public class MainFrame extends JFrame implements Observer {
             } else {
                 initGui();
 
-                SetupDialogContent content = new SetupDialogContent();
+                //SetupDialogContent content = new SetupDialogContent();
                 int result;
                 boolean isOk = false;
                 String recorderIPAddress = null;

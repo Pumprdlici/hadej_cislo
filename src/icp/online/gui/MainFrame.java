@@ -114,7 +114,7 @@ public class MainFrame extends JFrame implements Observer {
     public static IFilter dataFilter = null;
 
     private String configurationFile;
-    
+
     private final SetupDialogContent content = new SetupDialogContent();
 
     public MainFrame() {
@@ -142,18 +142,6 @@ public class MainFrame extends JFrame implements Observer {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         loadConfiguration();
-        File config = new File(configurationFile);
-        if (config.exists()) {
-            readConfiguration(config);
-            loadClassifier();
-            classifier.setFeatureExtraction(fe);
-            setTrained(true);
-        } else {
-            classifier = new MLPClassifier();
-            fe = new FilterAndSubsamplingFeatureExtraction();
-            classifier.setFeatureExtraction(fe);
-            setTrained(false);
-        }
 
         getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
         revalidate();
@@ -263,6 +251,22 @@ public class MainFrame extends JFrame implements Observer {
             configurationFile = open.getSelectedFile().getPath();
         } else {
             configurationFile = "";
+        }
+
+        File config = new File(configurationFile);
+        if (config.exists()) {
+            readConfiguration(config);
+            String path = config.getAbsolutePath();
+            path = path.substring(0, path.lastIndexOf('.')) + ".classifier";
+            classifier.load(path);
+            //loadClassifier();
+            classifier.setFeatureExtraction(fe);
+            setTrained(true);
+        } else {
+            classifier = new MLPClassifier();
+            fe = new FilterAndSubsamplingFeatureExtraction();
+            classifier.setFeatureExtraction(fe);
+            setTrained(false);
         }
     }
 
@@ -416,9 +420,9 @@ public class MainFrame extends JFrame implements Observer {
                 if (saveResult == JFileChooser.APPROVE_OPTION) {
                     file = save.getSelectedFile().getPath();
                     file += ".classifier";
-                    
-					new TrainUsingOfflineProvider(fe, classifier, file, dataFilter);
-					
+
+                    new TrainUsingOfflineProvider(fe, classifier, file, dataFilter);
+
                     setTrained(true);
                 }
             }
@@ -716,7 +720,7 @@ public class MainFrame extends JFrame implements Observer {
                     file = save.getSelectedFile().getPath();
                     file += ".classifier";
                     new TrainUsingOfflineProvider(fe, classifier, file, dataFilter);
-					
+
                     setTrained(true);
                 }
             } else {

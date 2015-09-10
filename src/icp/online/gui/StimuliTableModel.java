@@ -9,7 +9,7 @@ class StimuliTableModel extends AbstractTableModel {
     private final Object[][] data;
 
     StimuliTableModel() {
-        data = new Object[9][2];
+        data = new Object[9][3];
 
         for (int i = 0; i < data.length; i++) {
             data[i][0] = i + 1;

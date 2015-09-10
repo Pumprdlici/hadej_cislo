@@ -23,6 +23,7 @@ import icp.online.app.IDataProvider;
 import icp.online.app.OffLineDataProvider;
 import icp.online.app.OnLineDataProvider;
 import icp.online.app.OnlineDetection;
+import icp.utils.ColorUtils;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -556,32 +557,30 @@ public class MainFrame extends JFrame implements Observer {
 
     private JScrollPane createStimuliJT() {
         data = new StimuliTableModel();
-        JTable stimuliJT = new JTable(data){
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
-			{
-				Component c = super.prepareRenderer(renderer, row, column);
+        JTable stimuliJT = new JTable(data) {
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
 
-				//  Color row based on a cell value
-				c.setBackground(getBackground());
-				int modelRow = convertRowIndexToModel(row);
-				Double weight = (Double)getModel().getValueAt(modelRow, 1);
-				if (weight == null || weight == 0) {
-					c.setBackground(Color.WHITE);
-				} else {
-					c.setBackground(ColorUtils.getHeatColor(0, 1, weight));
-				}
-			
-				
-				return c;
-			}
-		};;
+                //  Color row based on a cell value
+                c.setBackground(getBackground());
+                int modelRow = convertRowIndexToModel(row);
+                Double weight = (Double) getModel().getValueAt(modelRow, 1);
+                if (weight == null || weight == 0) {
+                    c.setBackground(Color.WHITE);
+                } else {
+                    c.setBackground(ColorUtils.convertToRgb(weight));
+                }
+
+                return c;
+            }
+        };
         JScrollPane jsp = new JScrollPane(stimuliJT);
         stimuliJT.setFillsViewportHeight(true);
 
         return jsp;
     }
 
-    private void initProbabilities(double[] probabilities) {
+    private void initProbabilities(double[] probabilities, int[] counts) {
         Integer[] ranks = new Integer[probabilities.length];
         for (int i = 0; i < ranks.length; ++i) {
             ranks[i] = i;
@@ -593,6 +592,7 @@ public class MainFrame extends JFrame implements Observer {
         for (int i = 0; i < probabilities.length; i++) {
             data.setValueAt(probabilities[ranks[i]], i, 1);
             data.setValueAt(ranks[i] + 1, i, 0);
+            data.setValueAt(counts[ranks[i]], i, 2);
         }
 
         this.validate();
@@ -605,8 +605,8 @@ public class MainFrame extends JFrame implements Observer {
         if (message instanceof OnlineDetection) {
             double[] probabilities = ((OnlineDetection) message)
                     .getWeightedResults();
-
-            initProbabilities(probabilities);
+            int[] counts = ((OnlineDetection) message).getClassificationCounters();
+            initProbabilities(probabilities, counts);
 
             this.epochCharts.update(((OnlineDetection) message).getPzAvg());
         } /*
@@ -620,8 +620,10 @@ public class MainFrame extends JFrame implements Observer {
 
     private void initGui() {
         double[] zeros = new double[data.getRowCount()];
+        int[] intZeros = new int[data.getRowCount()];
         Arrays.fill(zeros, 0);
-        initProbabilities(zeros);
+        Arrays.fill(intZeros, 0);
+        initProbabilities(zeros, intZeros);
         winnerJTA.setText(Const.UNKNOWN_RESULT);
     }
 

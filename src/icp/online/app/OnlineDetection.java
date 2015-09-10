@@ -110,4 +110,8 @@ public class OnlineDetection extends Observable implements Observer {
         return weightedResults;
     }
 
+    public int[] getClassificationCounters() {
+        return classificationCounters;
+    }
+
 }

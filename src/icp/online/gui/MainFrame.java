@@ -26,6 +26,7 @@ import icp.online.app.OnlineDetection;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -65,6 +66,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -554,7 +556,25 @@ public class MainFrame extends JFrame implements Observer {
 
     private JScrollPane createStimuliJT() {
         data = new StimuliTableModel();
-        JTable stimuliJT = new JTable(data);
+        JTable stimuliJT = new JTable(data){
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
+			{
+				Component c = super.prepareRenderer(renderer, row, column);
+
+				//  Color row based on a cell value
+				c.setBackground(getBackground());
+				int modelRow = convertRowIndexToModel(row);
+				Double weight = (Double)getModel().getValueAt(modelRow, 1);
+				if (weight == null || weight == 0) {
+					c.setBackground(Color.WHITE);
+				} else {
+					c.setBackground(ColorUtils.getHeatColor(0, 1, weight));
+				}
+			
+				
+				return c;
+			}
+		};;
         JScrollPane jsp = new JScrollPane(stimuliJT);
         stimuliJT.setFillsViewportHeight(true);
 

@@ -244,5 +244,12 @@
 		<scope>system</scope>
 		<systemPath>${basedir}\lib\jdom.jar</systemPath>
 	</dependency>
+	<dependency>
+		<groupId>MPERPs</groupId>
+		<artifactId>MPERPs</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${basedir}\lib\MPERPs.jar</systemPath>
+	</dependency>
     </dependencies>
 </project>

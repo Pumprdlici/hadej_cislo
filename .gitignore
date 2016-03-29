@@ -9,3 +9,4 @@ data/best_class_2_650.txt
 .settings/
 log/
 .gitignore
+/target/

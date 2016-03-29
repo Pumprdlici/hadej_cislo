@@ -168,6 +168,26 @@
     		<version>4.0.2</version>
 	</dependency>
 	<dependency>
+  		<groupId>javaml</groupId>
+  		<artifactId>javaml</artifactId>
+  		<version>0.1.5</version>
+  	</dependency>
+	<dependency>
+		<groupId>tw.edu.ntu.csie</groupId>
+		<artifactId>libsvm</artifactId>
+		<version>3.17</version>
+	</dependency>
+	<dependency>
+		<groupId>jdom</groupId>
+		<artifactId>jdom</artifactId>
+		<version>1.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.xmlgraphics</groupId>
+		<artifactId>fop</artifactId>
+		<version>1.1</version>
+	</dependency>
+	<dependency>
 		<groupId>avalon</groupId>
 		<artifactId>avalon-framework-cvs</artifactId>
 		<version>20020806</version>
@@ -196,32 +216,11 @@
 		<scope>system</scope>
 	</dependency>
 	<dependency>
-		<groupId>fop</groupId>
-		<artifactId>fop</artifactId>
-		<version>1.0</version>
-		<scope>system</scope>
-		<systemPath>${basedir}\lib\fop.jar</systemPath>
-	</dependency>
-	<dependency>
 		<groupId>HHT</groupId>
 		<artifactId>HHT</artifactId>
 		<version>1.0</version>
 		<scope>system</scope>
 		<systemPath>${basedir}\lib\HHT.jar</systemPath>
-	</dependency>
-	<dependency>
-		<groupId>javaml</groupId>
-		<artifactId>javaml</artifactId>
-		<version>0.1.5</version>
-		<scope>system</scope>
-		<systemPath>${basedir}\lib\javaml-0.1.5.jar</systemPath>
-	</dependency>
-	<dependency>
-		<groupId>libsvm</groupId>
-		<artifactId>libsvm</artifactId>
-		<version>1.0</version>
-		<scope>system</scope>
-		<systemPath>${basedir}\lib\libsvm.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>neuroph</groupId>
@@ -236,13 +235,6 @@
 		<version>1.0</version>
 		<scope>system</scope>
 		<systemPath>${basedir}\lib\weka.jar</systemPath>
-	</dependency>
-	<dependency>
-		<groupId>jdom</groupId>
-		<artifactId>jdom</artifactId>
-		<version>1.0</version>
-		<scope>system</scope>
-		<systemPath>${basedir}\lib\jdom.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>MPERPs</groupId>

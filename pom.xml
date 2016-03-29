@@ -241,8 +241,6 @@
 		<groupId>jdom</groupId>
 		<artifactId>jdom</artifactId>
 		<version>1.0</version>
-		<scope>system</scope>
-		<systemPath>${basedir}\lib\jdom.jar</systemPath>
 	</dependency>
 	<dependency>
 		<groupId>MPERPs</groupId>

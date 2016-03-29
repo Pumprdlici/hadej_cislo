@@ -1,14 +1,4 @@
-
-commons-logging
-
-<dependency>
-	<groupId>commons-logging</groupId>
-	<artifactId>commons-logging</artifactId>
-	<version>1.1.1</version>
-</dependency>
-
-
-javaml
+javaml = done
 
 <dependency>
   		<groupId>javaml</groupId>
@@ -16,7 +6,7 @@ javaml
   		<version>0.1.5</version>
   	</dependency>
 
-fop
+fop = done
 
 <dependency>
 	<groupId>org.apache.xmlgraphics</groupId>
@@ -24,7 +14,7 @@ fop
 	<version>1.1</version>
 </dependency>
 
-libsvm
+libsvm = done
 
 <dependency>
 	<groupId>tw.edu.ntu.csie</groupId>
@@ -32,7 +22,7 @@ libsvm
 	<version>3.17</version>
 </dependency>
 
-jdom
+jdom = done
 
 <dependency>
 	<groupId>jdom</groupId>

@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -36,10 +37,14 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 public class DeepLearning implements IERPClassifier {
 	
 	private IFeatureExtraction fe;
-
+	private MultiLayerNetwork model;
+	
+	public DeepLearning(){
+		
+	}
 	
 	 public double classify(double[][] epoch) {
-		 return 0;
+		 return 0; //tady by to chtělo něco udělat
 	 }
 
 	@Override
@@ -103,7 +108,8 @@ public class DeepLearning implements IERPClassifier {
             .build()
         ) // NN layer type
         .build();
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        //MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model = new MultiLayerNetwork(conf);
         model.init();
 //        model.setListeners(Arrays.asList(new ScoreIterationListener(listenerFreq),
 //                new GradientPlotterIterationListener(listenerFreq),
@@ -135,17 +141,24 @@ public class DeepLearning implements IERPClassifier {
         System.out.println("****************Example finished********************");
 
 
-        OutputStream fos = Files.newOutputStream(Paths.get("coefficients.bin"));
-        DataOutputStream dos = new DataOutputStream(fos);
-        Nd4j.write(model.params(), dos);
-        dos.flush();
-        dos.close();
-        FileUtils.writeStringToFile(new File("conf.json"), model.getLayerWiseConfigurations().toJson());
-
-        MultiLayerConfiguration confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("conf.json")));
-        DataInputStream dis = new DataInputStream(new FileInputStream("coefficients.bin"));
-        INDArray newParams = Nd4j.read(dis);
-        dis.close();
+        OutputStream fos;
+        MultiLayerConfiguration confFromJson = null;
+        INDArray newParams = null;
+        try {
+			fos = Files.newOutputStream(Paths.get("coefficients.bin"));
+	        DataOutputStream dos = new DataOutputStream(fos);
+	        Nd4j.write(model.params(), dos);
+	        dos.flush();
+	        dos.close();
+	        FileUtils.writeStringToFile(new File("conf.json"), model.getLayerWiseConfigurations().toJson());
+	
+	        confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("conf.json")));
+	        DataInputStream dis = new DataInputStream(new FileInputStream("coefficients.bin"));
+	        newParams = Nd4j.read(dis);
+	        dis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         MultiLayerNetwork savedNetwork = new MultiLayerNetwork(confFromJson);
         savedNetwork.init();
         savedNetwork.setParams(newParams);
@@ -154,10 +167,13 @@ public class DeepLearning implements IERPClassifier {
 	}
 
 	@Override
-	public ClassificationStatistics test(List<double[][]> epochs,
-			List<Double> targets) {
-		// TODO Auto-generated method stub
-		return null;
+	public ClassificationStatistics test(List<double[][]> epochs,List<Double> targets) {
+		ClassificationStatistics resultsStats = new ClassificationStatistics();
+        for (int i = 0; i < epochs.size(); i++) {
+            double output = this.classify(epochs.get(i));
+            resultsStats.add(output, targets.get(i));
+        }
+        return resultsStats;
 	}
 
 	@Override
@@ -187,6 +203,6 @@ public class DeepLearning implements IERPClassifier {
 	@Override
 	public IFeatureExtraction getFeatureExtraction() {
 		// TODO Auto-generated method stub
-		return null;
+		return fe;
 	}
 }

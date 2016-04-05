@@ -7,6 +7,7 @@ import icp.application.classification.KNNClassifier;
 import icp.application.classification.LinearDiscriminantAnalysisClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.SVMClassifier;
+import icp.application.classification.DeepLearning;
 import icp.application.classification.test.TrainUsingOfflineProvider;
 
 import java.awt.Dimension;
@@ -527,7 +528,18 @@ public class ChangeClassifierFrame extends JFrame {
 					List<String> classifierParams = new ArrayList<String>();
 
 					trainingDialog(c, mainFrame, classifier, classifierParams);
-				} else {
+				}
+				else if (DBNBttn.isSelected()) {
+					JOptionPane
+					.showMessageDialog(null,
+							"Deep Belief Network is not done yet");
+				}
+				else if (AECBttn.isSelected()) {
+					JOptionPane
+					.showMessageDialog(null,
+							"Stacked Auto Encoder is not done yet");
+				}
+				else {
 					JOptionPane
 							.showMessageDialog(null,
 									"Choose one Feature Extraction method and fill in its parameters");

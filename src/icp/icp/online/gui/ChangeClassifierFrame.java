@@ -101,6 +101,10 @@ public class ChangeClassifierFrame extends JFrame {
 	 * Radio button for selecting Correlation classifier
 	 */
 	private JRadioButton correlationBttn;
+	
+	private JRadioButton DBNBttn;
+	
+	private JRadioButton AECBttn;
 
 	/**
 	 * Constructor for creating this window and creating its variables
@@ -173,6 +177,7 @@ public class ChangeClassifierFrame extends JFrame {
 	 * @return panel with radio buttons or selecting classifier
 	 */
 	private JPanel createRadioBttns() {
+			
 		mlpBttn = new JRadioButton("MLP");
 		mlpBttn.setSelected(false);
 		mlpBttn.addActionListener(new ActionListener() {
@@ -232,6 +237,30 @@ public class ChangeClassifierFrame extends JFrame {
 				svmCost.setEnabled(false);
 			}
 		});
+		DBNBttn = new JRadioButton("Deep Belief Network");
+		DBNBttn.setSelected(false);
+		DBNBttn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				middleNeuronsSpinner.setEnabled(false);
+				neighborsNumberSpinner.setEnabled(false);
+				svmCost.setEnabled(false);
+			}
+		});
+		
+		
+		AECBttn = new JRadioButton("Stacked Auto Encoder");
+		AECBttn.setSelected(false);
+		AECBttn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				middleNeuronsSpinner.setEnabled(false);
+				neighborsNumberSpinner.setEnabled(false);
+				svmCost.setEnabled(false);
+			}
+		});		
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(mlpBttn);
@@ -239,6 +268,8 @@ public class ChangeClassifierFrame extends JFrame {
 		group.add(ldaBttn);
 		group.add(svmBttn);
 		group.add(correlationBttn);
+		group.add(AECBttn);
+		group.add(DBNBttn);
 
 		JPanel pane = new JPanel();
 		pane.setBorder(BorderFactory.createTitledBorder("Classifier"));
@@ -248,7 +279,8 @@ public class ChangeClassifierFrame extends JFrame {
 		pane.add(ldaBttn);
 		pane.add(svmBttn);
 		pane.add(correlationBttn);
-
+		pane.add(AECBttn);
+		pane.add(DBNBttn);
 		return pane;
 	}
 
@@ -272,7 +304,14 @@ public class ChangeClassifierFrame extends JFrame {
 
 		// Correlation
 		JPanel correlationPane = createCorrelationPane();
-
+		
+		//DBN dodelat potrebne okna pro korelaci
+		JPanel DBNPane = createDBNPane();
+		
+		//AEC
+		JPanel AECPane = createAECPane();
+		
+		
 		// Buttons
 		JPanel bttnPane = createBttnPane();
 
@@ -283,7 +322,9 @@ public class ChangeClassifierFrame extends JFrame {
 		pane.add(knnPane);
 		pane.add(ldaPane);
 		pane.add(svmPane);
-		pane.add(correlationPane);
+		pane.add(correlationPane);	
+		pane.add(DBNPane);
+		pane.add(AECPane);		
 		pane.add(bttnPane);
 
 		return pane;
@@ -387,6 +428,30 @@ public class ChangeClassifierFrame extends JFrame {
 				.createTitledBorder("Correlation"));
 
 		return correlationPane;
+	}
+	/**
+	 * Creates panel with parameters for DBN
+	 * 
+	 * @return panel with parameters for DBN
+	 */
+	private JPanel createDBNPane() {
+		JPanel DBNPane = new JPanel();
+		DBNPane.setBorder(BorderFactory
+				.createTitledBorder("Deep Belief Network"));
+
+		return DBNPane;
+	}
+	/**
+	 * Creates panel with parameters for AEC
+	 * 
+	 * @return panel with parameters for AEC
+	 */
+	private JPanel createAECPane() {
+		JPanel AECPane = new JPanel();
+		AECPane.setBorder(BorderFactory
+				.createTitledBorder("Stacked Auto Encoder"));
+
+		return AECPane;
 	}
 
 	/**

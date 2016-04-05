@@ -9,7 +9,7 @@ import icp.application.classification.MLPClassifier;
 import icp.application.classification.SVMClassifier;
 import icp.application.classification.DeepLearning;
 import icp.application.classification.test.TrainUsingOfflineProvider;
-
+//SAE must be imported
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -103,9 +103,9 @@ public class ChangeClassifierFrame extends JFrame {
 	 */
 	private JRadioButton correlationBttn;
 	
-	private JRadioButton DBNBttn;
+	private JRadioButton dbnBttn;
 	
-	private JRadioButton AECBttn;
+	private JRadioButton saeBttn;
 
 	/**
 	 * Constructor for creating this window and creating its variables
@@ -238,9 +238,9 @@ public class ChangeClassifierFrame extends JFrame {
 				svmCost.setEnabled(false);
 			}
 		});
-		DBNBttn = new JRadioButton("Deep Belief Network");
-		DBNBttn.setSelected(false);
-		DBNBttn.addActionListener(new ActionListener() {
+		dbnBttn = new JRadioButton("Deep Belief Network");
+		dbnBttn.setSelected(false);
+		dbnBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -251,9 +251,9 @@ public class ChangeClassifierFrame extends JFrame {
 		});
 		
 		
-		AECBttn = new JRadioButton("Stacked Auto Encoder");
-		AECBttn.setSelected(false);
-		AECBttn.addActionListener(new ActionListener() {
+		saeBttn = new JRadioButton("Stacked Auto Encoder");
+		saeBttn.setSelected(false);
+		saeBttn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -269,8 +269,8 @@ public class ChangeClassifierFrame extends JFrame {
 		group.add(ldaBttn);
 		group.add(svmBttn);
 		group.add(correlationBttn);
-		group.add(AECBttn);
-		group.add(DBNBttn);
+		group.add(saeBttn);
+		group.add(dbnBttn);
 
 		JPanel pane = new JPanel();
 		pane.setBorder(BorderFactory.createTitledBorder("Classifier"));
@@ -280,8 +280,8 @@ public class ChangeClassifierFrame extends JFrame {
 		pane.add(ldaBttn);
 		pane.add(svmBttn);
 		pane.add(correlationBttn);
-		pane.add(AECBttn);
-		pane.add(DBNBttn);
+		pane.add(saeBttn);
+		pane.add(dbnBttn);
 		return pane;
 	}
 
@@ -307,10 +307,10 @@ public class ChangeClassifierFrame extends JFrame {
 		JPanel correlationPane = createCorrelationPane();
 		
 		//DBN dodelat potrebne okna pro korelaci
-		JPanel DBNPane = createDBNPane();
+		JPanel dbnPane = createDBNPane();
 		
-		//AEC
-		JPanel AECPane = createAECPane();
+		//SAE
+		JPanel saePane = createSAEPane();
 		
 		
 		// Buttons
@@ -324,8 +324,8 @@ public class ChangeClassifierFrame extends JFrame {
 		pane.add(ldaPane);
 		pane.add(svmPane);
 		pane.add(correlationPane);	
-		pane.add(DBNPane);
-		pane.add(AECPane);		
+		pane.add(dbnPane);
+		pane.add(saePane);		
 		pane.add(bttnPane);
 
 		return pane;
@@ -443,16 +443,16 @@ public class ChangeClassifierFrame extends JFrame {
 		return DBNPane;
 	}
 	/**
-	 * Creates panel with parameters for AEC
+	 * Creates panel with parameters for SAE
 	 * 
-	 * @return panel with parameters for AEC
+	 * @return panel with parameters for SAE
 	 */
-	private JPanel createAECPane() {
-		JPanel AECPane = new JPanel();
-		AECPane.setBorder(BorderFactory
+	private JPanel createSAEPane() {
+		JPanel saePane = new JPanel();
+		saePane.setBorder(BorderFactory
 				.createTitledBorder("Stacked Auto Encoder"));
 
-		return AECPane;
+		return saePane;
 	}
 
 	/**
@@ -529,12 +529,12 @@ public class ChangeClassifierFrame extends JFrame {
 
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
-				else if (DBNBttn.isSelected()) {
+				else if (dbnBttn.isSelected()) {
 					JOptionPane
 					.showMessageDialog(null,
 							"Deep Belief Network is not done yet");
 				}
-				else if (AECBttn.isSelected()) {
+				else if (saeBttn.isSelected()) {
 					JOptionPane
 					.showMessageDialog(null,
 							"Stacked Auto Encoder is not done yet");

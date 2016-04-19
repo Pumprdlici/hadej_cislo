@@ -146,7 +146,7 @@ public class DeepLearning implements IERPClassifier {
     		coefficientsName = "coefficients17.bin";
     	}else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
     		classifierName = "18_MP_DBN.classifier";
-    		coefficientsName = "coefficients16.bin";
+    		coefficientsName = "coefficients18.bin";
     	}
         try {
             fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));

@@ -24,7 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+
 
 public class DeepLearning implements IERPClassifier {
 
@@ -36,7 +36,7 @@ public class DeepLearning implements IERPClassifier {
     }
 
     public double classify(double[][] epoch) {
-        return 0; //tady by to chtělo něco udělat
+        return 1; //tady by to chtělo něco udělat
     }
 
     @Override
@@ -46,10 +46,10 @@ public class DeepLearning implements IERPClassifier {
         //Nd4j.MAX_SLICES_TO_PRINT = -1;
         //Nd4j.MAX_ELEMENTS_PER_SLICE = -1;
 
-        final int numRows = 4;
+        final int numRows = fe.getFeatureDimension();
         final int numColumns = 1;
-        int outputNum = 3;
-        int numSamples = 150;
+        int outputNum = 1;
+        int numSamples = 120;
         int batchSize = 150;
         int iterations = 5;
         int splitTrainNum = (int) (batchSize * .8);
@@ -66,12 +66,14 @@ public class DeepLearning implements IERPClassifier {
             outcomes[i][0] = targets.get(i);
             data.putRow(i, Nd4j.create(features));
         }
-        DataSet next = new DataSet(data, Nd4j.create(outcomes));
+        INDArray output_data = Nd4j.create(outcomes);
+        DataSet next = new DataSet(data, output_data);
 
         next.normalizeZeroMeanZeroUnitVariance();
-        SplitTestAndTrain splitedDataSet = next.splitTestAndTrain(splitTrainNum, new Random(seed));
+        SplitTestAndTrain splitedDataSet = next.splitTestAndTrain(20);
         DataSet train = splitedDataSet.getTrain();
         DataSet test = splitedDataSet.getTest();
+
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed) // Locks in weight initialization for tuning
                 .iterations(iterations) // # training iterations predict/classify & backprop

@@ -2,9 +2,12 @@ package icp.application.classification.test;
 
 import icp.application.classification.ClassificationStatistics;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
+import icp.application.classification.WaveletTransformFeatureExtraction;
+import icp.application.classification.MatchingPursuitFeatureExtraction;
 import icp.application.classification.IERPClassifier;
 import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.DeepLearning;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -87,8 +90,8 @@ public class TestClassificationMain {
 			int outputNeurons 	     = 1;
 			ArrayList<Integer> nnStructure = new ArrayList<Integer>();
 			nnStructure.add(numberOfInputNeurons); nnStructure.add(middleNeurons); nnStructure.add(outputNeurons);
-			IERPClassifier classifier = new MLPClassifier(nnStructure);
-			
+			IERPClassifier classifier = new DeepLearning();//MLPClassifier(nnStructure);
+			//TADY!!!!
 			
 			// training
 			System.out.println("Training started.");

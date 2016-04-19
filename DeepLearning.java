@@ -136,16 +136,28 @@ public class DeepLearning implements IERPClassifier {
         OutputStream fos;
         MultiLayerConfiguration confFromJson = null;
         INDArray newParams = null;
+        String classifierName = "wrong.classifier";
+        String coefficientsName = "wrong.bin";
+    	if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+    		classifierName = "16_F&S_DBN.classifier";
+    		coefficientsName = "coefficients16.bin";
+    	} else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+    		classifierName = "17_DWT_DBN.classifier";
+    		coefficientsName = "coefficients17.bin";
+    	}else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+    		classifierName = "18_MP_DBN.classifier";
+    		coefficientsName = "coefficients16.bin";
+    	}
         try {
-            fos = Files.newOutputStream(Paths.get("coefficients.bin"));
+            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
             DataOutputStream dos = new DataOutputStream(fos);
             Nd4j.write(model.params(), dos);
             dos.flush();
             dos.close();
-            FileUtils.writeStringToFile(new File("conf.json"), model.getLayerWiseConfigurations().toJson());
+            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
 
-            confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("conf.json")));
-            DataInputStream dis = new DataInputStream(new FileInputStream("coefficients.bin"));
+            confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("data/test_classifiers_and_settings/"+classifierName)));
+            DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
             newParams = Nd4j.read(dis);
             dis.close();
         } catch (IOException e) {

@@ -7,6 +7,7 @@ import icp.algorithm.math.IFilter;
 //=======
 import icp.application.classification.CorrelationClassifier;
 //>>>>>>> origin/ZSWI
+import icp.application.classification.DBNClassifier;
 import icp.application.classification.FilterAndSubsamplingFeatureExtraction;
 import icp.application.classification.HHTFeatureExtraction;
 import icp.application.classification.IERPClassifier;
@@ -15,6 +16,7 @@ import icp.application.classification.KNNClassifier;
 import icp.application.classification.LinearDiscriminantAnalysisClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.MatchingPursuitFeatureExtraction;
+import icp.application.classification.SDAClassifier;
 import icp.application.classification.SVMClassifier;
 import icp.application.classification.WaveletTransformFeatureExtraction;
 import icp.application.classification.test.TestClassificationAccuracy;
@@ -229,6 +231,10 @@ public class MainFrame extends JFrame implements Observer {
                 }
             } else if (radka.equals("CorrelationClassifier")) {
                 classifier = new CorrelationClassifier();
+            } else if (radka.equals("DBNClassifier")) {
+            	classifier = new DBNClassifier();
+            } else if (radka.equals("SDAClassifier")) {
+            	classifier = new SDAClassifier();
             }
             br.close();
             fr.close();

@@ -2,8 +2,11 @@ package icp.application.classification;
 
 
 import org.apache.commons.io.FileUtils;
+import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
@@ -16,13 +19,16 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -32,84 +38,94 @@ public class DBNClassifier implements IERPClassifier {
     private MultiLayerNetwork model;
 
     public DBNClassifier() {
-
+    	
     }
     
     @Override
-    public double classify(double[][] epoch) {
-        return 1; //tady by to chtìlo nìco udìlat
+    public double classify(double[][] epoch){
+    	double[] featureVector = this.fe.extractFeatures(epoch);
+        INDArray labels = Nd4j.create(featureVector.length,2);
+        INDArray features = Nd4j.create(featureVector.length,1);
+        for(int i=0;i<featureVector.length;i++){
+            double pom[] = new double[]{0,1};
+            double x[] = new double[]{featureVector[i]};
+            labels.putRow(i,Nd4j.create(pom));
+            features.putRow(i,Nd4j.create(x));
+        }
+        DataSet dataSet = new DataSet(features,labels);
+        INDArray data = dataSet.getFeatureMatrix();
+       // INDArray output = model.output(dataSet.getFeatureMatrix());
+        model.output(Nd4j.create(featureVector), Layer.TrainingMode.TEST);
+        return 0;
     }
 
     @Override
     public void train(List<double[][]> epochs, List<Double> targets,
                       int numberOfiter, IFeatureExtraction fe) {
-        // Customizing params
-        //Nd4j.MAX_SLICES_TO_PRINT = -1;
-        //Nd4j.MAX_ELEMENTS_PER_SLICE = -1;
 
         final int numRows = fe.getFeatureDimension();
-        final int numColumns = 1;
-        int outputNum = 1;
-        int numSamples = 120;
-        int batchSize = 150;
-        int iterations = 5;
-        int splitTrainNum = (int) (batchSize * .8);
+        final int numColumns = 10;
+        int outputNum = 10;
+        int batchSize = 50;
+        int iterations = 10;
         int seed = 123;
-        int listenerFreq = 1;
+        int listenerFreq = batchSize / 5;
 
-        double x = targets.get(0);
-
+        //Load Data
         INDArray data = Nd4j.ones(epochs.size(), fe.getFeatureDimension());
-        double[][] outcomes = new double[targets.size()][(int) x];
+        double[][] outcomes = new double[targets.size()][numColumns];
         for (int i = 0; i < epochs.size(); i++) {
             double[][] epoch = epochs.get(i);
             double[] features = fe.extractFeatures(epoch);
-            outcomes[i][0] = targets.get(i);
+            for(int j=0;j<numColumns;j++)
+            outcomes[i][j] = targets.get(i);
             data.putRow(i, Nd4j.create(features));
         }
         INDArray output_data = Nd4j.create(outcomes);
-        DataSet next = new DataSet(data, output_data);
-
-        next.normalizeZeroMeanZeroUnitVariance();
-        SplitTestAndTrain splitedDataSet = next.splitTestAndTrain(20);
+        DataSet dataSet = new DataSet(data, output_data);
+        dataSet.shuffle();
+        //Split test/train
+        SplitTestAndTrain splitedDataSet = dataSet.splitTestAndTrain(308);
+        List<DataSet> testovani = splitedDataSet.getTest().batchBy(50);
         DataSet train = splitedDataSet.getTrain();
-        DataSet test = splitedDataSet.getTest();
 
+
+        //build
+        System.out.print("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .seed(seed) // Locks in weight initialization for tuning
-                .iterations(iterations) // # training iterations predict/classify & backprop
-                .learningRate(1e-6f) // Optimization step size
-                .optimizationAlgo(OptimizationAlgorithm.CONJUGATE_GRADIENT) // Backprop to calculate gradients
-                .l1(1e-1).regularization(true).l2(2e-4)
-                .useDropConnect(true)
-                .list(2) // # NN layers (doesn't count input layer)
-                .layer(0, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN)
-                        .nIn(numRows * numColumns) // # input nodes
-                        .nOut(3) // # fully connected hidden layer nodes. Add list if multiple layers.
-                        .weightInit(WeightInit.XAVIER) // Weight initialization
-                        .k(1) // # contrastive divergence iterations
-                        .activation("relu") // Activation function type
-                        .lossFunction(LossFunctions.LossFunction.RMSE_XENT) // Loss function type
-                        .updater(org.deeplearning4j.nn.conf.Updater.ADAGRAD)
-                        .dropOut(0.5)
-                        .build()
-                ) // NN layer type
-                .layer(1, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
-                        .nIn(3) // # input nodes
-                        .nOut(outputNum) // # output nodes
-                        .activation("softmax")
-                        .build()
-                ) // NN layer type
+                .seed(seed)
+                .gradientNormalization(GradientNormalization.ClipElementWiseAbsoluteValue)
+                .gradientNormalizationThreshold(1.0)
+                .iterations(iterations)
+                .momentum(0.5)
+                .momentumAfter(Collections.singletonMap(3, 0.9))
+                .optimizationAlgo(OptimizationAlgorithm.CONJUGATE_GRADIENT)
+                .list(4)
+                .layer(0, new RBM.Builder().nIn(numRows).nOut(500)
+                        .weightInit(WeightInit.XAVIER).lossFunction(LossFunction.RMSE_XENT)
+                        .visibleUnit(RBM.VisibleUnit.BINARY)
+                        .hiddenUnit(RBM.HiddenUnit.BINARY)
+                        .build())
+                .layer(1, new RBM.Builder().nIn(500).nOut(250)
+                        .weightInit(WeightInit.XAVIER).lossFunction(LossFunction.RMSE_XENT)
+                        .visibleUnit(RBM.VisibleUnit.BINARY)
+                        .hiddenUnit(RBM.HiddenUnit.BINARY)
+                        .build())
+                .layer(2, new RBM.Builder().nIn(250).nOut(200)
+                        .weightInit(WeightInit.XAVIER).lossFunction(LossFunction.RMSE_XENT)
+                        .visibleUnit(RBM.VisibleUnit.BINARY)
+                        .hiddenUnit(RBM.HiddenUnit.BINARY)
+                        .build())
+                .layer(3, new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD).activation("softmax")
+                        .nIn(200).nOut(outputNum).build())
+                .pretrain(true).backprop(false)
                 .build();
-        //MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model = new MultiLayerNetwork(conf);
         model.init();
-//        model.setListeners(Arrays.asList(new ScoreIterationListener(listenerFreq),
-//                new GradientPlotterIterationListener(listenerFreq),
-//                new LossPlotterIterationListener(listenerFreq)));
-
 
         model.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(listenerFreq)));
+
+
         System.out.println("Train model....");
         model.fit(train);
 
@@ -119,19 +135,16 @@ public class DBNClassifier implements IERPClassifier {
             System.out.println("Weights: " + w);
         }
 
-        System.out.println("Evaluate model....");
         Evaluation eval = new Evaluation(outputNum);
-        INDArray output = model.output(test.getFeatureMatrix());
 
-        for (int i = 0; i < output.rows(); i++) {
-            String actual = test.getLabels().getRow(i).toString().trim();
-            String predicted = output.getRow(i).toString().trim();
-            System.out.println("actual " + actual + " vs predicted " + predicted);
+        System.out.print("Evaluate model....");
+        for(DataSet d : testovani){
+            DataSet test=d;
+            INDArray predict2 = model.output(d.getFeatureMatrix(),false);
+            eval.eval(d.getLabels(),predict2);
         }
-
-        eval.eval(test.getLabels(), output);
-        System.out.println(eval.stats());
-        System.out.println("****************Example finished********************");
+        System.out.print(eval.stats());
+        System.out.print("****************Example finished********************");
 
 
         OutputStream fos;
@@ -190,19 +203,56 @@ public class DBNClassifier implements IERPClassifier {
     @Override
     public void save(OutputStream dest) {
         // TODO Auto-generated method stub
-
+        
     }
 
     @Override
     public void save(String file) {
-        // TODO Auto-generated method stub
-
+//        // TODO Auto-generated method stub
+//    	OutputStream fos;
+//        String classifierName = "wrong.classifier";
+//        String coefficientsName = "wrong.bin";
+//    	if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+//    		classifierName = "16_F&S_DBN.classifier";
+//    		coefficientsName = "coefficients16.bin";
+//    	} else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+//    		classifierName = "17_DWT_DBN.classifier";
+//    		coefficientsName = "coefficients17.bin";
+//    	}else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+//    		classifierName = "18_MP_DBN.classifier";
+//    		coefficientsName = "coefficients18.bin";
+//    	}
+//        try {
+//            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
+//            DataOutputStream dos = new DataOutputStream(fos);
+//            Nd4j.write(model.params(), dos);
+//            dos.flush();
+//            dos.close();
+//            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
     public void load(String file) {
-        // TODO Auto-generated method stub
-
+//        // TODO Auto-generated method stub
+//        MultiLayerConfiguration confFromJson = null;
+//        INDArray newParams = null;
+//
+//        try {
+//        	confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
+//        	DataInputStream dis = new DataInputStream(new FileInputStream(file));
+//        	newParams = Nd4j.read(dis);
+//        	dis.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        MultiLayerNetwork savedNetwork = new MultiLayerNetwork(confFromJson);
+//        savedNetwork.init();
+//        savedNetwork.setParams(newParams);
+//        System.out.println("Original network params " + model.params());
+//        System.out.println(savedNetwork.params());
     }
 
     @Override

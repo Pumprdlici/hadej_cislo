@@ -18,6 +18,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
@@ -26,9 +27,7 @@ import javax.xml.crypto.Data;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 public class DeepLearning implements IERPClassifier {
@@ -39,8 +38,8 @@ public class DeepLearning implements IERPClassifier {
     public DeepLearning() {
 
     }
-
-    public double classify(double[][] epoch) {
+//not working
+   /* public double classify(double[][] epoch) {
 
         double[] featureVector = this.fe.extractFeatures(epoch);
         INDArray labels = Nd4j.create(featureVector.length,2);
@@ -56,7 +55,7 @@ public class DeepLearning implements IERPClassifier {
        // INDArray output = model.output(dataSet.getFeatureMatrix());
         model.output(Nd4j.create(featureVector), Layer.TrainingMode.TEST);
         return 0;
-    }
+    }*/
 
     @Override
     public void train(List<double[][]> epochs, List<Double> targets,
@@ -64,12 +63,13 @@ public class DeepLearning implements IERPClassifier {
 
 
         final int numRows = fe.getFeatureDimension();
-        final int numColumns = 10;
-        int outputNum = 10;
-        int batchSize = 50;
+        final int numColumns = 2;
+        int outputNum = 2;
+        int batchSize = 150;
+        int splitTrainNum = (int) (batchSize * .8);
         int iterations = 10;
         int seed = 123;
-        int listenerFreq = batchSize / 5;
+        int listenerFreq = 4;
 
         //Load Data
         INDArray data = Nd4j.ones(epochs.size(), fe.getFeatureDimension());
@@ -82,11 +82,13 @@ public class DeepLearning implements IERPClassifier {
             data.putRow(i, Nd4j.create(features));
         }
         INDArray output_data = Nd4j.create(outcomes);
+
         DataSet dataSet = new DataSet(data, output_data);
         dataSet.shuffle();
+
         //Split test/train
-        SplitTestAndTrain splitedDataSet = dataSet.splitTestAndTrain(308);
-        List<DataSet> testovani = splitedDataSet.getTest().batchBy(50);
+        SplitTestAndTrain splitedDataSet = dataSet.splitTestAndTrain(splitTrainNum, new Random(seed));
+        Iterator<DataSet> iter = dataSet.iterator();
         DataSet train = splitedDataSet.getTrain();
 
 
@@ -120,9 +122,10 @@ public class DeepLearning implements IERPClassifier {
                         .nIn(200).nOut(outputNum).build())
                 .pretrain(true).backprop(false)
                 .build();
+
+
         model = new MultiLayerNetwork(conf);
         model.init();
-
         model.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(listenerFreq)));
 
 
@@ -135,14 +138,23 @@ public class DeepLearning implements IERPClassifier {
             System.out.println("Weights: " + w);
         }
 
-        Evaluation eval = new Evaluation(outputNum);
 
+        Evaluation eval = new Evaluation(2);
         System.out.print("Evaluate model....");
-        for(DataSet d : testovani){
-            DataSet test=d;
-            INDArray predict2 = model.output(d.getFeatureMatrix(),false);
-            eval.eval(d.getLabels(),predict2);
+        while (iter.hasNext()) {
+            DataSet validation = iter.next();
+            INDArray predict = model.output(validation.getFeatureMatrix(), Layer.TrainingMode.TEST);
+            double a =validation.getLabels().getDouble(0);
+            double b= predict.getDouble(0);
+            eval.eval((int)b,(int)a);
+            for (int i = 0; i < predict.rows(); i++) {
+                String actual = validation.getLabels().getRow(i).toString().trim();
+                String predicted = predict.getRow(i).toString().trim();
+                System.out.print("actual " + actual + " vs predicted " + predicted);
+            }
         }
+
+
         System.out.print(eval.stats());
         System.out.print("****************Example finished********************");
 

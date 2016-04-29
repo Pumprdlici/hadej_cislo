@@ -121,43 +121,7 @@ public class DBNClassifier implements IERPClassifier {
         save(fe);
     }
 
-    private void save(IFeatureExtraction fe) {
-        OutputStream fos;
-        MultiLayerConfiguration confFromJson = null;
-        INDArray newParams = null;
-        String classifierName = "wrong.classifier";
-        String coefficientsName = "wrong.bin";
-        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
-            classifierName = "16_F&S_DBN.classifier";
-            coefficientsName = "coefficients16.bin";
-        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
-            classifierName = "17_DWT_DBN.classifier";
-            coefficientsName = "coefficients17.bin";
-        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
-            classifierName = "18_MP_DBN.classifier";
-            coefficientsName = "coefficients18.bin";
-        }
-        try {
-            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
-            DataOutputStream dos = new DataOutputStream(fos);
-            Nd4j.write(model.params(), dos);
-            dos.flush();
-            dos.close();
-            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
-
-            confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("data/test_classifiers_and_settings/"+classifierName)));
-            DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
-            newParams = Nd4j.read(dis);
-            dis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        MultiLayerNetwork savedNetwork = new MultiLayerNetwork(confFromJson);
-        savedNetwork.init();
-        savedNetwork.setParams(newParams);
-        System.out.println("Original network params " + model.params());
-        System.out.println(savedNetwork.params());
-    }
+    
 
     private void build(int numRows, int numColumns, int outputNum, int iterations, int seed, int listenerFreq) {
         System.out.print("Build model....");
@@ -214,7 +178,43 @@ public class DBNClassifier implements IERPClassifier {
         // TODO Auto-generated method stub
 
     }
+    private void save(IFeatureExtraction fe) {
+        OutputStream fos;
+        MultiLayerConfiguration confFromJson = null;
+        INDArray newParams = null;
+        String classifierName = "wrong.classifier";
+        String coefficientsName = "wrong.bin";
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+            classifierName = "16_F&S_DBN.classifier";
+            coefficientsName = "coefficients16.bin";
+        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+            classifierName = "17_DWT_DBN.classifier";
+            coefficientsName = "coefficients17.bin";
+        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+            classifierName = "18_MP_DBN.classifier";
+            coefficientsName = "coefficients18.bin";
+        }
+        try {
+            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
+            DataOutputStream dos = new DataOutputStream(fos);
+            Nd4j.write(model.params(), dos);
+            dos.flush();
+            dos.close();
+            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
 
+            confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("data/test_classifiers_and_settings/"+classifierName)));
+            DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
+            newParams = Nd4j.read(dis);
+            dis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MultiLayerNetwork savedNetwork = new MultiLayerNetwork(confFromJson);
+        savedNetwork.init();
+        savedNetwork.setParams(newParams);
+        System.out.println("Original network params " + model.params());
+        System.out.println(savedNetwork.params());
+    }
     @Override
     public void save(String file) {
 //        // TODO Auto-generated method stub
@@ -245,33 +245,41 @@ public class DBNClassifier implements IERPClassifier {
 
     @Override
     public void load(String file) {
-//        // TODO Auto-generated method stub
-//        MultiLayerConfiguration confFromJson = null;
-//        INDArray newParams = null;
-//
-//        try {
-//        	confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
-//        	DataInputStream dis = new DataInputStream(new FileInputStream(file));
-//        	newParams = Nd4j.read(dis);
-//        	dis.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        MultiLayerNetwork savedNetwork = new MultiLayerNetwork(confFromJson);
-//        savedNetwork.init();
-//        savedNetwork.setParams(newParams);
-//        System.out.println("Original network params " + model.params());
-//        System.out.println(savedNetwork.params());
+        MultiLayerConfiguration confFromJson = null;
+        try {
+        	confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        model = new MultiLayerNetwork(confFromJson);
     }
 
     @Override
     public IFeatureExtraction getFeatureExtraction() {
-        // TODO Auto-generated method stub
         return fe;
     }
 
     @Override
     public void setFeatureExtraction(IFeatureExtraction fe) {
         this.fe = fe;
+        INDArray newParams = null;
+        String coefficientsName = "wrong.bin";
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+            coefficientsName = "coefficients16.bin";
+        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+            coefficientsName = "coefficients17.bin";
+        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+            coefficientsName = "coefficients18.bin";
+        }
+        try {
+        	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
+        	newParams = Nd4j.read(dis);
+        	dis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        model.init();
+        model.setParams(newParams);
+        System.out.println("Original network params " + model.params());
     }
 }

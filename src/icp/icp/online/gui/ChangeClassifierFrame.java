@@ -7,7 +7,7 @@ import icp.application.classification.KNNClassifier;
 import icp.application.classification.LinearDiscriminantAnalysisClassifier;
 import icp.application.classification.MLPClassifier;
 import icp.application.classification.SVMClassifier;
-import icp.application.classification.DeepLearning;
+import icp.application.classification.DBNClassifier;
 import icp.application.classification.test.TrainUsingOfflineProvider;
 //SAE must be imported
 import java.awt.Dimension;
@@ -530,14 +530,20 @@ public class ChangeClassifierFrame extends JFrame {
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (dbnBttn.isSelected()) {
-					JOptionPane
-					.showMessageDialog(null,
-							"Deep Belief Network is not done yet");
+					IERPClassifier classifier = new CorrelationClassifier();
+					classifier.setFeatureExtraction(fe);
+
+					List<String> classifierParams = new ArrayList<String>();
+
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (saeBttn.isSelected()) {
-					JOptionPane
-					.showMessageDialog(null,
-							"Stacked Auto Encoder is not done yet");
+					IERPClassifier classifier = new CorrelationClassifier();
+					classifier.setFeatureExtraction(fe);
+
+					List<String> classifierParams = new ArrayList<String>();
+
+					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else {
 					JOptionPane

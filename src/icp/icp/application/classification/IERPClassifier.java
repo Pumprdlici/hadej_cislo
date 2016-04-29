@@ -68,4 +68,6 @@ public interface IERPClassifier {
 	public void load(String file);
 
 	public IFeatureExtraction getFeatureExtraction();
+	
+	public void loadConf();
 }

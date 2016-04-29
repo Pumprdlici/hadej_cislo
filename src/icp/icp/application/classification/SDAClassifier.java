@@ -47,14 +47,13 @@ public class SDAClassifier implements IERPClassifier{
     public double classify(double[][] epoch) {
         double[] featureVector = this.fe.extractFeatures(epoch);
         INDArray features = Nd4j.create(featureVector);
-        //---------------------------------------------------tady už musí bejt model inicializovanej !
         double x = model.output(features, Layer.TrainingMode.TEST).getDouble(0);
         return x;
     }
 
     @Override
     public void train(List<double[][]> epochs, List<Double> targets, int numberOfiter, IFeatureExtraction fe) {
-        // TODO Auto-generated method stub
+
         final int numRows = fe.getFeatureDimension();
         final int numColumns = 2;
         int outputNum = 2;
@@ -62,8 +61,7 @@ public class SDAClassifier implements IERPClassifier{
         int seed = 123;
         int listenerFreq = 1;
 
-        double x = targets.get(0);
-
+        //Load Data
         double[][] outcomes = new double[targets.size()][numColumns];
         double [][]data =  new double[targets.size()][fe.getFeatureDimension()];
         for (int i = 0; i < epochs.size(); i++) {
@@ -88,8 +86,8 @@ public class SDAClassifier implements IERPClassifier{
         DataSet test = testAndTrain.getTest();
         Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
 
+        //Build
         build(numRows, numColumns, outputNum, iterations, seed, listenerFreq);
-
 
         System.out.println("Train model....");
         model.fit(train);
@@ -100,8 +98,7 @@ public class SDAClassifier implements IERPClassifier{
             System.out.println("Weights: " + w);
         }
 
-        double a = model.score(test);
-        //Evaluation eval = new Evaluation(outputNum);
+        //double a = model.score(test);
         Iterator<DataSet> iter = test.iterator();
         Evaluation eval =new Evaluation(outputNum);
         while(iter.hasNext()) {
@@ -116,59 +113,10 @@ public class SDAClassifier implements IERPClassifier{
         System.out.println("Evaluate model....");
         System.out.println(eval.stats());
         System.out.println("****************Example finished********************");
-
-
+        
         save(fe);
     }
-
-    private void save(IFeatureExtraction fe) {
-        OutputStream fos;
-        MultiLayerConfiguration confFromJson = null;
-        INDArray newParams = null;
-        String classifierName = "wrong.classifier";
-        String coefficientsName = "wrong.bin";
-        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
-            classifierName = "19_F&S_SDA.classifier";
-            coefficientsName = "coefficients19.bin";
-        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
-            classifierName = "20_DWT_SDA.classifier";
-            coefficientsName = "coefficients20.bin";
-        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
-            classifierName = "21_MP_SDA.classifier";
-            coefficientsName = "coefficients21.bin";
-        }
-        try {
-            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
-            DataOutputStream dos = new DataOutputStream(fos);
-            Nd4j.write(model.params(), dos);
-            dos.flush();
-            dos.close();
-            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
-
-            confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File("data/test_classifiers_and_settings/"+classifierName)));
-            DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
-            newParams = Nd4j.read(dis);
-            dis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        MultiLayerNetwork savedNetwork = new MultiLayerNetwork(confFromJson);
-        savedNetwork.init();
-        savedNetwork.setParams(newParams);
-        System.out.println("Original network params " + model.params());
-        System.out.println(savedNetwork.params());
-    }
-
-    @Override
-    public ClassificationStatistics test(List<double[][]> epochs, List<Double> targets) {
-        ClassificationStatistics resultsStats = new ClassificationStatistics();
-        for (int i = 0; i < epochs.size(); i++) {
-            double output = this.classify(epochs.get(i));
-            resultsStats.add(output, targets.get(i));
-        }
-        return resultsStats;
-    }
-
+    
     private void build(int numRows, int numColumns, int outputNum, int iterations, int seed, int listenerFreq) {
         System.out.print("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
@@ -199,47 +147,81 @@ public class SDAClassifier implements IERPClassifier{
                 .build();
         model = new MultiLayerNetwork(conf);
         model.init();
-
         model.setListeners(Arrays.asList((IterationListener) new ScoreIterationListener(listenerFreq)));
     }
+    
+    @Override
+    public ClassificationStatistics test(List<double[][]> epochs, List<Double> targets) {
+        ClassificationStatistics resultsStats = new ClassificationStatistics();
+        for (int i = 0; i < epochs.size(); i++) {
+            double output = this.classify(epochs.get(i));
+            resultsStats.add(output, targets.get(i));
+        }
+        return resultsStats;
+    }
+    
+    public void loadConf(){
+    	INDArray newParams = null;
+        String coefficientsName = "wrong.bin";
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+            coefficientsName = "coefficients19.bin";
+        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+            coefficientsName = "coefficients20.bin";
+        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+            coefficientsName = "coefficients21.bin";
+        }
+        try {
+        	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
+        	newParams = Nd4j.read(dis);
+        	dis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        model.init();
+        model.setParams(newParams);
+        System.out.println("Original network params " + model.params());
+        System.out.println("Loaded");
+    }
+
     @Override
     public void load(InputStream is) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void save(OutputStream dest) {
-        // TODO Auto-generated method stub
 
     }
-
+    
+    private void save(IFeatureExtraction fe) {
+        OutputStream fos;
+        String classifierName = "wrong.classifier";
+        String coefficientsName = "wrong.bin";
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+            classifierName = "19_F&S_SDA.classifier";
+            coefficientsName = "coefficients19.bin";
+        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+            classifierName = "20_DWT_SDA.classifier";
+            coefficientsName = "coefficients20.bin";
+        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+            classifierName = "21_MP_SDA.classifier";
+            coefficientsName = "coefficients21.bin";
+        }
+        try {
+            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
+            DataOutputStream dos = new DataOutputStream(fos);
+            Nd4j.write(model.params(), dos);
+            dos.flush();
+            dos.close();
+            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     @Override
     public void save(String file) {
-//      // TODO Auto-generated method stub
-//  	OutputStream fos;
-//      String classifierName = "wrong.classifier";
-//      String coefficientsName = "wrong.bin";
-//  	if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
-//  		classifierName = "19_F&S_SDA.classifier";
-//  		coefficientsName = "coefficients19.bin";
-//  	} else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
-//  		classifierName = "20_DWT_SDA.classifier";
-//  		coefficientsName = "coefficients20.bin";
-//  	}else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
-//  		classifierName = "21_MP_SDA.classifier";
-//  		coefficientsName = "coefficients21.bin";
-//  	}
-//      try {
-//          fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
-//          DataOutputStream dos = new DataOutputStream(fos);
-//          Nd4j.write(model.params(), dos);
-//          dos.flush();
-//          dos.close();
-//          FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
-//      } catch (IOException e) {
-//          e.printStackTrace();
-//      }
+
     }
 
     @Override
@@ -262,24 +244,5 @@ public class SDAClassifier implements IERPClassifier{
     @Override
     public void setFeatureExtraction(IFeatureExtraction fe) {
         this.fe = fe;
-        INDArray newParams = null;
-        String coefficientsName = "wrong.bin";
-        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
-            coefficientsName = "coefficients19.bin";
-        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
-            coefficientsName = "coefficients20.bin";
-        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
-            coefficientsName = "coefficients21.bin";
-        }
-        try {
-        	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
-        	newParams = Nd4j.read(dis);
-        	dis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        model.init();
-        model.setParams(newParams);
-        System.out.println("Original network params " + model.params());
     }
 }

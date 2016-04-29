@@ -60,6 +60,6 @@ public class ERPClassifierAdapter implements IERPClassifier {
 	
 	@Override
 	public void loadConf() {
-		throw new NullPointerException();
+		//throw new NullPointerException();
 	}
 }

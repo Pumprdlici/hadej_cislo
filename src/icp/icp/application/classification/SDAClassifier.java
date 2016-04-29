@@ -216,24 +216,70 @@ public class SDAClassifier implements IERPClassifier{
 
     @Override
     public void save(String file) {
-        // TODO Auto-generated method stub
-
+//      // TODO Auto-generated method stub
+//  	OutputStream fos;
+//      String classifierName = "wrong.classifier";
+//      String coefficientsName = "wrong.bin";
+//  	if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+//  		classifierName = "19_F&S_SDA.classifier";
+//  		coefficientsName = "coefficients19.bin";
+//  	} else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+//  		classifierName = "20_DWT_SDA.classifier";
+//  		coefficientsName = "coefficients20.bin";
+//  	}else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+//  		classifierName = "21_MP_SDA.classifier";
+//  		coefficientsName = "coefficients21.bin";
+//  	}
+//      try {
+//          fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
+//          DataOutputStream dos = new DataOutputStream(fos);
+//          Nd4j.write(model.params(), dos);
+//          dos.flush();
+//          dos.close();
+//          FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
+//      } catch (IOException e) {
+//          e.printStackTrace();
+//      }
     }
 
     @Override
     public void load(String file) {
-        // TODO Auto-generated method stub
+    	MultiLayerConfiguration confFromJson = null;
+        try {
+        	confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        model = new MultiLayerNetwork(confFromJson);
 
     }
 
     @Override
     public IFeatureExtraction getFeatureExtraction() {
-        // TODO Auto-generated method stub
         return fe;
     }
 
     @Override
     public void setFeatureExtraction(IFeatureExtraction fe) {
         this.fe = fe;
+        INDArray newParams = null;
+        String coefficientsName = "wrong.bin";
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+            coefficientsName = "coefficients19.bin";
+        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+            coefficientsName = "coefficients20.bin";
+        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+            coefficientsName = "coefficients21.bin";
+        }
+        try {
+        	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
+        	newParams = Nd4j.read(dis);
+        	dis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        model.init();
+        model.setParams(newParams);
+        System.out.println("Original network params " + model.params());
     }
 }

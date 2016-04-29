@@ -270,6 +270,7 @@ public class MainFrame extends JFrame implements Observer {
             classifier.load(path);
             //loadClassifier();
             classifier.setFeatureExtraction(fe);
+            classifier.loadConf();
             setTrained(true);
         } else {
             classifier = new MLPClassifier();

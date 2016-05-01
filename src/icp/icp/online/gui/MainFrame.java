@@ -232,9 +232,19 @@ public class MainFrame extends JFrame implements Observer {
             } else if (radka.equals("CorrelationClassifier")) {
                 classifier = new CorrelationClassifier();
             } else if (radka.equals("DBNClassifier")) {
-            	classifier = new DBNClassifier();
+            	try {
+                    classifier = new DBNClassifier(Integer.parseInt(br
+                            .readLine()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (radka.equals("SDAClassifier")) {
-            	classifier = new SDAClassifier();
+            	try {
+                    classifier = new SDAClassifier(Integer.parseInt(br
+                            .readLine()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             br.close();
             fr.close();

@@ -186,6 +186,7 @@ public class SDAClassifier implements IERPClassifier{
     @Override
     public void save(String file) {
         OutputStream fos;
+        // Choose the name of classifier and coefficient file to save
         String classifierName = "wrong.classifier";
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
@@ -199,7 +200,8 @@ public class SDAClassifier implements IERPClassifier{
             coefficientsName = "coefficients21.bin";
         }
         try {
-            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
+        	// Save classifier and coefficients 
+        	fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
             DataOutputStream dos = new DataOutputStream(fos);
             Nd4j.write(model.params(), dos);
             dos.flush();
@@ -214,6 +216,7 @@ public class SDAClassifier implements IERPClassifier{
     public void load(String file) {
     	MultiLayerConfiguration confFromJson = null;
     	INDArray newParams = null;
+    	// Choose the name of coefficient file to load
     	String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
             coefficientsName = "coefficients19.bin";
@@ -223,14 +226,16 @@ public class SDAClassifier implements IERPClassifier{
             coefficientsName = "coefficients21.bin";
         }
     	try {
-        	confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
+    		// Load classifier and coefficients
+    		confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
         	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
         	newParams = Nd4j.read(dis);
         	dis.close();
     	} catch (IOException e) {
             e.printStackTrace();
         }
-        model = new MultiLayerNetwork(confFromJson);
+    	// Initialize network with loaded params
+    	model = new MultiLayerNetwork(confFromJson);
         model.init();
         model.setParams(newParams);
         System.out.println("Original network params " + model.params());

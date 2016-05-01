@@ -267,10 +267,9 @@ public class MainFrame extends JFrame implements Observer {
             readConfiguration(config);
             String path = config.getAbsolutePath();
             path = path.substring(0, path.lastIndexOf('.')) + ".classifier";
+            classifier.setFeatureExtraction(fe);
             classifier.load(path);
             //loadClassifier();
-            classifier.setFeatureExtraction(fe);
-            classifier.loadConf();
             setTrained(true);
         } else {
             classifier = new MLPClassifier();

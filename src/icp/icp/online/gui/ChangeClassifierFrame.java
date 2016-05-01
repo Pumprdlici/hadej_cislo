@@ -6,6 +6,7 @@ import icp.application.classification.IFeatureExtraction;
 import icp.application.classification.KNNClassifier;
 import icp.application.classification.LinearDiscriminantAnalysisClassifier;
 import icp.application.classification.MLPClassifier;
+import icp.application.classification.SDAClassifier;
 import icp.application.classification.SVMClassifier;
 import icp.application.classification.DBNClassifier;
 import icp.application.classification.test.TrainUsingOfflineProvider;
@@ -530,7 +531,7 @@ public class ChangeClassifierFrame extends JFrame {
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (dbnBttn.isSelected()) {
-					IERPClassifier classifier = new CorrelationClassifier();
+					IERPClassifier classifier = new DBNClassifier();
 					classifier.setFeatureExtraction(fe);
 
 					List<String> classifierParams = new ArrayList<String>();
@@ -538,7 +539,7 @@ public class ChangeClassifierFrame extends JFrame {
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (saeBttn.isSelected()) {
-					IERPClassifier classifier = new CorrelationClassifier();
+					IERPClassifier classifier = new SDAClassifier();
 					classifier.setFeatureExtraction(fe);
 
 					List<String> classifierParams = new ArrayList<String>();

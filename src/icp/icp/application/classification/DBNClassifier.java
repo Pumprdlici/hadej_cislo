@@ -173,6 +173,7 @@ public class DBNClassifier implements IERPClassifier {
     @Override
     public void save(String file) {
     	OutputStream fos;
+    	// Choose the name of classifier and coefficient file to save
         String classifierName = "wrong.classifier";
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
@@ -186,6 +187,7 @@ public class DBNClassifier implements IERPClassifier {
             coefficientsName = "coefficients18.bin";
         }
         try {
+        	// Save classifier and coefficients 
             fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
             DataOutputStream dos = new DataOutputStream(fos);
             Nd4j.write(model.params(), dos);
@@ -201,6 +203,7 @@ public class DBNClassifier implements IERPClassifier {
     public void load(String file) {
         MultiLayerConfiguration confFromJson = null;
         INDArray newParams = null;
+        // Choose the name of coefficient file to load
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
             coefficientsName = "coefficients16.bin";
@@ -210,6 +213,7 @@ public class DBNClassifier implements IERPClassifier {
             coefficientsName = "coefficients18.bin";
         }
         try {
+        	// Load classifier and coefficients
         	confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
         	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
         	newParams = Nd4j.read(dis);
@@ -217,6 +221,7 @@ public class DBNClassifier implements IERPClassifier {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // Initialize network with loaded params
         model = new MultiLayerNetwork(confFromJson);
         model.init();
         model.setParams(newParams);

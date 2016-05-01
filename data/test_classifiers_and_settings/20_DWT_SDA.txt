@@ -4,3 +4,4 @@ WaveletTransformFeatureExtraction
 8
 32
 SDAClassifier
+10

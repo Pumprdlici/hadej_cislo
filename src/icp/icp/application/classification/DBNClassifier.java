@@ -30,14 +30,18 @@ public class DBNClassifier implements IERPClassifier {
 
     private IFeatureExtraction fe;		//type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
     private MultiLayerNetwork model;	//multi layer neural network with a logistic output layer and multiple hidden neuralNets
-
+    int iterations;                   //Iterations used to classify
+    private final int ITER_DEFAULT = 10; // Default number of iterations
+    
     /*Default constructor*/
     public DBNClassifier() {
-
+    	this.iterations = ITER_DEFAULT;
     }
-    /*Parametric constructor
-     * MISSING!!!
-     */
+    
+    /*Parametric constructor */
+    public DBNClassifier(int iterations) {
+    	this.iterations = iterations;
+    }
     
     /*Classifying features*/
     @Override
@@ -56,7 +60,6 @@ public class DBNClassifier implements IERPClassifier {
         final int numRows = fe.getFeatureDimension();
         final int numColumns = 2;
         int outputNum = 2;
-        int iterations = 10;
         int seed = 123;
         int listenerFreq = 1;
 
@@ -86,7 +89,7 @@ public class DBNClassifier implements IERPClassifier {
         Nd4j.ENFORCE_NUMERICAL_STABILITY = true; // Setting to enforce numerical stability
 
         // Build neural net
-        build(numRows, numColumns, outputNum, iterations, seed, listenerFreq);
+        build(numRows, numColumns, outputNum, seed, listenerFreq);
 
         System.out.println("Train model....");
         model.fit(train); // Learning of neural net with training data
@@ -112,10 +115,9 @@ public class DBNClassifier implements IERPClassifier {
         
         System.out.println("Evaluate model....");
         System.out.println(eval.stats()); // Statistics of evaluation
-        System.out.println("****************Example finished********************");
     }
 
-    private void build(int numRows, int numColumns, int outputNum, int iterations, int seed, int listenerFreq) {
+    private void build(int numRows, int numColumns, int outputNum, int seed, int listenerFreq) {
         System.out.print("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder() // Starting builder pattern
                 .seed(seed) // Locks in weight initialization for tuning

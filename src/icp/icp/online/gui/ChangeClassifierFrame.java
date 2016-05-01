@@ -78,6 +78,15 @@ public class ChangeClassifierFrame extends JFrame {
 	 * Spinner for SVM's cost
 	 */
 	private JSpinner svmCost;
+	
+	/**
+	 * Spinner for DBN's iterations
+	 */
+	private JSpinner dbnIter;
+	/**
+	 * Spinner for SDA's iterations
+	 */
+	private JSpinner sdaIter;
 
 	/**
 	 * Radio button for selecting MLP classifier
@@ -104,8 +113,14 @@ public class ChangeClassifierFrame extends JFrame {
 	 */
 	private JRadioButton correlationBttn;
 	
+	/**
+	 * Radio button for selecting DBN classifier
+	 */
 	private JRadioButton dbnBttn;
 	
+	/**
+	 * Radio button for selecting SDA classifier
+	 */
 	private JRadioButton saeBttn;
 
 	/**
@@ -189,6 +204,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(true);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
+				dbnIter.setEnabled(false);
+				sdaIter.setEnabled(false);
 			}
 		});
 
@@ -201,6 +218,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(true);
 				svmCost.setEnabled(false);
+				dbnIter.setEnabled(false);
+				sdaIter.setEnabled(false);
 			}
 		});
 
@@ -213,6 +232,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
+				dbnIter.setEnabled(false);
+				sdaIter.setEnabled(false);
 			}
 		});
 
@@ -225,6 +246,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(true);
+				dbnIter.setEnabled(false);
+				sdaIter.setEnabled(false);
 			}
 		});
 
@@ -237,6 +260,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
+				dbnIter.setEnabled(false);
+				sdaIter.setEnabled(false);
 			}
 		});
 		dbnBttn = new JRadioButton("Deep Belief Network");
@@ -248,6 +273,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
+				dbnIter.setEnabled(true);
+				sdaIter.setEnabled(false);
 			}
 		});
 		
@@ -261,6 +288,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
+				dbnIter.setEnabled(false);
+				sdaIter.setEnabled(true);
 			}
 		});		
 
@@ -307,7 +336,7 @@ public class ChangeClassifierFrame extends JFrame {
 		// Correlation
 		JPanel correlationPane = createCorrelationPane();
 		
-		//DBN dodelat potrebne okna pro korelaci
+		//DBN 
 		JPanel dbnPane = createDBNPane();
 		
 		//SAE
@@ -440,7 +469,15 @@ public class ChangeClassifierFrame extends JFrame {
 		JPanel DBNPane = new JPanel();
 		DBNPane.setBorder(BorderFactory
 				.createTitledBorder("Deep Belief Network"));
+		JLabel iterLabel = new JLabel("Number of Iterations");
+		DBNPane.add(iterLabel);
 
+		SpinnerNumberModel iterSnm = new SpinnerNumberModel(10, 1,
+				1000, 1);
+		dbnIter = new JSpinner(iterSnm);
+		dbnIter.setEnabled(false);
+		dbnIter.setToolTipText("Select number of iterations that will be used for classification.");
+		DBNPane.add(dbnIter);
 		return DBNPane;
 	}
 	/**
@@ -452,7 +489,15 @@ public class ChangeClassifierFrame extends JFrame {
 		JPanel saePane = new JPanel();
 		saePane.setBorder(BorderFactory
 				.createTitledBorder("Stacked Auto Encoder"));
+		JLabel iterLabel = new JLabel("Number of Iterations");
+		saePane.add(iterLabel);
 
+		SpinnerNumberModel iterSnm = new SpinnerNumberModel(10, 1,
+				1000, 1);
+		sdaIter = new JSpinner(iterSnm);
+		sdaIter.setEnabled(false);
+		sdaIter.setToolTipText("Select number of iterations that will be used for classification.");
+		saePane.add(sdaIter);
 		return saePane;
 	}
 
@@ -531,19 +576,23 @@ public class ChangeClassifierFrame extends JFrame {
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (dbnBttn.isSelected()) {
-					IERPClassifier classifier = new DBNClassifier();
+					int iter = (Integer) dbnIter.getValue();
+					IERPClassifier classifier = new DBNClassifier(iter);
 					classifier.setFeatureExtraction(fe);
 
 					List<String> classifierParams = new ArrayList<String>();
-
+					classifierParams.add((Integer) dbnIter.getValue() + "");
+					
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (saeBttn.isSelected()) {
-					IERPClassifier classifier = new SDAClassifier();
+					int iter = (Integer) sdaIter.getValue();
+					IERPClassifier classifier = new SDAClassifier(iter);
 					classifier.setFeatureExtraction(fe);
 
 					List<String> classifierParams = new ArrayList<String>();
-
+					classifierParams.add((Integer) sdaIter.getValue() + "");
+					
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else {

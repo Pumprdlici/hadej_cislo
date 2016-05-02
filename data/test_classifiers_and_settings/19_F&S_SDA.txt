@@ -3,4 +3,4 @@ FilterAndSubsamplingFeatureExtraction
 1
 200
 SDAClassifier
-10
+30

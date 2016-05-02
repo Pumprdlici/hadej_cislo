@@ -23,24 +23,21 @@ import java.util.Random;
 
 
 public class DBNClassifier implements IERPClassifier {
-    private final int ITER_DEFAULT = 50;  // Default number of iterations
-    private final int NEURON_COUNT = 9;
+    private final int NEURON_COUNT = 9; //default number of neurons
     private IFeatureExtraction fe;		//type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
     private MultiLayerNetwork model;	//multi layer neural network with a logistic output layer and multiple hidden neuralNets
-    private int iterations;                   //Iterations used to classify
-    private int neuronCount;
+    private int iterations;             //Iterations used to classify
+    private int neuronCount;			// Number of neurons
 
 
     /*Default constructor*/
     public DBNClassifier() {
-    	this.iterations = ITER_DEFAULT;
         this.neuronCount = NEURON_COUNT;
     }
     
     /*Parametric constructor */
-    public DBNClassifier(int iterations) {
-    	this.iterations = ITER_DEFAULT;
-        this.neuronCount = NEURON_COUNT;
+    public DBNClassifier(int neuronCount) {
+        this.neuronCount = neuronCount;
     }
     
     /*Classifying features*/
@@ -99,7 +96,7 @@ public class DBNClassifier implements IERPClassifier {
                 .list(2) // # NN layers (doesn't count input layer)
                 .layer(0, new RBM.Builder(RBM.HiddenUnit.RECTIFIED, RBM.VisibleUnit.GAUSSIAN) // Setting layer to Restricted Boltzmann machine
                         .nIn(numRows) // # input nodes
-                        .nOut(neuron_count) // # fully connected hidden layer nodes. Add list if multiple layers.
+                        .nOut(neuronCount) // # fully connected hidden layer nodes. Add list if multiple layers.
                         .weightInit(WeightInit.XAVIER) // Weight initialization
                         .k(3) // # contrastive divergence iterations
                         .activation("relu") // Activation function type
@@ -109,7 +106,7 @@ public class DBNClassifier implements IERPClassifier {
                         .build() // Build on set configuration
                 ) // NN layer type
                 .layer(1, new OutputLayer.Builder(LossFunction.MCXENT) //Override default output layer that classifies input by Iris label using softmax
-                        .nIn(neuron_count) // # input nodes
+                        .nIn(neuronCount) // # input nodes
                         .nOut(outputNum) // # output nodes
                         .activation("softmax") // Activation function type
                         .build() // Build on set configuration

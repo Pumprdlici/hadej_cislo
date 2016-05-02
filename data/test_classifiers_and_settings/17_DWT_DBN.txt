@@ -4,4 +4,4 @@ WaveletTransformFeatureExtraction
 8
 32
 DBNClassifier
-10
+9

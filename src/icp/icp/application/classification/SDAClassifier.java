@@ -31,23 +31,19 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 public class SDAClassifier implements IERPClassifier{
-    private final int ITER_COUNT_DEFAULT = 50;
-    private final int NEURON_COUNT_DEFAULT=30;
-    private IFeatureExtraction fe;		//type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
-    private MultiLayerNetwork model;	//multi layer neural network with a logistic output layer and multiple hidden neuralNets
-    private int neuronCount;
-    private int iterations;                   //Iterations used to classify
-     // Default number of iterations
+    private final int NEURON_COUNT_DEFAULT=30; 	//default number of neurons
+    private IFeatureExtraction fe;				//type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
+    private MultiLayerNetwork model;			//multi layer neural network with a logistic output layer and multiple hidden neuralNets
+    private int neuronCount;					// Number of neurons
+    private int iterations;                   	//Iterations used to classify
     
     /*Default constructor*/
     public SDAClassifier(){
-    	this.iterations = ITER_COUNT_DEFAULT;
         this.neuronCount = NEURON_COUNT_DEFAULT;
     }
     
     /*Parametric constructor */
     public SDAClassifier(int neuronCount) {
-        this.iterations = ITER_COUNT_DEFAULT;
         this.neuronCount = neuronCount;
     }
     
@@ -56,7 +52,7 @@ public class SDAClassifier implements IERPClassifier{
     public double classify(double[][] epoch) {
     	double[] featureVector = this.fe.extractFeatures(epoch); // Extracting features to vector
         INDArray features = Nd4j.create(featureVector); // Creating INDArray with extracted features
-        return model.output(features, Layer.TrainingMode.TEST).getDouble(0);
+        return model.output(features, Layer.TrainingMode.TEST).getDouble(0); // Result of classifying
     }
 
     @Override
@@ -113,14 +109,14 @@ public class SDAClassifier implements IERPClassifier{
                 .momentumAfter(Collections.singletonMap(3, 0.9)) //Map of the iteration to the momentum rate to apply at that iteration
                 .optimizationAlgo(OptimizationAlgorithm.CONJUGATE_GRADIENT) // Backprop to calculate gradients
                 .list(2) // # NN layers (doesn't count input layer)
-                .layer(0, new AutoEncoder.Builder().nIn(numRows).nOut(30) // Setting layer to Autoencoder
+                .layer(0, new AutoEncoder.Builder().nIn(numRows).nOut(neuronCount) // Setting layer to Autoencoder
                         .weightInit(WeightInit.XAVIER).lossFunction(LossFunction.RMSE_XENT) // Weight initialization
                         .corruptionLevel(0.3) // Set level of corruption
                         .build() // Build on set configuration
                 ) // NN layer type
                 .layer(1, new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD)//Override default output layer that classifies input using softmax
                 		.activation("softmax") // Activation function type
-                        .nIn(30) // # input nodes
+                        .nIn(neuronCount) // # input nodes
                         .nOut(outputNum) // # output nodes
                         .build() // Build on set configuration
                  ) // NN layer type

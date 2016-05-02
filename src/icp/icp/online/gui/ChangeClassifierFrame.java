@@ -82,11 +82,11 @@ public class ChangeClassifierFrame extends JFrame {
 	/**
 	 * Spinner for DBN's iterations
 	 */
-	private JSpinner dbnIter;
+	private JSpinner dbnNeuron;
 	/**
 	 * Spinner for SDA's iterations
 	 */
-	private JSpinner sdaIter;
+	private JSpinner sdaNeuron;
 
 	/**
 	 * Radio button for selecting MLP classifier
@@ -204,8 +204,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(true);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
-				dbnIter.setEnabled(false);
-				sdaIter.setEnabled(false);
+				dbnNeuron.setEnabled(false);
+				sdaNeuron.setEnabled(false);
 			}
 		});
 
@@ -218,8 +218,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(true);
 				svmCost.setEnabled(false);
-				dbnIter.setEnabled(false);
-				sdaIter.setEnabled(false);
+				dbnNeuron.setEnabled(false);
+				sdaNeuron.setEnabled(false);
 			}
 		});
 
@@ -232,8 +232,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
-				dbnIter.setEnabled(false);
-				sdaIter.setEnabled(false);
+				dbnNeuron.setEnabled(false);
+				sdaNeuron.setEnabled(false);
 			}
 		});
 
@@ -246,8 +246,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(true);
-				dbnIter.setEnabled(false);
-				sdaIter.setEnabled(false);
+				dbnNeuron.setEnabled(false);
+				sdaNeuron.setEnabled(false);
 			}
 		});
 
@@ -260,8 +260,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
-				dbnIter.setEnabled(false);
-				sdaIter.setEnabled(false);
+				dbnNeuron.setEnabled(false);
+				sdaNeuron.setEnabled(false);
 			}
 		});
 		dbnBttn = new JRadioButton("Deep Belief Network");
@@ -273,8 +273,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
-				dbnIter.setEnabled(true);
-				sdaIter.setEnabled(false);
+				dbnNeuron.setEnabled(true);
+				sdaNeuron.setEnabled(false);
 			}
 		});
 		
@@ -288,8 +288,8 @@ public class ChangeClassifierFrame extends JFrame {
 				middleNeuronsSpinner.setEnabled(false);
 				neighborsNumberSpinner.setEnabled(false);
 				svmCost.setEnabled(false);
-				dbnIter.setEnabled(false);
-				sdaIter.setEnabled(true);
+				dbnNeuron.setEnabled(false);
+				sdaNeuron.setEnabled(true);
 			}
 		});		
 
@@ -469,15 +469,16 @@ public class ChangeClassifierFrame extends JFrame {
 		JPanel DBNPane = new JPanel();
 		DBNPane.setBorder(BorderFactory
 				.createTitledBorder("Deep Belief Network"));
-		JLabel iterLabel = new JLabel("Number of Iterations");
+		DBNPane.setLayout(new GridLayout(0, 2));
+		JLabel iterLabel = new JLabel("Number of neurons");
 		DBNPane.add(iterLabel);
 
-		SpinnerNumberModel iterSnm = new SpinnerNumberModel(10, 1,
-				1000, 1);
-		dbnIter = new JSpinner(iterSnm);
-		dbnIter.setEnabled(false);
-		dbnIter.setToolTipText("Select number of iterations that will be used for classification.");
-		DBNPane.add(dbnIter);
+		SpinnerNumberModel iterSnm = new SpinnerNumberModel(9, 1,
+				48, 1);
+		dbnNeuron = new JSpinner(iterSnm);
+		dbnNeuron.setEnabled(false);
+		dbnNeuron.setToolTipText("Select number of neurons that will be used for classification.");
+		DBNPane.add(dbnNeuron);
 		return DBNPane;
 	}
 	/**
@@ -489,15 +490,16 @@ public class ChangeClassifierFrame extends JFrame {
 		JPanel saePane = new JPanel();
 		saePane.setBorder(BorderFactory
 				.createTitledBorder("Stacked Auto Encoder"));
-		JLabel iterLabel = new JLabel("Number of Iterations");
+		saePane.setLayout(new GridLayout(0, 2));
+		JLabel iterLabel = new JLabel("Number of neurons");
 		saePane.add(iterLabel);
 
-		SpinnerNumberModel iterSnm = new SpinnerNumberModel(10, 1,
-				1000, 1);
-		sdaIter = new JSpinner(iterSnm);
-		sdaIter.setEnabled(false);
-		sdaIter.setToolTipText("Select number of iterations that will be used for classification.");
-		saePane.add(sdaIter);
+		SpinnerNumberModel iterSnm = new SpinnerNumberModel(30, 1,
+				48, 1);
+		sdaNeuron = new JSpinner(iterSnm);
+		sdaNeuron.setEnabled(false);
+		sdaNeuron.setToolTipText("Select number of neurons that will be used for classification.");
+		saePane.add(sdaNeuron);
 		return saePane;
 	}
 
@@ -576,22 +578,22 @@ public class ChangeClassifierFrame extends JFrame {
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (dbnBttn.isSelected()) {
-					int iter = (Integer) dbnIter.getValue();
-					IERPClassifier classifier = new DBNClassifier(iter);
+					int neurons = (Integer) dbnNeuron.getValue();
+					IERPClassifier classifier = new DBNClassifier(neurons);
 					classifier.setFeatureExtraction(fe);
 
 					List<String> classifierParams = new ArrayList<String>();
-					classifierParams.add((Integer) dbnIter.getValue() + "");
+					classifierParams.add((Integer) dbnNeuron.getValue() + "");
 					
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}
 				else if (saeBttn.isSelected()) {
-					int iter = (Integer) sdaIter.getValue();
-					IERPClassifier classifier = new SDAClassifier(iter);
+					int neurons = (Integer) sdaNeuron.getValue();
+					IERPClassifier classifier = new SDAClassifier(neurons);
 					classifier.setFeatureExtraction(fe);
 
 					List<String> classifierParams = new ArrayList<String>();
-					classifierParams.add((Integer) sdaIter.getValue() + "");
+					classifierParams.add((Integer) sdaNeuron.getValue() + "");
 					
 					trainingDialog(c, mainFrame, classifier, classifierParams);
 				}

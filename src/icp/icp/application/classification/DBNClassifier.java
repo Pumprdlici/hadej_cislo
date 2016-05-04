@@ -82,10 +82,10 @@ public class DBNClassifier implements IERPClassifier {
 
     private void build(int numRows, int outputNum, int seed, int listenerFreq) {
         System.out.print("Build model....");
-        Random rand = new Random();
-        int neuron_count = rand.nextInt(48);
-        int contrastive = rand.nextInt(15);
-        System.out.println("kontrast iter :" + contrastive + "/n" +  "pocet neuronu :" + neuron_count);
+//        Random rand = new Random();
+//        int neuron_count = rand.nextInt(48);
+//        int contrastive = rand.nextInt(15);
+//        System.out.println("kontrast iter :" + contrastive + "/n" +  "pocet neuronu :" + neuron_count);
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder() // Starting builder pattern
                 .seed(seed) // Locks in weight initialization for tuning
                 .iterations(this.iterations) // # training iterations predict/classify & backprop

@@ -49,6 +49,8 @@ public class DBNClassifier implements IERPClassifier {
 
     @Override
     public void train(List<double[][]> epochs, List<Double> targets, int numberOfIter, IFeatureExtraction fe) {
+        
+        // Customizing params
         final int numRows = fe.getFeatureDimension();
         final int numColumns = 2;
         int seed = 123;

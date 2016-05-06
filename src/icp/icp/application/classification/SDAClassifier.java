@@ -68,11 +68,9 @@ public class SDAClassifier implements IERPClassifier{
         //Load Data
         double[][] outcomes = new double[targets.size()][numColumns]; // Matrix of outcomes
         double[][] data = new double[targets.size()][numRows]; // Matrix of data
-
         for (int i = 0; i < epochs.size(); i++) { // Iterating through epochs
             double[][] epoch = epochs.get(i); // Each epoch
             double[] features = fe.extractFeatures(epoch); // Feature of each epoch
-
             for (int j = 0; j < numColumns; j++) {
                 outcomes[i][0] = targets.get(i); // Setting outcome to target
                 outcomes[i][1] = Math.abs(1 - targets.get(i)); // Setting outcome to target
@@ -91,11 +89,11 @@ public class SDAClassifier implements IERPClassifier{
         System.out.println("Train model....");
         model.fit(dataSet); // Learning of neural net with training data
 
-        System.out.println("Evaluate weights....");
-        for (org.deeplearning4j.nn.api.Layer layer : model.getLayers()) {
-            INDArray w = layer.getParam(DefaultParamInitializer.WEIGHT_KEY);
-            System.out.println("Weights: " + w);
-        }
+//        System.out.println("Evaluate weights....");
+//        for (org.deeplearning4j.nn.api.Layer layer : model.getLayers()) {
+//           INDArray w = layer.getParam(DefaultParamInitializer.WEIGHT_KEY);
+//            System.out.println("Weights: " + w);
+//        }
     }
     
     private void build(int numRows, int outputNum, int seed, int listenerFreq) {
@@ -153,16 +151,12 @@ public class SDAClassifier implements IERPClassifier{
     public void save(String file) {
         OutputStream fos;
         // Choose the name of classifier and coefficient file to save
-        String classifierName = "wrong.classifier";
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
-            classifierName = "19_F&S_SDA.classifier";
             coefficientsName = "coefficients19.bin";
         } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
-            classifierName = "20_DWT_SDA.classifier";
             coefficientsName = "coefficients20.bin";
         }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
-            classifierName = "21_MP_SDA.classifier";
             coefficientsName = "coefficients21.bin";
         }
         try {
@@ -172,7 +166,7 @@ public class SDAClassifier implements IERPClassifier{
             Nd4j.write(model.params(), dos);
             dos.flush();
             dos.close();
-            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
+            FileUtils.writeStringToFile(new File(file), model.getLayerWiseConfigurations().toJson());
         } catch (IOException e) {
             e.printStackTrace();
         }

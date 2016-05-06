@@ -1,0 +1,6 @@
+FilterAndSubsamplingFeatureExtraction
+512
+1
+200
+SDAClassifier
+25

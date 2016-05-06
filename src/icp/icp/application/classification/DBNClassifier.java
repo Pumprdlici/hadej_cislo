@@ -23,12 +23,11 @@ import java.util.Random;
 
 
 public class DBNClassifier implements IERPClassifier {
-    private final int NEURON_COUNT = 9; //default number of neurons
+    private final int NEURON_COUNT = 24; //default number of neurons
     private IFeatureExtraction fe;		//type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
     private MultiLayerNetwork model;	//multi layer neural network with a logistic output layer and multiple hidden neuralNets
     private int iterations;             //Iterations used to classify
     private int neuronCount;			// Number of neurons
-
 
     /*Default constructor*/
     public DBNClassifier() {
@@ -82,10 +81,6 @@ public class DBNClassifier implements IERPClassifier {
 
     private void build(int numRows, int outputNum, int seed, int listenerFreq) {
         System.out.print("Build model....");
-//        Random rand = new Random();
-//        int neuron_count = rand.nextInt(48);
-//        int contrastive = rand.nextInt(15);
-//        System.out.println("kontrast iter :" + contrastive + "/n" +  "pocet neuronu :" + neuron_count);
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder() // Starting builder pattern
                 .seed(seed) // Locks in weight initialization for tuning
                 .iterations(this.iterations) // # training iterations predict/classify & backprop
@@ -141,16 +136,12 @@ public class DBNClassifier implements IERPClassifier {
     public void save(String file) {
     	OutputStream fos;
     	// Choose the name of classifier and coefficient file to save
-        String classifierName = "wrong.classifier";
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
-            classifierName = "16_F&S_DBN.classifier";
             coefficientsName = "coefficients16.bin";
         } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
-            classifierName = "17_DWT_DBN.classifier";
             coefficientsName = "coefficients17.bin";
         }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
-            classifierName = "18_MP_DBN.classifier";
             coefficientsName = "coefficients18.bin";
         }
         try {
@@ -160,7 +151,7 @@ public class DBNClassifier implements IERPClassifier {
             Nd4j.write(model.params(), dos);
             dos.flush();
             dos.close();
-            FileUtils.writeStringToFile(new File("data/test_classifiers_and_settings/"+classifierName), model.getLayerWiseConfigurations().toJson());
+            FileUtils.writeStringToFile(new File(file), model.getLayerWiseConfigurations().toJson());
         } catch (IOException e) {
             e.printStackTrace();
         }

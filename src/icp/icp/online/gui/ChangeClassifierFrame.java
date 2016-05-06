@@ -299,8 +299,9 @@ public class ChangeClassifierFrame extends JFrame {
 		group.add(ldaBttn);
 		group.add(svmBttn);
 		group.add(correlationBttn);
-		group.add(saeBttn);
 		group.add(dbnBttn);
+		group.add(saeBttn);
+		
 
 		JPanel pane = new JPanel();
 		pane.setBorder(BorderFactory.createTitledBorder("Classifier"));
@@ -310,8 +311,8 @@ public class ChangeClassifierFrame extends JFrame {
 		pane.add(ldaBttn);
 		pane.add(svmBttn);
 		pane.add(correlationBttn);
-		pane.add(saeBttn);
 		pane.add(dbnBttn);
+		pane.add(saeBttn);
 		return pane;
 	}
 
@@ -473,7 +474,7 @@ public class ChangeClassifierFrame extends JFrame {
 		JLabel iterLabel = new JLabel("Number of neurons");
 		DBNPane.add(iterLabel);
 
-		SpinnerNumberModel iterSnm = new SpinnerNumberModel(9, 1,
+		SpinnerNumberModel iterSnm = new SpinnerNumberModel(24, 1,
 				48, 1);
 		dbnNeuron = new JSpinner(iterSnm);
 		dbnNeuron.setEnabled(false);
@@ -494,7 +495,7 @@ public class ChangeClassifierFrame extends JFrame {
 		JLabel iterLabel = new JLabel("Number of neurons");
 		saePane.add(iterLabel);
 
-		SpinnerNumberModel iterSnm = new SpinnerNumberModel(30, 1,
+		SpinnerNumberModel iterSnm = new SpinnerNumberModel(24, 1,
 				48, 1);
 		sdaNeuron = new JSpinner(iterSnm);
 		sdaNeuron.setEnabled(false);

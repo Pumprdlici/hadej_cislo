@@ -21,7 +21,6 @@ import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.AutoEncoder;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.params.DefaultParamInitializer;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.api.IterationListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -30,27 +29,28 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
-public class SDAClassifier implements IERPClassifier{
-    private final int NEURON_COUNT_DEFAULT=30; 	//default number of neurons
-    private IFeatureExtraction fe;				//type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
-    private MultiLayerNetwork model;			//multi layer neural network with a logistic output layer and multiple hidden neuralNets
-    private int neuronCount;					// Number of neurons
-    private int iterations;                   	//Iterations used to classify
-    
+// creates instance of Stacked Denoising Autoencoder @author Pumprdlici group
+public class SDAClassifier implements IERPClassifier {
+    private final int NEURON_COUNT_DEFAULT = 30;    //default number of neurons
+    private IFeatureExtraction fe;                //type of feature extraction (MatchingPursuit, FilterAndSubampling or WaveletTransform)
+    private MultiLayerNetwork model;            //multi layer neural network with a logistic output layer and multiple hidden neuralNets
+    private int neuronCount;                    // Number of neurons
+    private int iterations;                    //Iterations used to classify
+
     /*Default constructor*/
-    public SDAClassifier(){
-        this.neuronCount = NEURON_COUNT_DEFAULT;
+    public SDAClassifier() {
+        this.neuronCount = NEURON_COUNT_DEFAULT; // sets count of neurons in layer(0) to default number
     }
-    
+
     /*Parametric constructor */
     public SDAClassifier(int neuronCount) {
-        this.neuronCount = neuronCount;
+        this.neuronCount = neuronCount; // sets count of neurons in layer(0) to param
     }
-    
+
     /*Classifying features*/
     @Override
     public double classify(double[][] epoch) {
-    	double[] featureVector = this.fe.extractFeatures(epoch); // Extracting features to vector
+        double[] featureVector = this.fe.extractFeatures(epoch); // Extracting features to vector
         INDArray features = Nd4j.create(featureVector); // Creating INDArray with extracted features
         return model.output(features, Layer.TrainingMode.TEST).getDouble(0); // Result of classifying
     }
@@ -58,44 +58,40 @@ public class SDAClassifier implements IERPClassifier{
     @Override
     public void train(List<double[][]> epochs, List<Double> targets, int numberOfiter, IFeatureExtraction fe) {
 
-        // Customizing params
-        final int numRows = fe.getFeatureDimension();
-        final int numColumns = 2;
-        this.iterations = numberOfiter;
-        int listenerFreq = numberOfiter/10;
-        int seed = 123;
+        // Customizing params of classifier
+        final int numRows = fe.getFeatureDimension();   // number of targets on a line
+        final int numColumns = 2;   // number of labels needed for classifying
+        this.iterations = numberOfiter; // number of iteration in the learning phase
+        int listenerFreq = numberOfiter / 10; // frequency of output strings
+        int seed = 123; //  seed - one of parameters. For more info check http://deeplearning4j.org/iris-flower-dataset-tutorial
 
-        //Load Data
-        double[][] outcomes = new double[targets.size()][numColumns]; // Matrix of outcomes
-        double[][] data = new double[targets.size()][numRows]; // Matrix of data
+        //Load Data - when target is 0, label[0] is 0 and label[1] is 1.
+        double[][] labels = new double[targets.size()][numColumns]; // Matrix of labels for classifier
+        double[][] features_matrix = new double[targets.size()][numRows]; // Matrix of features
         for (int i = 0; i < epochs.size(); i++) { // Iterating through epochs
             double[][] epoch = epochs.get(i); // Each epoch
             double[] features = fe.extractFeatures(epoch); // Feature of each epoch
-            for (int j = 0; j < numColumns; j++) {
-                outcomes[i][0] = targets.get(i); // Setting outcome to target
-                outcomes[i][1] = Math.abs(1 - targets.get(i)); // Setting outcome to target
+            for (int j = 0; j < numColumns; j++) {   //setting labels for each column
+                labels[i][0] = targets.get(i); // Setting label on position 0 as target
+                labels[i][1] = Math.abs(1 - targets.get(i));  // Setting label on position 1 to be different from label[0]
             }
-            data[i] = features; // Saving feature to data matrix
+            features_matrix[i] = features; // Saving features to features matrix
         }
 
-        INDArray output_data = Nd4j.create(outcomes); // Create INDArray with outcomes
-        INDArray input_data = Nd4j.create(data); // Create INDArray with data
-        DataSet dataSet = new DataSet(input_data, output_data); // Create dataSet with input and output data
+        // Creating INDArrays and DataSet
+        INDArray output_data = Nd4j.create(labels); // Create INDArray with labels(targets)
+        INDArray input_data = Nd4j.create(features_matrix); // Create INDArray with features(data)
+        DataSet dataSet = new DataSet(input_data, output_data); // Create dataSet with features and labels
         Nd4j.ENFORCE_NUMERICAL_STABILITY = true; // Setting to enforce numerical stability
 
-        // Build neural net
+        // Building a neural net
         build(numRows, numColumns, seed, listenerFreq);
 
         System.out.println("Train model....");
         model.fit(dataSet); // Learning of neural net with training data
-
-//        System.out.println("Evaluate weights....");
-//        for (org.deeplearning4j.nn.api.Layer layer : model.getLayers()) {
-//           INDArray w = layer.getParam(DefaultParamInitializer.WEIGHT_KEY);
-//            System.out.println("Weights: " + w);
-//        }
     }
-    
+
+    //  initialization of neural net with params. For more info check http://deeplearning4j.org/iris-flower-dataset-tutorial where is more about params
     private void build(int numRows, int outputNum, int seed, int listenerFreq) {
         System.out.print("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder() // Starting builder pattern
@@ -113,11 +109,11 @@ public class SDAClassifier implements IERPClassifier{
                         .build() // Build on set configuration
                 ) // NN layer type
                 .layer(1, new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD)//Override default output layer that classifies input using softmax
-                		.activation("softmax") // Activation function type
+                        .activation("softmax") // Activation function type
                         .nIn(neuronCount) // # input nodes
                         .nOut(outputNum) // # output nodes
                         .build() // Build on set configuration
-                 ) // NN layer type
+                ) // NN layer type
 
                 .pretrain(true) // Do pre training
                 .backprop(true) // Don't do back proping
@@ -126,42 +122,45 @@ public class SDAClassifier implements IERPClassifier{
         model.init(); // Initialize model
         model.setListeners(Collections.singletonList((IterationListener) new ScoreIterationListener(listenerFreq))); // Setting listeners
     }
-    
+
+    // method for testing the classifier.
     @Override
     public ClassificationStatistics test(List<double[][]> epochs, List<Double> targets) {
-        ClassificationStatistics resultsStats = new ClassificationStatistics();
-        for (int i = 0; i < epochs.size(); i++) {
-            double output = this.classify(epochs.get(i));
-            resultsStats.add(output, targets.get(i));
+        ClassificationStatistics resultsStats = new ClassificationStatistics(); // initialization of classifier statistics
+        for (int i = 0; i < epochs.size(); i++) {   //iterating epochs
+            double output = this.classify(epochs.get(i));   //   output means score of a classifier from method classify
+            resultsStats.add(output, targets.get(i));   // calculating statistics
         }
-        return resultsStats;
+        return resultsStats;    //  returns classifier statistics
     }
 
+    // method not implemented. For loading use load(String file)
     @Override
     public void load(InputStream is) {
 
     }
 
+    // method not implemented. For saving use method save(String file)
     @Override
     public void save(OutputStream dest) {
 
     }
-    
+
     @Override
     public void save(String file) {
         OutputStream fos;
         // Choose the name of classifier and coefficient file to save
         String coefficientsName = "wrong.bin";
-        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")) {
             coefficientsName = "coefficients19.bin";
-        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+        } else if (fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")) {
             coefficientsName = "coefficients20.bin";
-        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+        } else if (fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")) {
             coefficientsName = "coefficients21.bin";
         }
         try {
-        	// Save classifier and coefficients 
-        	fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/"+coefficientsName));
+            // Save classifier and coefficients
+            fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/" + coefficientsName));
             DataOutputStream dos = new DataOutputStream(fos);
             Nd4j.write(model.params(), dos);
             dos.flush();
@@ -174,27 +173,27 @@ public class SDAClassifier implements IERPClassifier{
 
     @Override
     public void load(String file) {
-    	MultiLayerConfiguration confFromJson = null;
-    	INDArray newParams = null;
-    	// Choose the name of coefficient file to load
-    	String coefficientsName = "wrong.bin";
-        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")){
+        MultiLayerConfiguration confFromJson = null;
+        INDArray newParams = null;
+        // Choose the name of coefficient file to load
+        String coefficientsName = "wrong.bin";
+        if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")) {
             coefficientsName = "coefficients19.bin";
-        } else if(fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")){
+        } else if (fe.getClass().getSimpleName().equals("WaveletTransformFeatureExtraction")) {
             coefficientsName = "coefficients20.bin";
-        }else if(fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")){
+        } else if (fe.getClass().getSimpleName().equals("MatchingPursuitFeatureExtraction")) {
             coefficientsName = "coefficients21.bin";
         }
-    	try {
-    		// Load classifier and coefficients
-    		confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
-        	DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/"+coefficientsName));
-        	newParams = Nd4j.read(dis);
-        	dis.close();
-    	} catch (IOException e) {
+        try {
+            // Load classifier and coefficients
+            confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
+            DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/" + coefficientsName));
+            newParams = Nd4j.read(dis);
+            dis.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-    	// Initialize network with loaded params
+        // Initialize network with loaded params
         if (confFromJson != null) {
             model = new MultiLayerNetwork(confFromJson);
         }

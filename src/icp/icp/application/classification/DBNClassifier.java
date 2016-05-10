@@ -141,7 +141,7 @@ public class DBNClassifier implements IERPClassifier {
     @Override
     public void save(String file) {
         OutputStream fos;
-        // Choose the name of classifier and coefficient file to save
+        // Choose the name of classifier and coefficient file to save based on the feature extraction, which is used
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")) {
             coefficientsName = "coefficients16.bin";
@@ -151,7 +151,7 @@ public class DBNClassifier implements IERPClassifier {
             coefficientsName = "coefficients18.bin";
         }
         try {
-            // Save classifier and coefficients
+            // Save classifier and coefficients, used methods come from Nd4j library
             fos = Files.newOutputStream(Paths.get("data/test_classifiers_and_settings/" + coefficientsName));
             DataOutputStream dos = new DataOutputStream(fos);
             Nd4j.write(model.params(), dos);
@@ -167,7 +167,7 @@ public class DBNClassifier implements IERPClassifier {
     public void load(String file) {
         MultiLayerConfiguration confFromJson = null;
         INDArray newParams = null;
-        // Choose the name of coefficient file to load
+        // Choose the name of coefficient file to load based on the feature extraction, which is used
         String coefficientsName = "wrong.bin";
         if (fe.getClass().getSimpleName().equals("FilterAndSubsamplingFeatureExtraction")) {
             coefficientsName = "coefficients16.bin";
@@ -177,7 +177,7 @@ public class DBNClassifier implements IERPClassifier {
             coefficientsName = "coefficients18.bin";
         }
         try {
-            // Load classifier and coefficients
+            // Load classifier and coefficients, used methods come from Nd4j library
             confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(new File(file)));
             DataInputStream dis = new DataInputStream(new FileInputStream("data/test_classifiers_and_settings/" + coefficientsName));
             newParams = Nd4j.read(dis);
